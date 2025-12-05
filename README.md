@@ -5,11 +5,11 @@
 ![Unreal Engine 5](https://img.shields.io/badge/Unreal_Engine-5.x-black?logo=unrealengine)
 ![Language](https://img.shields.io/badge/Language-C%2B%2B_%26_BluePrint-blue?logo=cplusplus)
 ![Genre](https://img.shields.io/badge/Genre-Stealth_Action-red)
-![Team](https://img.shields.io/badge/Team-5_People-green)
+![Team](https://img.shields.io/badge/Team-3_People-green)
 
 ## 📂 프로젝트 소개
-**'칼퇴의 정석'**은 언리얼 엔진 5를 활용한 3인칭 오피스 잠입 액션 게임입니다.
-단순한 추격전을 넘어, **고도화된 AI 시스템(EQS, Perception)**과 **비헤이비어 트리(Behavior Tree)**를 심도 있게 연구하여 긴장감 넘치는 잠입 플레이를 구현하는 데 중점을 두었습니다.
+'칼퇴의 정석'은 언리얼 엔진 5를 활용한 3인칭 오피스 잠입 액션 게임입니다.
+단순한 추격전을 넘어, 고도화된 AI 시스템(EQS, Perception)과 비헤이비어 트리(Behavior Tree)를 심도 있게 연구하여 긴장감 넘치는 잠입 플레이를 구현하는 데 중점을 두었습니다.
 
 플레이어는 '김 대리'가 되어, 시각과 청각을 곤두세운 '부장님(AI)'의 감시망을 뚫고 엘리베이터로 탈출해야 합니다.
 
@@ -32,7 +32,7 @@
 * **감각 시스템 (AI Perception):**
     * **시각(Sight):** 전방 90도 시야각 구현. 플레이어 식별 시 즉시 추격 모드 전환.
     * **청각(Hearing):** 발소리나 사물 소음 감지 시 해당 위치(`LastHeardLocation`)로 의심 이동.
-* **지능적 수색 (EQS):** 플레이어를 놓쳤을 때 단순히 제자리로 돌아가지 않고, **주변의 은폐 가능한 지점(책상 밑, 사각지대)**을 우선적으로 수색하는 고지능 로직 구현.
+* **지능적 수색 (EQS):** 플레이어를 놓쳤을 때 단순히 제자리로 돌아가지 않고, 주변의 은폐 가능한 지점(책상 밑, 사각지대)을 우선적으로 수색하는 고지능 로직 구현.
 * **행동 패턴:** `[업무]` ↔ `[순찰]` ↔ `[의심]` ↔ `[추격]` ↔ `[휴식(커피)]`의 유기적 상태 전환.
 
 ---
