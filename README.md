@@ -2,7 +2,7 @@
 
 > **"금요일 오후 6시 1분. 주말을 즐기려는 김 대리와 야근을 시키려는 부장님의 숨 막히는 추격전!"**
 
-![Unreal Engine 5](https://img.shields.io/badge/Unreal_Engine-5.x-black?logo=unrealengine)
+![Unreal Engine 5](https://img.shields.io/badge/Unreal_Engine-5.6.1-black?logo=unrealengine)
 ![Language](https://img.shields.io/badge/Language-C%2B%2B_%26_BluePrint-blue?logo=cplusplus)
 ![Genre](https://img.shields.io/badge/Genre-Stealth_Action-red)
 ![Team](https://img.shields.io/badge/Team-3_People-green)
