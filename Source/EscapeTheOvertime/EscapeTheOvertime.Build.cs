@@ -4,48 +4,37 @@ using UnrealBuildTool;
 
 public class EscapeTheOvertime : ModuleRules
 {
-	public EscapeTheOvertime(ReadOnlyTargetRules Target) : base(Target)
-	{
-		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+    public EscapeTheOvertime(ReadOnlyTargetRules Target) : base(Target)
+    {
+        PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicDependencyModuleNames.AddRange(new string[] {
-			"Core",
-			"CoreUObject",
-			"Engine",
-			"InputCore",
-			"EnhancedInput",
-			"AIModule",
-			"StateTreeModule",
-			"GameplayStateTreeModule",
-			"UMG",
-			"Slate"
-		});
+        // 1. 필수 의존성 모듈 (1인칭, AI, UI, 입력)
+        PublicDependencyModuleNames.AddRange(new string[] {
+            "Core",
+            "CoreUObject",
+            "Engine",
+            "InputCore",
+            "EnhancedInput",
+            "AIModule",        // 부장님 AI 필수
+			"NavigationSystem", // 네비게이션 메시 필수
+			"UMG",             // UI 위젯 필수
+			"Slate",
+            "SlateCore"
+        });
 
-		PrivateDependencyModuleNames.AddRange(new string[] { });
+        // StateTree 관련 모듈은 만약 사용하지 않는다면 주석 처리해도 됩니다.
+        // 혹시 남아있는 AI 코드에서 쓸 수 있어 남겨둡니다.
+        PublicDependencyModuleNames.AddRange(new string[] {
+            "StateTreeModule",
+            "GameplayStateTreeModule",
+        });
 
-		PublicIncludePaths.AddRange(new string[] {
-			"EscapeTheOvertime",
-			"EscapeTheOvertime/Variant_Platforming",
-			"EscapeTheOvertime/Variant_Platforming/Animation",
-			"EscapeTheOvertime/Variant_Combat",
-			"EscapeTheOvertime/Variant_Combat/AI",
-			"EscapeTheOvertime/Variant_Combat/Animation",
-			"EscapeTheOvertime/Variant_Combat/Gameplay",
-			"EscapeTheOvertime/Variant_Combat/Interfaces",
-			"EscapeTheOvertime/Variant_Combat/UI",
-			"EscapeTheOvertime/Variant_SideScrolling",
-			"EscapeTheOvertime/Variant_SideScrolling/AI",
-			"EscapeTheOvertime/Variant_SideScrolling/Gameplay",
-			"EscapeTheOvertime/Variant_SideScrolling/Interfaces",
-			"EscapeTheOvertime/Variant_SideScrolling/UI"
-		});
+        PrivateDependencyModuleNames.AddRange(new string[] { });
 
-		// Uncomment if you are using Slate UI
-		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
-
-		// Uncomment if you are using online features
-		// PrivateDependencyModuleNames.Add("OnlineSubsystem");
-
-		// To include OnlineSubsystemSteam, add it to the plugins section in your uproject file with the Enabled attribute set to true
-	}
+        // 2. [중요] 삭제한 Variant 폴더들의 경로를 모두 제거했습니다.
+        // 프로젝트 루트 경로만 포함하면 엔진이 알아서 하위 폴더를 스캔합니다.
+        PublicIncludePaths.AddRange(new string[] {
+            "EscapeTheOvertime"
+        });
+    }
 }
