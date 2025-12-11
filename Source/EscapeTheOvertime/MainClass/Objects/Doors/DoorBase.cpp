@@ -11,13 +11,13 @@ ADoorBase::ADoorBase()
 	SetRootComponent(BoxComp); // RootComponent = BoxComp;
 	BoxComp->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 	BoxComp->SetBoxExtent(FVector(30.f, 74.f, 147.f));
+	//BoxComp->SetRelativeLocation();
 
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
 	MeshComp->SetupAttachment(BoxComp);
 
-	FOnTimelineFloat TimelineCallback;
-	TimelineCallback.BindUFunction(this, FName("UpdateDoorMovement"));
-	DoorTimeline->AddInterpFloat(DoorCurve, TimelineCallback);
+	DoorTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("DoorTimeline"));
+
 }
 
 // Called when the game starts or when spawned
@@ -30,6 +30,12 @@ void ADoorBase::BeginPlay()
 
 	BoxComp->OnComponentBeginOverlap.AddDynamic(this, &ADoorBase::OnOverlapBegin);
 
+	if (DoorCurve)
+	{
+		FOnTimelineFloat TimelineCallback;
+		TimelineCallback.BindUFunction(this, FName("UpdateDoorMovement"));
+		DoorTimeline->AddInterpFloat(DoorCurve, TimelineCallback);
+	}
 }
 
 // Called every frame
@@ -46,8 +52,8 @@ void ADoorBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor*
 	{
 		//will timeline work?
 		UE_LOG(LogTemp, Warning, TEXT("Character is near Door"));
-		//DoorTimeline->PlayFromStart();
-		UpdateDoorMovement(1.0f);
+		DoorTimeline->PlayFromStart();
+		//UpdateDoorMovement(1.0f);
 		bIsOpen = true;
 	}
 }

@@ -36,12 +36,9 @@ ACabinetDoor::ACabinetDoor()
 	{
 		UE_LOG(LogTemp, Error, TEXT("Failed to get Material for %s"), *GetName());
 	}
-	
-	FOnTimelineFloat TimelineCallback;
-	TimelineCallback.BindUFunction(this, FName("UpdateCabMovement"));
-	CabTimeline->AddInterpFloat(CabDoorCurve, TimelineCallback);
-	
 
+	CabTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("CabTimeline"));
+	
 }
 
 // Called when the game starts or when spawned
@@ -53,6 +50,13 @@ void ACabinetDoor::BeginPlay()
 
 	InitialXValue = MeshComp->GetRelativeLocation().X;
 	TargetXValue = InitialXValue + MovableXValue;
+
+	if (CabDoorCurve)
+	{
+		FOnTimelineFloat TimelineCallback;
+		TimelineCallback.BindUFunction(this, FName("UpdateCabMovement"));
+		CabTimeline->AddInterpFloat(CabDoorCurve, TimelineCallback);
+	}
 }
 
 void ACabinetDoor::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -64,9 +68,9 @@ void ACabinetDoor::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAct
 	if (PlayerCharacter && !bIsOpen)
 	{
 		//timeline failed-> fix it later
-		//CabTimeline->PlayFromStart();
+		CabTimeline->PlayFromStart();
 		UE_LOG(LogTemp, Warning, TEXT("Character is near Cabinet"));	
-		UpdateCabMovement(1.0f);
+		//UpdateCabMovement(1.0f);
 		bIsOpen = true;
 	}
 }

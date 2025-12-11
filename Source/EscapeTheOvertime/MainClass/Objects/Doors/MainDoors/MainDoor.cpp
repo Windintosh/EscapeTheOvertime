@@ -2,7 +2,7 @@
 
 AMainDoor::AMainDoor()
 {
-	//need to add logic to change rotation
+	//need to add logic to change rotation->Done!
 
 
 }
