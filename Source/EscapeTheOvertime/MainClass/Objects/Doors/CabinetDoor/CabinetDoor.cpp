@@ -1,5 +1,6 @@
 #include "CabinetDoor.h"
 #include "UObject/ConstructorHelpers.h"
+#include "EscapeTheOvertimeCharacter.h"
 
 
 // Sets default values
@@ -11,12 +12,12 @@ ACabinetDoor::ACabinetDoor()
 	BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Component"));
 	SetRootComponent(BoxComp); // RootComponent = BoxComp;
 	BoxComp->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
-	BoxComp->SetBoxExtent(FVector(50.f, 70.f, 15.f));
+	BoxComp->SetBoxExtent(FVector(60.f, 60.f, 7.5f)); //make it half!
 
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
 	MeshComp->SetupAttachment(BoxComp);
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> CabinetMesh(TEXT("/Game/EscapeTheOvertime/00_Maps/UseAsset/File_Cabinets_02-Freepoly_org/MiniCabinets_Door1.MiniCabinets_Door1'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> CabinetMesh(TEXT("/Game/EscapeTheOvertime/00_Maps/UseAsset/File_Cabinets_02-Freepoly_org/MiniCabinets_Door5.MiniCabinets_Door5"));
 	if (CabinetMesh.Succeeded())
 	{
 		MeshComp->SetStaticMesh(CabinetMesh.Object);
@@ -26,7 +27,7 @@ ACabinetDoor::ACabinetDoor()
 		UE_LOG(LogTemp, Error, TEXT("Failed to get StaticMesh for %s"), *GetName());
 	}
 	
-	static ConstructorHelpers::FObjectFinder<UMaterial> CabinetMaterial(TEXT("/Game/EscapeTheOvertime/00_Maps/UseAsset/File_Cabinets_02-Freepoly_org/21___Default.21___Default'"));
+	static ConstructorHelpers::FObjectFinder<UMaterial> CabinetMaterial(TEXT("/Game/EscapeTheOvertime/00_Maps/UseAsset/File_Cabinets_02-Freepoly_org/21___Default.21___Default"));
 	if (CabinetMaterial.Succeeded())
 	{
 		MeshComp->GetStaticMesh()->SetMaterial(0, CabinetMaterial.Object);
@@ -35,9 +36,9 @@ ACabinetDoor::ACabinetDoor()
 	{
 		UE_LOG(LogTemp, Error, TEXT("Failed to get Material for %s"), *GetName());
 	}
+	
 
-
-
+	
 
 }
 
@@ -52,6 +53,16 @@ void ACabinetDoor::BeginPlay()
 void ACabinetDoor::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	//add this later, after making character
+	UE_LOG(LogTemp, Warning, TEXT("Character is near Cabinet"));
+
+	AEscapeTheOvertimeCharacter* PlayerCharacter = Cast<AEscapeTheOvertimeCharacter>(OtherActor);
+	if (PlayerCharacter)
+	{
+
+	}
+
+
+
 }
 
 // Called every frame
