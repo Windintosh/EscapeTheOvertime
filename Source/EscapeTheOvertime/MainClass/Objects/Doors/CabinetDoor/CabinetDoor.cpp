@@ -58,6 +58,8 @@ void ACabinetDoor::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAct
 	AEscapeTheOvertimeCharacter* PlayerCharacter = Cast<AEscapeTheOvertimeCharacter>(OtherActor);
 	if (PlayerCharacter)
 	{
+		//this->AddActorLocalTransform()
+
 
 	}
 
