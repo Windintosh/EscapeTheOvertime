@@ -18,14 +18,21 @@ public class EscapeTheOvertime : ModuleRules
 			"StateTreeModule",
 			"GameplayStateTreeModule",
 			"UMG",
-			"Slate"
+			"Slate",
+			"NavigationSystem"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { });
 
 		PublicIncludePaths.AddRange(new string[] {
 			"EscapeTheOvertime",
-			"EscapeTheOvertime/Variant_Horror",
+			"EscapeTheOvertime/MainClass",
+            "EscapeTheOvertime/MainClass/Objects",
+            "EscapeTheOvertime/MainClass/Objects/CabinetDoor",
+            "EscapeTheOvertime/MainClass/Objects/ElevatorDoors",
+            "EscapeTheOvertime/MainClass/Objects/MainDoors",
+            "EscapeTheOvertime/MainClass/Objects/RestroomDoors",
+            "EscapeTheOvertime/Variant_Horror",
 			"EscapeTheOvertime/Variant_Horror/UI",
 			"EscapeTheOvertime/Variant_Shooter",
 			"EscapeTheOvertime/Variant_Shooter/AI",
