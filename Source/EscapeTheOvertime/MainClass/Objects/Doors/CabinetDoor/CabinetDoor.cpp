@@ -61,12 +61,13 @@ void ACabinetDoor::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAct
 	
 
 	AEscapeTheOvertimeCharacter* PlayerCharacter = Cast<AEscapeTheOvertimeCharacter>(OtherActor);
-	if (PlayerCharacter)
+	if (PlayerCharacter && !bIsOpen)
 	{
-		//
+		//timeline failed-> fix it later
 		//CabTimeline->PlayFromStart();
 		UE_LOG(LogTemp, Warning, TEXT("Character is near Cabinet"));	
 		UpdateCabMovement(1.0f);
+		bIsOpen = true;
 	}
 }
 
