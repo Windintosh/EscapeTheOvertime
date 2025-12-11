@@ -3,10 +3,17 @@
 AMainDoor::AMainDoor()
 {
 	//need to add logic to change rotation
+
+
 }
 
 void AMainDoor::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (GetClass()->GetName().Contains("Left"))
+	{
+		TargetYaw = InitialYaw - 90.f;
+	}
 
 }
