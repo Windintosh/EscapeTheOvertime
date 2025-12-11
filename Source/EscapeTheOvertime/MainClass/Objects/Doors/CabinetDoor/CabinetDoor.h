@@ -4,6 +4,7 @@
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/TimelineComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "CabinetDoor.generated.h"
 
@@ -25,9 +26,24 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UStaticMeshComponent* MeshComp;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Animation")
+	UTimelineComponent* CabTimeline;
+
+	UPROPERTY(EditAnywhere, Category = "Animation")
+	UCurveFloat* CabDoorCurve;
+
+	float InitialXValue;
+
+	const float MovableXValue = 40.f;
+
+	float TargetXValue;
 
 	UFUNCTION()
 	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void UpdateCabMovement(float Value);
 
 
 public:	

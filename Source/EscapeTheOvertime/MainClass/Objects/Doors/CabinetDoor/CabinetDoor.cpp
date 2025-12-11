@@ -37,7 +37,9 @@ ACabinetDoor::ACabinetDoor()
 		UE_LOG(LogTemp, Error, TEXT("Failed to get Material for %s"), *GetName());
 	}
 	
-
+	FOnTimelineFloat TimelineCallback;
+	TimelineCallback.BindUFunction(this, FName("UpdateCabMovement"));
+	CabTimeline->AddInterpFloat(CabDoorCurve, TimelineCallback);
 	
 
 }
@@ -48,23 +50,32 @@ void ACabinetDoor::BeginPlay()
 	Super::BeginPlay();
 	
 	BoxComp->OnComponentBeginOverlap.AddDynamic(this, &ACabinetDoor::OnOverlapBegin);
+
+	InitialXValue = MeshComp->GetRelativeLocation().X;
+	TargetXValue = InitialXValue + MovableXValue;
 }
 
 void ACabinetDoor::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	//add this later, after making character
-	UE_LOG(LogTemp, Warning, TEXT("Character is near Cabinet"));
+	
 
 	AEscapeTheOvertimeCharacter* PlayerCharacter = Cast<AEscapeTheOvertimeCharacter>(OtherActor);
 	if (PlayerCharacter)
 	{
-		//this->AddActorLocalTransform()
-
-
+		//
+		//CabTimeline->PlayFromStart();
+		UE_LOG(LogTemp, Warning, TEXT("Character is near Cabinet"));	
+		UpdateCabMovement(1.0f);
 	}
+}
 
-
-
+void ACabinetDoor::UpdateCabMovement(float Value)
+{
+	float NewLocation = FMath::Lerp(InitialXValue, TargetXValue, Value);
+	float InitialYValue = MeshComp->GetRelativeLocation().Y;
+	float InitialZValue = MeshComp->GetRelativeLocation().Z;
+	MeshComp->SetRelativeLocation(FVector(NewLocation, InitialYValue, InitialZValue), false);
 }
 
 // Called every frame
