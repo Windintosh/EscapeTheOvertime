@@ -3,7 +3,7 @@
 ARestroomBoothDoor::ARestroomBoothDoor()
 {
 	BoxComp->SetBoxExtent(FVector(25.f, 10.f, 53.f));
-	BoxComp->SetRelativeLocation(FVector(0.f, 0.f, 53.f), false);
+	BoxComp->SetRelativeLocation(FVector(0.f, 0.f, 106.f), false);
 }
 
 void ARestroomBoothDoor::BeginPlay()
