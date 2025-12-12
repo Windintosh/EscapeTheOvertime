@@ -11,7 +11,7 @@ ADoorBase::ADoorBase()
 	SetRootComponent(BoxComp); // RootComponent = BoxComp;
 	BoxComp->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 	BoxComp->SetBoxExtent(FVector(30.f, 74.f, 147.f));
-	//BoxComp->SetRelativeLocation();
+	BoxComp->SetRelativeLocation(FVector(0.f, 0.f, 147.f), false);
 
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
 	MeshComp->SetupAttachment(BoxComp);
