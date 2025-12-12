@@ -34,6 +34,9 @@ protected:
 	UCurveFloat* DoorCurve;
 
 	float InitialYaw;
+	
+	float MovableYaw;
+
 	float TargetYaw;
 
 	bool bIsOpen = false;

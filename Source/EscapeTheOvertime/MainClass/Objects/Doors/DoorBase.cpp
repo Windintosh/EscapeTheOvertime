@@ -18,6 +18,7 @@ ADoorBase::ADoorBase()
 
 	DoorTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("DoorTimeline"));
 
+	MovableYaw = 90.f;
 }
 
 // Called when the game starts or when spawned
@@ -26,7 +27,7 @@ void ADoorBase::BeginPlay()
 	Super::BeginPlay();
 
 	InitialYaw = MeshComp->GetRelativeRotation().Yaw;
-	TargetYaw = InitialYaw + 90.f; // need to add L/R logic later
+	TargetYaw = InitialYaw + MovableYaw; // need to add L/R logic later
 
 	BoxComp->OnComponentBeginOverlap.AddDynamic(this, &ADoorBase::OnOverlapBegin);
 

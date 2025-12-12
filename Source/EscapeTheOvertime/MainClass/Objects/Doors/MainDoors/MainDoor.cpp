@@ -13,7 +13,7 @@ void AMainDoor::BeginPlay()
 
 	if (GetClass()->GetName().Contains("Left"))
 	{
-		TargetYaw = InitialYaw - 90.f;
+		TargetYaw = InitialYaw - MovableYaw;
 	}
 
 }
