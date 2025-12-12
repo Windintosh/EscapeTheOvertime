@@ -41,6 +41,10 @@ void ASlidingDoorBase::BeginPlay()
 		TimelineCallback.BindUFunction(this, FName("UpdateSDMovement"));
 		SlidingTimeline->AddInterpFloat(SlidingDoorCurve, TimelineCallback);
 	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s No DoorCurve Found! Assign in Blueprint!"), *GetName());
+	}
 }
 
 // Called every frame

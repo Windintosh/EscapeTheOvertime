@@ -36,6 +36,10 @@ void ADoorBase::BeginPlay()
 		TimelineCallback.BindUFunction(this, FName("UpdateDoorMovement"));
 		DoorTimeline->AddInterpFloat(DoorCurve, TimelineCallback);
 	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s No DoorCurve Found! Assign in Blueprint!"), *GetName());
+	}
 }
 
 // Called every frame

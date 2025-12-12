@@ -1,9 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "SlidingDoorBase.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/TimelineComponent.h"
@@ -11,7 +10,7 @@
 #include "ElevatorDoor.generated.h"
 
 UCLASS()
-class ESCAPETHEOVERTIME_API AElevatorDoor : public AActor
+class ESCAPETHEOVERTIME_API AElevatorDoor : public ASlidingDoorBase
 {
 	GENERATED_BODY()
 	
@@ -22,6 +21,8 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	virtual void UpdateSDMovement(float Value) override;
 
 public:	
 	// Called every frame
