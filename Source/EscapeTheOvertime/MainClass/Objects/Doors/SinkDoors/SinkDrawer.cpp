@@ -2,7 +2,7 @@
 
 ASinkDrawer::ASinkDrawer()
 {
-	BoxComp->SetBoxExtent(FVector(29.5f, 35.f, 15.5f)); //make it half! 59 70 31
+	BoxComp->SetBoxExtent(FVector(33.f, 35.f, 15.5f)); //make it half! 59 70 31
 	MeshComp->SetRelativeLocation(FVector(20.f, -58.f, -31.f), false);
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> CabinetMesh(TEXT("/Game/EscapeTheOvertime/00_Maps/UseAsset/Sink_Cabinet/scene_003.scene_003"));
 	if (CabinetMesh.Succeeded())
@@ -32,7 +32,7 @@ void ASinkDrawer::BeginPlay()
 	Super::BeginPlay();
 
 	InitialMoveValue = MeshComp->GetRelativeLocation().X;
-	TargetMoveValue = InitialMoveValue + MovableValue;
+	TargetMoveValue = InitialMoveValue - MovableValue;
 }
 
 void ASinkDrawer::UpdateSDMovement(float Value)
