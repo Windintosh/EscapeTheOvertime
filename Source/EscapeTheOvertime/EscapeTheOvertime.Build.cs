@@ -35,6 +35,7 @@ public class EscapeTheOvertime : ModuleRules
             "EscapeTheOvertime/MainClass/Objects/Doors/RestroomDoors",
             "EscapeTheOvertime/MainClass/Objects/Doors/LockerDoors",
             "EscapeTheOvertime/MainClass/Objects/Doors/SinkDoors",
+            "EscapeTheOvertime/MainClass/Objects/Items",
             "EscapeTheOvertime/MainClass/Characters",
             "EscapeTheOvertime/Variant_Horror",
 			"EscapeTheOvertime/Variant_Horror/UI",
