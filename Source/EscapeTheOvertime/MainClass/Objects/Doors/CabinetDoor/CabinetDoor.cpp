@@ -9,13 +9,7 @@ ACabinetDoor::ACabinetDoor()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Component"));
-	SetRootComponent(BoxComp); // RootComponent = BoxComp;
-	BoxComp->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
 	BoxComp->SetBoxExtent(FVector(60.f, 60.f, 7.5f)); //make it half!
-
-	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
-	MeshComp->SetupAttachment(BoxComp);
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> CabinetMesh(TEXT("/Game/EscapeTheOvertime/00_Maps/UseAsset/File_Cabinets_02-Freepoly_org/MiniCabinets_Door5.MiniCabinets_Door5"));
 	if (CabinetMesh.Succeeded())
@@ -37,47 +31,21 @@ ACabinetDoor::ACabinetDoor()
 		UE_LOG(LogTemp, Error, TEXT("Failed to get Material for %s"), *GetName());
 	}
 
-	CabTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("CabTimeline"));
-	
+	MovableValue = 40.f;	
 }
 
 // Called when the game starts or when spawned
 void ACabinetDoor::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	BoxComp->OnComponentBeginOverlap.AddDynamic(this, &ACabinetDoor::OnOverlapBegin);
 
-	InitialXValue = MeshComp->GetRelativeLocation().X;
-	TargetXValue = InitialXValue + MovableXValue;
-
-	if (CabDoorCurve)
-	{
-		FOnTimelineFloat TimelineCallback;
-		TimelineCallback.BindUFunction(this, FName("UpdateCabMovement"));
-		CabTimeline->AddInterpFloat(CabDoorCurve, TimelineCallback);
-	}
+	InitialMoveValue = MeshComp->GetRelativeLocation().X;
+	TargetMoveValue = InitialMoveValue + MovableValue;
 }
 
-void ACabinetDoor::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void ACabinetDoor::UpdateSDMovement(float Value)
 {
-	//add this later, after making character
-	
-
-	AEscapeTheOvertimeCharacter* PlayerCharacter = Cast<AEscapeTheOvertimeCharacter>(OtherActor);
-	if (PlayerCharacter && !bIsOpen)
-	{
-		//timeline failed-> fix it later
-		CabTimeline->PlayFromStart();
-		UE_LOG(LogTemp, Warning, TEXT("Character is near Cabinet"));	
-		//UpdateCabMovement(1.0f);
-		bIsOpen = true;
-	}
-}
-
-void ACabinetDoor::UpdateCabMovement(float Value)
-{
-	float NewLocation = FMath::Lerp(InitialXValue, TargetXValue, Value);
+	float NewLocation = FMath::Lerp(InitialMoveValue, TargetMoveValue, Value);
 	float InitialYValue = MeshComp->GetRelativeLocation().Y;
 	float InitialZValue = MeshComp->GetRelativeLocation().Z;
 	MeshComp->SetRelativeLocation(FVector(NewLocation, InitialYValue, InitialZValue), false);

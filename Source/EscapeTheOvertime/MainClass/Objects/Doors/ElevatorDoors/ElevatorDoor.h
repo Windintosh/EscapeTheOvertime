@@ -1,28 +1,27 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "SlidingDoorBase.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/TimelineComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "CabinetDoor.generated.h"
+#include "ElevatorDoor.generated.h"
 
 UCLASS()
-class ESCAPETHEOVERTIME_API ACabinetDoor : public ASlidingDoorBase
+class ESCAPETHEOVERTIME_API AElevatorDoor : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ACabinetDoor();
+	AElevatorDoor();
 
-protected:	
+protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	virtual void UpdateSDMovement(float Value) override;
 
 public:	
 	// Called every frame
