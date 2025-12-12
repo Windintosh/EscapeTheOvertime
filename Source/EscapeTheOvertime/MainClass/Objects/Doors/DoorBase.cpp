@@ -15,6 +15,7 @@ ADoorBase::ADoorBase()
 
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
 	MeshComp->SetupAttachment(BoxComp);
+	MeshComp->SetRelativeLocation(FVector(0.f, 74.f, -147.f), false);
 
 	DoorTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("DoorTimeline"));
 
