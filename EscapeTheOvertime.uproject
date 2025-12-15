@@ -45,6 +45,10 @@
 				"Linux",
 				"Android"
 			]
+		},
+		{
+			"Name": "MetaHumanLiveLink",
+			"Enabled": true
 		}
 	]
 }
