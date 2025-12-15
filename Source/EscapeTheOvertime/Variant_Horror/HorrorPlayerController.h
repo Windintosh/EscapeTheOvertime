@@ -10,19 +10,20 @@ class UInputMappingContext;
 class UHorrorUI;
 
 /**
- *  Player Controller for a first person horror game
- *  Manages input mappings
- *  Manages UI
+ * Player Controller for a first person horror game
+ * Manages input mappings
+ * Manages UI
+ * Manages Time System (Added)
  */
 UCLASS(abstract)
 class ESCAPETHEOVERTIME_API AHorrorPlayerController : public APlayerController
 {
 	GENERATED_BODY()
-	
+
 protected:
 
 	/** Type of UI widget to spawn */
-	UPROPERTY(EditAnywhere, Category="Horror|UI")
+	UPROPERTY(EditAnywhere, Category = "Horror|UI")
 	TSubclassOf<UHorrorUI> HorrorUIClass;
 
 	/** Pointer to the UI widget */
@@ -33,18 +34,21 @@ public:
 	/** Constructor */
 	AHorrorPlayerController();
 
+	// [Time System] 매 프레임 시간 계산을 위해 Tick 함수 오버라이드
+	virtual void Tick(float DeltaTime) override;
+
 protected:
 
 	/** Input Mapping Contexts */
-	UPROPERTY(EditAnywhere, Category ="Input|Input Mappings")
+	UPROPERTY(EditAnywhere, Category = "Input|Input Mappings")
 	TArray<UInputMappingContext*> DefaultMappingContexts;
 
 	/** Input Mapping Contexts */
-	UPROPERTY(EditAnywhere, Category="Input|Input Mappings")
+	UPROPERTY(EditAnywhere, Category = "Input|Input Mappings")
 	TArray<UInputMappingContext*> MobileExcludedMappingContexts;
 
 	/** Mobile controls widget to spawn */
-	UPROPERTY(EditAnywhere, Category="Input|Touch Controls")
+	UPROPERTY(EditAnywhere, Category = "Input|Touch Controls")
 	TSubclassOf<UUserWidget> MobileControlsWidgetClass;
 
 	/** Pointer to the mobile controls widget */
@@ -58,5 +62,30 @@ protected:
 
 	/** Input mapping context setup */
 	virtual void SetupInputComponent() override;
+
+public:
+	// --- [Time System Variables] ---
+
+	/** 현재 시간 (기본값 18시) */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Time System")
+	int32 CurrentHour;
+
+	/** 현재 분 (누적용 Float) */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Time System")
+	float CurrentMinute;
+
+	/** 시간 흐름 속도 (1.0 = 실제 1초가 게임 1분) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Time System")
+	float TimeSpeed;
+
+	/** 게임 오버 상태 체크 */
+	bool bIsGameOver;
+
+protected:
+	// --- [Time System Events] ---
+
+	/** 12시(자정)가 되었을 때 블루프린트에서 호출될 이벤트 (암전, 게임오버 연출용) */
+	UFUNCTION(BlueprintImplementableEvent, Category = "Time System")
+	void OnTimeLimitReached();
 
 };
