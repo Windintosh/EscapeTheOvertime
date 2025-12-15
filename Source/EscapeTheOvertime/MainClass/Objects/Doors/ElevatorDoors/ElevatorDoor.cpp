@@ -29,6 +29,17 @@ void AElevatorDoor::UpdateSDMovement(float Value)
 	MeshComp->SetRelativeLocation(FVector(InitialXValue, NewLocation, InitialZValue), false);
 }
 
+void AElevatorDoor::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	//no function on overlap, opens when player interacts with card reader
+}
+
+void AElevatorDoor::OpenDoor()
+{
+	SlidingTimeline->PlayFromStart();
+	bIsOpen = true;
+}
+
 // Called every frame
 void AElevatorDoor::Tick(float DeltaTime)
 {

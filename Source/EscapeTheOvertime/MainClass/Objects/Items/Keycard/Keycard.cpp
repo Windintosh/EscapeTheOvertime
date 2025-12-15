@@ -13,4 +13,5 @@ void AKeycard::ActivateItem(AActor* Activator)
 	AEscapeTheOvertimeCharacter* PlayerCharacter = Cast<AEscapeTheOvertimeCharacter>(Activator);
 	if (!PlayerCharacter) return;
 	PlayerCharacter->bHasKeycard = true;
+	DestroyItem();
 }

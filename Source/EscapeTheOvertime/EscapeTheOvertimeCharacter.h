@@ -90,6 +90,7 @@ public:
 	/** Returns first person camera component **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Game")
 	bool bHasKeycard = false;
 };
 
