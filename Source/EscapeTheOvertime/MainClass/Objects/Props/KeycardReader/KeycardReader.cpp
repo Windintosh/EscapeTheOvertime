@@ -17,7 +17,7 @@ void AKeycardReader::ActivateProp(AActor* Activator)
 	{
 		TArray<AActor*> EVDoors;
 		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AElevatorDoor::StaticClass(), EVDoors);
-		for (AActor* EVDoor : EVDoors)
+		for (AActor* EVDoor : EVDoors) //can it be changed with broadcasting?
 		{
 			AElevatorDoor* OpenableDoor = Cast<AElevatorDoor>(EVDoor);
 			if (OpenableDoor)
