@@ -37,6 +37,8 @@ public class EscapeTheOvertime : ModuleRules
             "EscapeTheOvertime/MainClass/Objects/Doors/SinkDoors",
             "EscapeTheOvertime/MainClass/Objects/Items",
             "EscapeTheOvertime/MainClass/Objects/Items/Keycard",
+            "EscapeTheOvertime/MainClass/Objects/Props",
+            "EscapeTheOvertime/MainClass/Objects/Props/KeycardReader",
             "EscapeTheOvertime/MainClass/Characters",
             "EscapeTheOvertime/MainClass/Game",
             "EscapeTheOvertime/Variant_Horror",
