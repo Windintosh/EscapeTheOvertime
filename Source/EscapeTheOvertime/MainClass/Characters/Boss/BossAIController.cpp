@@ -199,7 +199,7 @@ void ABossAIController::OnHearNoise(APawn* PawnInstigator, const FVector& Locati
 
 	if (!PlayerCharacter || !BB) return;
 
-	if (PawnInstigator == PlayerCharacter) // if source of the noise is Player character
+	if (PawnInstigator == PlayerCharacter) // if source of the noise is Player character->needs to be updated
 	{
 		//update blackboard data
 		UE_LOG(LogTemp, Warning, TEXT("AI heard player noise via PawnSensing"));
