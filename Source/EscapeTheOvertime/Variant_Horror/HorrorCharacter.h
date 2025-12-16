@@ -8,6 +8,7 @@
 
 class USpotLightComponent;
 class UInputAction;
+class USoundBase;
 
 // 스태미나 관련 델리게이트
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FUpdateSprintMeterDelegate, float, Percentage);
@@ -88,6 +89,10 @@ protected:
 	/** Is Dead? */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
 	bool bIsDead = false;
+
+	/** 피격 시 재생할 사운드 (Sound Cue 권장) */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	USoundBase* DamageSound;
 
 public:
 

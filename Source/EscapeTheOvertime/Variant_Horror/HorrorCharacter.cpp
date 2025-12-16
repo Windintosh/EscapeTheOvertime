@@ -1,6 +1,7 @@
 #include "Variant_Horror/HorrorCharacter.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
+#include "Kismet/GameplayStatics.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/SpotLightComponent.h"
@@ -24,6 +25,14 @@ AHorrorCharacter::AHorrorCharacter()
 	MaxHP = 100.0f;
 	CurrentHP = MaxHP;
 	bIsDead = false;
+
+	// [NEW] 1. 생성자에서 사운드 큐 파일 찾아서 로드하기 (Hard Loading)
+	static ConstructorHelpers::FObjectFinder<USoundBase> DamageSoundAsset(TEXT("/Game/EscapeTheOvertime/07_FX/SFX/CinematicSound/Ugh_Cue.Ugh_Cue"));
+
+	if (DamageSoundAsset.Succeeded())
+	{
+		DamageSound = DamageSoundAsset.Object;
+	}
 }
 
 void AHorrorCharacter::BeginPlay()
@@ -76,6 +85,13 @@ float AHorrorCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 	if (MaxHP > 0.0f)
 	{
 		OnHealthChanged.Broadcast(CurrentHP / MaxHP);
+	}
+
+	// ★ [NEW] 2. 데미지를 입었으면 소리 재생 (2D)
+	if (ActualDamage > 0.0f && DamageSound)
+	{
+		// 플레이어 본인의 소리이므로 위치값 없이 2D로 재생 (헤드셋 전체에서 들림)
+		UGameplayStatics::PlaySound2D(this, DamageSound);
 	}
 
 	// 사망 체크
