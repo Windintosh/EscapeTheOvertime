@@ -18,7 +18,7 @@ AHorrorPlayerController::AHorrorPlayerController()
 
 	// [Time System] Tick 활성화 및 변수 초기화
 	PrimaryActorTick.bCanEverTick = true;
-	CurrentHour = 18;   // 18시 시작
+	CurrentHour = 21;   //  시작 시간
 	CurrentMinute = 0.0f;
 	TimeSpeed = 10.0f;  // 시간 흐름 속도 (조절 가능)
 	bIsGameOver = false;

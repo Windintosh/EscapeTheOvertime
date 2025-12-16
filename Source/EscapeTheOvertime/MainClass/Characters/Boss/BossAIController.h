@@ -6,88 +6,56 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
-#include "Perception/AIPerceptionTypes.h"
-#include "Perception/PawnSensingComponent.h"
+#include "Perception/AISenseConfig_Hearing.h" // [NEW] 청각 설정 헤더 추가
 #include "BossAIController.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class ESCAPETHEOVERTIME_API ABossAIController : public AAIController
 {
 	GENERATED_BODY()
-	
+
 public:
 	ABossAIController();
 
+	// 패트롤 지점 목록
 	TArray<FVector> PatrolPoints;
 
 	UPROPERTY(EditAnywhere, Category = "AI")
 	UBehaviorTree* BehaviorTree;
 
-	UBlackboardComponent* GetBlackboard() const;
-
-	bool bIsPatrolPointsReady = false;
-
-	//AIPerception Component
+	// AIPerception Component (시각 + 청각 통합)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI|Perception")
 	UAIPerceptionComponent* BossAIPerceptionComponent;
 
-	//set sight config
+	// Sight Config
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI|Perception")
 	UAISenseConfig_Sight* SightConfig;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI|Perception")
-	UPawnSensingComponent* PawnSensingComponent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-	float ChaseRadius = 500.f;
-
+	// [NEW] Hearing Config (PawnSensing 대체)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI|Perception")
+	UAISenseConfig_Hearing* HearingConfig;
 
 protected:
 	virtual void BeginPlay() override;
-
-	static const FName PatrolLocationReady;
-
 	virtual void OnPossess(APawn* InPawn) override;
 
-	//static const FName PatrolLocationKey;
-
-	//static const FName PatrolIndexKey;
-
+	// 월드의 모든 TargetPoint를 찾아 PatrolPoints에 저장
 	void InitializePatrolPoints();
 
-	UFUNCTION()
-	void StartChasingPlayer(AActor* PlayerActor);
-
-	UFUNCTION()
-	void StopChasingPlayer();
-
-	UFUNCTION()
-	void StartSearchingLastLocation();
-
-	//Handler
+	// 감각(시각/청각) 업데이트 시 호출되는 함수
 	UFUNCTION()
 	void OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
 
-	UFUNCTION()
-	void OnHearNoise(APawn* PawnInstigator, const FVector& Location, float Volume);
-
-private:
-
-	FVector CurrentTargetLocation;
-
+public:
+	// Blackboard Keys (기존 키 활용)
 	static const FName PatrolLocationKey;
 	static const FName PatrolIndexKey;
-	//class 251202 ~ 251203
 	static const FName TargetPlayerKey;
 	static const FName CanSeePlayerKey;
 	static const FName LastSeenLocationKey;
-	static const FName SearchStateKey;
-	static const FName LastHeardLocationKey; //1203
+	static const FName LastHeardLocationKey;
 	static const FName CanHearPlayerKey;
 
-	//
+private:
 	UBlackboardComponent* BB = nullptr;
 };

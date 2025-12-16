@@ -1,6 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
-
 #include "Variant_Horror/HorrorCharacter.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
@@ -22,6 +19,11 @@ AHorrorCharacter::AHorrorCharacter()
 	SpotLight->AttenuationRadius = 1050.0f;
 	SpotLight->InnerConeAngle = 18.7f;
 	SpotLight->OuterConeAngle = 45.24f;
+
+	// [NEW] 기본 HP값 설정
+	MaxHP = 100.0f;
+	CurrentHP = MaxHP;
+	bIsDead = false;
 }
 
 void AHorrorCharacter::BeginPlay()
@@ -30,6 +32,16 @@ void AHorrorCharacter::BeginPlay()
 
 	// initialize sprint meter to max
 	SprintMeter = SprintTime;
+
+	// [NEW] 게임 시작 시 HP 초기화
+	CurrentHP = MaxHP;
+	bIsDead = false;
+
+	// [NEW] UI가 초기 상태(100%)를 그릴 수 있도록 방송
+	if (MaxHP > 0.0f)
+	{
+		OnHealthChanged.Broadcast(CurrentHP / MaxHP);
+	}
 
 	// Initialize the walk speed
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
@@ -46,6 +58,53 @@ void AHorrorCharacter::EndPlay(EEndPlayReason::Type EndPlayReason)
 	GetWorld()->GetTimerManager().ClearTimer(SprintTimer);
 }
 
+// [NEW] 보스가 때리면 자동 호출됨. 맞았을 때만 UI 업데이트 방송을 함.
+float AHorrorCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	// 이미 죽었거나 데미지가 없으면 무시
+	if (bIsDead || DamageAmount <= 0.0f)
+	{
+		return 0.0f;
+	}
+
+	float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	// HP 감소 및 0 미만 방지
+	CurrentHP = FMath::Clamp(CurrentHP - ActualDamage, 0.0f, MaxHP);
+
+	// ★ [핵심] 맞았을 때만 UI에게 "나 체력 변했어!"라고 알림
+	if (MaxHP > 0.0f)
+	{
+		OnHealthChanged.Broadcast(CurrentHP / MaxHP);
+	}
+
+	// 사망 체크
+	if (CurrentHP <= 0.0f)
+	{
+		OnDeath();
+	}
+
+	return ActualDamage;
+}
+
+// [NEW] 사망 처리 (C++)
+void AHorrorCharacter::OnDeath_Implementation()
+{
+	if (bIsDead) return;
+
+	bIsDead = true;
+
+	// 입력 막기 (플레이어 멈춤)
+	if (APlayerController* PC = Cast<APlayerController>(GetController()))
+	{
+		DisableInput(PC);
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Player Died. Check Blueprint for Cinematic logic."));
+
+	// 실제 시네마틱 재생은 블루프린트의 'Event On Death' 노드에서 처리합니다.
+}
+
 void AHorrorCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -57,13 +116,15 @@ void AHorrorCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 			// Sprinting
 			EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &AHorrorCharacter::DoStartSprint);
 			EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &AHorrorCharacter::DoEndSprint);
-
 		}
 	}
 }
 
 void AHorrorCharacter::DoStartSprint()
 {
+	// [NEW] 죽었으면 달리기 불가
+	if (bIsDead) return;
+
 	// set the sprinting flag
 	bSprinting = true;
 
@@ -97,6 +158,9 @@ void AHorrorCharacter::DoEndSprint()
 
 void AHorrorCharacter::SprintFixedTick()
 {
+	// [NEW] 죽었으면 스태미나 로직 중단
+	if (bIsDead) return;
+
 	// are we out of recovery, still have stamina and are moving faster than our walk speed?
 	if (bSprinting && !bRecovering && GetVelocity().Length() > WalkSpeed)
 	{
@@ -117,8 +181,9 @@ void AHorrorCharacter::SprintFixedTick()
 				GetCharacterMovement()->MaxWalkSpeed = RecoveringWalkSpeed;
 			}
 		}
-		
-	} else {
+
+	}
+	else {
 
 		// recover stamina
 		SprintMeter = FMath::Min(SprintMeter + SprintFixedTickTime, SprintTime);
@@ -139,5 +204,4 @@ void AHorrorCharacter::SprintFixedTick()
 
 	// broadcast the sprint meter updated delegate
 	OnSprintMeterUpdated.Broadcast(SprintMeter / SprintTime);
-
 }
