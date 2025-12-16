@@ -15,6 +15,13 @@ public:
 	// Sets default values for this actor's properties
 	AItemBase();
 
+	//returns the type of the item
+	virtual FName GetItemType() const override;
+
+	virtual int32 GetItemIndex() const override;
+
+	virtual void DestroyItem();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -41,12 +48,6 @@ protected:
 
 	//when Item is used
 	virtual void ActivateItem(AActor* Activator) override;
-	//returns the type of the item
-	virtual FName GetItemType() const override;
-
-	virtual int32 GetItemIndex() const override;
-
-	virtual void DestroyItem();
 
 public:	
 	// Called every frame

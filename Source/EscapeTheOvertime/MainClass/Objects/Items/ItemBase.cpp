@@ -73,6 +73,7 @@ int32 AItemBase::GetItemIndex() const
 
 void AItemBase::DestroyItem()
 {
+	UE_LOG(LogTemp, Display, TEXT("%s is destroyed."), *GetName());
 	Destroy();
 }
 

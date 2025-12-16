@@ -29,7 +29,7 @@ void AItemSpawner::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	SpawnItem(FMath::RandRange(0, 3)); //need to move to GameInstance or sth
+	//SpawnItem(FMath::RandRange(0, 3)); //need to move to GameInstance or sth
 }
 
 // Called every frame
@@ -46,22 +46,27 @@ AActor* AItemSpawner::SpawnItem(int32 Index)
 	{
 	case 0:
 	{
-		AActor* SpawnedItem = GetWorld()->SpawnActor<AActor>(KeycardClass, GetActorLocation(), GetActorRotation());
+		AKeycard* SpawnedItem = GetWorld()->SpawnActor<AKeycard>(KeycardClass, GetActorLocation(), GetActorRotation());
+		ItemIndex = SpawnedItem->GetItemIndex();
+		UE_LOG(LogTemp, Display, TEXT("Keycard Spawned"));
 		return SpawnedItem;
 	}
 	case 1:
 	{
 		AActor* SpawnedItem = GetWorld()->SpawnActor<AActor>(MuffleItemClass, GetActorLocation(), GetActorRotation());
+		UE_LOG(LogTemp, Display, TEXT("MuffleItem Spawned"));
 		return SpawnedItem;
 	}
 	case 2:
 	{
 		AActor* SpawnedItem = GetWorld()->SpawnActor<AActor>(SpeedUpItemClass, GetActorLocation(), GetActorRotation());
+		UE_LOG(LogTemp, Display, TEXT("SpeedUp Spawned"));
 		return SpawnedItem;
 	}
 	case 3:
 	{
 		AActor* SpawnedItem = GetWorld()->SpawnActor<AActor>(DistractionItemClass, GetActorLocation(), GetActorRotation());
+		UE_LOG(LogTemp, Display, TEXT("DistractionItem Spawned"));
 		return SpawnedItem;
 	}
 	default:

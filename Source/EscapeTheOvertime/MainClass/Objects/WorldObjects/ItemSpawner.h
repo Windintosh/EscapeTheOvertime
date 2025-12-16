@@ -41,4 +41,6 @@ public:
 	TSubclassOf<class ADistractionItem> DistractionItemClass;
 
 	AActor* SpawnItem(int32 Index);
+
+	int32 ItemIndex;
 };
