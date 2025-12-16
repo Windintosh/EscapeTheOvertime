@@ -15,6 +15,19 @@ struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
+USTRUCT(BlueprintType)
+struct FItemState
+{
+	GENERATED_BODY()
+
+	float Duration = 0.f;
+
+	float RemainingTime = 0.f;
+
+};
+
+
+
 /**
  *  A basic first person character
  */
@@ -81,6 +94,7 @@ protected:
 	/** Set up input action bindings */
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 	
+	virtual void Tick(float DeltaTime) override;
 
 public:
 
@@ -92,5 +106,36 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Game")
 	bool bHasKeycard = false;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Game")
+	bool bIsMuffled = false;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Game")
+	bool bIsSpedUp = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	FItemState DistractionItem;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	FItemState MuffleItem;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	FItemState SpeedUpItem;
+
+	UFUNCTION(BlueprintCallable, Category = "Item")
+	void ActivateMuffle();
+
+	UFUNCTION(BlueprintCallable, Category = "Item")
+	void ActivateSpeedUp();
+
+	UFUNCTION(BlueprintCallable, Category = "Item")
+	void ActivateDistraction();
+
+	UFUNCTION(BlueprintCallable, Category = "Item")
+	void EndMuffle();
+
+	UFUNCTION(BlueprintCallable, Category = "Item")
+	void EndSpeedUp();
+
 };
 

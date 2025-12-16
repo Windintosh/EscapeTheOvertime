@@ -8,6 +8,7 @@
 #include "EnhancedInputComponent.h"
 #include "InputActionValue.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "HorrorCharacter.h"
 #include "EscapeTheOvertime.h"
 
 AEscapeTheOvertimeCharacter::AEscapeTheOvertimeCharacter()
@@ -42,6 +43,12 @@ AEscapeTheOvertimeCharacter::AEscapeTheOvertimeCharacter()
 	// Configure character movement
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 	GetCharacterMovement()->AirControl = 0.5f;
+
+	DistractionItem.Duration = 10.0f;
+	MuffleItem.Duration = 30.f;
+	SpeedUpItem.Duration = 10.f;
+
+
 }
 
 void AEscapeTheOvertimeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -64,6 +71,64 @@ void AEscapeTheOvertimeCharacter::SetupPlayerInputComponent(UInputComponent* Pla
 	{
 		UE_LOG(LogEscapeTheOvertime, Error, TEXT("'%s' Failed to find an Enhanced Input Component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
 	}
+}
+
+void AEscapeTheOvertimeCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (bIsMuffled)
+	{
+		MuffleItem.RemainingTime -= DeltaTime;
+		UE_LOG(LogTemp, Warning, TEXT("Muffle : %f"), MuffleItem.RemainingTime);
+		if (MuffleItem.RemainingTime <= 0)
+		{
+			EndMuffle();
+		}
+	}
+
+	if (bIsSpedUp)
+	{
+		SpeedUpItem.RemainingTime -= DeltaTime;
+		UE_LOG(LogTemp, Warning, TEXT("SpeedUp : %f"), SpeedUpItem.RemainingTime);
+		if (SpeedUpItem.RemainingTime <= 0)
+		{
+			EndSpeedUp();
+		}
+	}
+}
+
+void AEscapeTheOvertimeCharacter::ActivateMuffle()
+{
+	bIsMuffled = true;
+	MuffleItem.RemainingTime = MuffleItem.Duration;
+	UE_LOG(LogTemp, Warning, TEXT("Muffle Activated for %f sec"), MuffleItem.Duration);
+}
+
+void AEscapeTheOvertimeCharacter::ActivateSpeedUp()
+{
+	bIsSpedUp = true;
+	GetCharacterMovement()->MaxWalkSpeed = GetCharacterMovement()->MaxWalkSpeed * 2;
+	SpeedUpItem.RemainingTime = SpeedUpItem.Duration;
+	UE_LOG(LogTemp, Warning, TEXT("SpeedUp Activated for %f sec"), SpeedUpItem.Duration);
+}
+
+void AEscapeTheOvertimeCharacter::ActivateDistraction()
+{
+	//later
+}
+
+void AEscapeTheOvertimeCharacter::EndMuffle()
+{
+	bIsMuffled = false;
+	UE_LOG(LogTemp, Warning, TEXT("Muffle Ended"));
+}
+
+void AEscapeTheOvertimeCharacter::EndSpeedUp()
+{
+	bIsSpedUp = false;
+	GetCharacterMovement()->MaxWalkSpeed = 250.0f; //need to change logic
+	UE_LOG(LogTemp, Warning, TEXT("SpeedUp Ended"));
 }
 
 

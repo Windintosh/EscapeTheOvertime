@@ -47,7 +47,7 @@ private:
 	int32 CurrentPatrolIndex = 0;
 
 	//Checks if character is close to targets
-	bool IsCloseToTarget(float AcceptanceDistance = 100.0f);
+	bool IsCloseToTarget(float AcceptanceDistance = 50.0f);
 
 	//Character moves to next patrol point
 	void MoveToNextPatrolPoint();
