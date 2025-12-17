@@ -40,6 +40,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	TSubclassOf<class ADistractionItem> DistractionItemClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	TSubclassOf<class AHealItem> HealItemClass;
+
 	AActor* SpawnItem(int32 Index);
 
 	int32 ItemIndex;

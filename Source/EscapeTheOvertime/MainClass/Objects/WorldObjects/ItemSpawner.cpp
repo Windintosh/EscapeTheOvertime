@@ -83,7 +83,7 @@ AActor* AItemSpawner::SpawnItem(int32 Index)
 	}
 	case 4:
 	{
-		AHealItem* SpawnedItem = GetWorld()->SpawnActor<AHealItem>(DistractionItemClass, GetActorLocation(), GetActorRotation());
+		AHealItem* SpawnedItem = GetWorld()->SpawnActor<AHealItem>(HealItemClass, GetActorLocation(), GetActorRotation());
 		ItemIndex = SpawnedItem->GetItemIndex();
 		ItemType = SpawnedItem->GetItemType();
 		SpawnedItem->AttachToComponent(BoxComp, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
