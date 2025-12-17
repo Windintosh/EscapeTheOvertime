@@ -21,4 +21,6 @@ public:
 
 	const int32 MinItemIndex = 0;
 	const int32 MaxItemIndex = 3;
+
+	bool bIsKeycardSpawned = false;
 };

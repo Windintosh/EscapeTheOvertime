@@ -40,8 +40,10 @@ void AETOGameState::SpawnRandomItems()
 		if (SpawnPoint)
 		{
 			SpawnPoint->SpawnItem(RandIndex);
+			UE_LOG(LogTemp, Display, TEXT("%s Spawned(Index: %d) at point %d"), *SpawnPoint->ItemType.ToString(), SpawnPoint->ItemIndex, index);
 			if (SpawnPoint->ItemIndex == 0) //if keycard, break the loop
 			{
+				bIsKeycardSpawned = true;
 				UE_LOG(LogTemp, Display, TEXT("Keycard Spawned; doing next loop"));
 				break;
 			}
@@ -67,10 +69,11 @@ void AETOGameState::SpawnRandomItems()
 	for (loopcount; loopcount < ItemSpots.Num(); loopcount++) //spawn for the rest of the loop
 	{
 		int32 RandIndex = FMath::RandRange(MinItemIndex+1, MaxItemIndex); //no keycard
-		AItemSpawner* SpawnPoint = Cast<AItemSpawner>(ItemSpots[index]);
+		AItemSpawner* SpawnPoint = Cast<AItemSpawner>(ItemSpots[loopcount]);
 		if (SpawnPoint)
 		{
 			SpawnPoint->SpawnItem(RandIndex);
+			UE_LOG(LogTemp, Display, TEXT("%s Spawned(Index: %d) at point %d"), *SpawnPoint->ItemType.ToString(), SpawnPoint->ItemIndex, loopcount);
 		}
 	}
 	UGameplayStatics::SetGamePaused(GetWorld(), false);

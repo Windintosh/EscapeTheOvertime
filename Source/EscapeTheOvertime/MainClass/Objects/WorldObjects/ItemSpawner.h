@@ -43,4 +43,6 @@ public:
 	AActor* SpawnItem(int32 Index);
 
 	int32 ItemIndex;
+
+	FName ItemType;
 };

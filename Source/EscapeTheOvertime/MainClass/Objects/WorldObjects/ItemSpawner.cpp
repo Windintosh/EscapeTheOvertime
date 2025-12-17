@@ -48,24 +48,31 @@ AActor* AItemSpawner::SpawnItem(int32 Index)
 	{
 		AKeycard* SpawnedItem = GetWorld()->SpawnActor<AKeycard>(KeycardClass, GetActorLocation(), GetActorRotation());
 		ItemIndex = SpawnedItem->GetItemIndex();
+		ItemType = SpawnedItem->GetItemType();
 		UE_LOG(LogTemp, Display, TEXT("Keycard Spawned"));
 		return SpawnedItem;
 	}
 	case 1:
 	{
-		AActor* SpawnedItem = GetWorld()->SpawnActor<AActor>(MuffleItemClass, GetActorLocation(), GetActorRotation());
+		AMuffleItem* SpawnedItem = GetWorld()->SpawnActor<AMuffleItem>(MuffleItemClass, GetActorLocation(), GetActorRotation());
+		ItemIndex = SpawnedItem->GetItemIndex();
+		ItemType = SpawnedItem->GetItemType();
 		UE_LOG(LogTemp, Display, TEXT("MuffleItem Spawned"));
 		return SpawnedItem;
 	}
 	case 2:
 	{
-		AActor* SpawnedItem = GetWorld()->SpawnActor<AActor>(SpeedUpItemClass, GetActorLocation(), GetActorRotation());
+		ASpeedUpItem* SpawnedItem = GetWorld()->SpawnActor<ASpeedUpItem>(SpeedUpItemClass, GetActorLocation(), GetActorRotation());
+		ItemIndex = SpawnedItem->GetItemIndex();
+		ItemType = SpawnedItem->GetItemType();
 		UE_LOG(LogTemp, Display, TEXT("SpeedUp Spawned"));
 		return SpawnedItem;
 	}
 	case 3:
 	{
-		AActor* SpawnedItem = GetWorld()->SpawnActor<AActor>(DistractionItemClass, GetActorLocation(), GetActorRotation());
+		ADistractionItem* SpawnedItem = GetWorld()->SpawnActor<ADistractionItem>(DistractionItemClass, GetActorLocation(), GetActorRotation());
+		ItemIndex = SpawnedItem->GetItemIndex();
+		ItemType = SpawnedItem->GetItemType();
 		UE_LOG(LogTemp, Display, TEXT("DistractionItem Spawned"));
 		return SpawnedItem;
 	}
