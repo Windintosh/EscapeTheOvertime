@@ -49,6 +49,7 @@ AActor* AItemSpawner::SpawnItem(int32 Index)
 		AKeycard* SpawnedItem = GetWorld()->SpawnActor<AKeycard>(KeycardClass, GetActorLocation(), GetActorRotation());
 		ItemIndex = SpawnedItem->GetItemIndex();
 		ItemType = SpawnedItem->GetItemType();
+		SpawnedItem->AttachToComponent(BoxComp, FAttachmentTransformRules::KeepRelativeTransform);
 		UE_LOG(LogTemp, Display, TEXT("Keycard Spawned"));
 		return SpawnedItem;
 	}
@@ -57,6 +58,7 @@ AActor* AItemSpawner::SpawnItem(int32 Index)
 		AMuffleItem* SpawnedItem = GetWorld()->SpawnActor<AMuffleItem>(MuffleItemClass, GetActorLocation(), GetActorRotation());
 		ItemIndex = SpawnedItem->GetItemIndex();
 		ItemType = SpawnedItem->GetItemType();
+		SpawnedItem->AttachToComponent(BoxComp, FAttachmentTransformRules::KeepRelativeTransform);
 		UE_LOG(LogTemp, Display, TEXT("MuffleItem Spawned"));
 		return SpawnedItem;
 	}
@@ -65,6 +67,7 @@ AActor* AItemSpawner::SpawnItem(int32 Index)
 		ASpeedUpItem* SpawnedItem = GetWorld()->SpawnActor<ASpeedUpItem>(SpeedUpItemClass, GetActorLocation(), GetActorRotation());
 		ItemIndex = SpawnedItem->GetItemIndex();
 		ItemType = SpawnedItem->GetItemType();
+		SpawnedItem->AttachToComponent(BoxComp, FAttachmentTransformRules::KeepRelativeTransform);
 		UE_LOG(LogTemp, Display, TEXT("SpeedUp Spawned"));
 		return SpawnedItem;
 	}
@@ -73,6 +76,7 @@ AActor* AItemSpawner::SpawnItem(int32 Index)
 		ADistractionItem* SpawnedItem = GetWorld()->SpawnActor<ADistractionItem>(DistractionItemClass, GetActorLocation(), GetActorRotation());
 		ItemIndex = SpawnedItem->GetItemIndex();
 		ItemType = SpawnedItem->GetItemType();
+		SpawnedItem->AttachToComponent(BoxComp, FAttachmentTransformRules::KeepRelativeTransform);
 		UE_LOG(LogTemp, Display, TEXT("DistractionItem Spawned"));
 		return SpawnedItem;
 	}

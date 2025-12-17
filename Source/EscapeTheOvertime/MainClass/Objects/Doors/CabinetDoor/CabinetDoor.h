@@ -7,6 +7,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/TimelineComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "ItemSpawner.h"
 #include "CabinetDoor.generated.h"
 
 UCLASS()
@@ -27,5 +28,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	AItemSpawner* ItemSpawner;
 
 };
