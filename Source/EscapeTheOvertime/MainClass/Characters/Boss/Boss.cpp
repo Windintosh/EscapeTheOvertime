@@ -1,4 +1,4 @@
-#include "MainClass/Characters/Boss/Boss.h"
+ï»¿#include "MainClass/Characters/Boss/Boss.h"
 #include "MainClass/Characters/Boss/BossAIController.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -7,13 +7,13 @@
 // Sets default values
 ABoss::ABoss()
 {
-	// TickÀº ÄÑµÎµÇ, ÀÌµ¿ ·ÎÁ÷Àº ³ÖÁö ¾Ê½À´Ï´Ù.
+	// Tickì€ ì¼œë‘ë˜, ì´ë™ ë¡œì§ì€ ë„£ì§€ ì•ŠìŠµë‹ˆë‹¤.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// AI ÄÁÆ®·Ñ·¯°¡ ÀÚµ¿À¸·Î ºùÀÇµÇµµ·Ï ¼³Á¤
+	// AI ì»¨íŠ¸ë¡¤ëŸ¬ê°€ ìë™ìœ¼ë¡œ ë¹™ì˜ë˜ë„ë¡ ì„¤ì •
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
-	// (¼±ÅÃ»çÇ×) º¸½º È¸Àü ¼³Á¤ - ÄÁÆ®·Ñ·¯°¡ È¸ÀüÀ» Á¦¾îÇÏµµ·Ï
+	// ë³´ìŠ¤ íšŒì „ ì„¤ì • - ì»¨íŠ¸ë¡¤ëŸ¬ê°€ íšŒì „ì„ ì œì–´í•˜ë„ë¡
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f);
@@ -24,7 +24,7 @@ void ABoss::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// AI Controller ¿¬°á È®ÀÎ (µğ¹ö±ë¿ë)
+	// AI Controller ì—°ê²° í™•ì¸ (ë””ë²„ê¹…ìš©)
 	ABossAIController* BossAI = Cast<ABossAIController>(GetController());
 	if (!BossAI)
 	{
@@ -40,10 +40,6 @@ void ABoss::BeginPlay()
 void ABoss::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	// ¡Ú Áß¿ä: ±âÁ¸ÀÇ ¼öµ¿ ÀÌµ¿ ·ÎÁ÷(MoveToNextPatrolPoint µî)À» ¸ğµÎ Á¦°ÅÇß½À´Ï´Ù.
-	// ÀÌÁ¦ ÀÌµ¿Àº Behavior TreeÀÇ 'Move To' ³ëµå°¡ ´ã´çÇÕ´Ï´Ù.
-	// ¿©±â¿¡ ÀÌµ¿ ÄÚµå¸¦ ³²°ÜµÎ¸é AI°¡ ¸í·É Ãæµ¹·Î ¹ö¹÷°Å¸³´Ï´Ù.
 }
 
 // Called to bind functionality to input
@@ -52,7 +48,7 @@ void ABoss::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-// [NEW] Behavior Tree¿¡¼­ È£ÃâÇÒ °ø°İ ÇÔ¼ö
+// Behavior Treeì—ì„œ í˜¸ì¶œí•  ê³µê²© í•¨ìˆ˜
 void ABoss::Attack()
 {
 	if (AttackMontage)
@@ -60,10 +56,10 @@ void ABoss::Attack()
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		if (AnimInstance)
 		{
-			// ¸ùÅ¸ÁÖ Àç»ı
+			// ëª½íƒ€ì£¼ ì¬ìƒ
 			AnimInstance->Montage_Play(AttackMontage);
 
-			// ¸ùÅ¸ÁÖ Á¾·á ½ÃÁ¡ ¹ÙÀÎµù (ÇÊ¿ä ½Ã AI¿¡°Ô ¾Ë¸®±â À§ÇÔ)
+			// ëª½íƒ€ì£¼ ì¢…ë£Œ ì‹œì  ë°”ì¸ë”© (í•„ìš” ì‹œ AIì—ê²Œ ì•Œë¦¬ê¸° ìœ„í•¨)
 			FOnMontageEnded EndDelegate;
 			EndDelegate.BindUObject(this, &ABoss::OnAttackMontageEnded);
 			AnimInstance->Montage_SetEndDelegate(EndDelegate, AttackMontage);
@@ -75,10 +71,6 @@ void ABoss::Attack()
 
 void ABoss::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
-	// °ø°İÀÌ ³¡³µÀ» ¶§ÀÇ ÈÄÃ³¸® (¿¹: µ¨¸®°ÔÀÌÆ® ¹æ¼Û)
-	// OnAttackFinished.Broadcast(); // Çì´õ¿¡ µ¨¸®°ÔÀÌÆ® ¼±¾ğ ½Ã »ç¿ë °¡´É
+	// ê³µê²©ì´ ëë‚¬ì„ ë•Œì˜ í›„ì²˜ë¦¬ 
 	UE_LOG(LogTemp, Warning, TEXT("Boss: Attack Finished."));
 }
-
-// ¡Ú ±âÁ¸ÀÇ SetPatrolPoints, IsCloseToTarget, MoveToNextPatrolPoint ÇÔ¼ö´Â
-// AIController¿Í Behavior Tree°¡ ´ë½Å ¼öÇàÇÏ¹Ç·Î »èÁ¦Çß½À´Ï´Ù.

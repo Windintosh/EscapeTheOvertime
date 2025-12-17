@@ -1,11 +1,11 @@
-#include "MainClass/Characters/Boss/BossAIController.h"
+ï»¿#include "MainClass/Characters/Boss/BossAIController.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/TargetPoint.h"
 #include "GameFramework/Character.h"
 #include "Perception/AISense_Sight.h"
-#include "Perception/AISense_Hearing.h" // [NEW] Ã»°¢ ¼¾½º Çì´õ
+#include "Perception/AISense_Hearing.h" // ì²­ê° ì„¼ìŠ¤ í—¤ë”
 
-// ºí·¢º¸µå Å° Á¤ÀÇ
+// ë¸”ë™ë³´ë“œ í‚¤ ì •ì˜
 const FName ABossAIController::PatrolLocationKey = TEXT("PatrolLocation");
 const FName ABossAIController::PatrolIndexKey = TEXT("PatrolIndex");
 const FName ABossAIController::TargetPlayerKey = TEXT("TargetPlayer");
@@ -16,30 +16,30 @@ const FName ABossAIController::CanHearPlayerKey = TEXT("CanHearPlayer");
 
 ABossAIController::ABossAIController()
 {
-	PrimaryActorTick.bCanEverTick = true; // µğ¹ö±ë¿ë ¿Ü¿£ false ±ÇÀå
+	PrimaryActorTick.bCanEverTick = true; // ë””ë²„ê¹…ìš© ì™¸ì—” false
 
-	// 1. Perception ÄÄÆ÷³ÍÆ® »ı¼º
+	// 1. Perception ì»´í¬ë„ŒíŠ¸ ìƒì„±
 	BossAIPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("PerceptionComponent"));
 
-	// 2. ½Ã°¢ ¼³Á¤ (Sight)
+	// 2. ì‹œê° ì„¤ì • (Sight)
 	SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("SightConfig"));
-	SightConfig->SightRadius = 1500.0f; // °¨Áö ¹İ°æ ´Ã¸² (±âÁ¸ 600Àº ³Ê¹« ÂªÀ½)
+	SightConfig->SightRadius = 1500.0f; // ê°ì§€ ë°˜ê²½
 	SightConfig->LoseSightRadius = 2000.0f;
 	SightConfig->PeripheralVisionAngleDegrees = 90.0f;
-	SightConfig->SetMaxAge(5.0f); // ±â¾ï À¯Áö ½Ã°£
+	SightConfig->SetMaxAge(5.0f); // ê¸°ì–µ ìœ ì§€ ì‹œê°„
 
 	SightConfig->DetectionByAffiliation.bDetectEnemies = true;
 	SightConfig->DetectionByAffiliation.bDetectFriendlies = true;
 	SightConfig->DetectionByAffiliation.bDetectNeutrals = true;
 
-	// 3. [NEW] Ã»°¢ ¼³Á¤ (Hearing) - PawnSensing ´ëÃ¼
+	// 3. ì²­ê° ì„¤ì • (Hearing) 
 	HearingConfig = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("HearingConfig"));
-	HearingConfig->HearingRange = 3000.0f; // ¼Ò¸® °¨Áö ¹üÀ§
+	HearingConfig->HearingRange = 3000.0f; // ì†Œë¦¬ ê°ì§€ ë²”ìœ„
 	HearingConfig->DetectionByAffiliation.bDetectEnemies = true;
 	HearingConfig->DetectionByAffiliation.bDetectFriendlies = true;
 	HearingConfig->DetectionByAffiliation.bDetectNeutrals = true;
 
-	// 4. ¼³Á¤ µî·Ï
+	// 4. ì„¤ì • ë“±ë¡
 	BossAIPerceptionComponent->ConfigureSense(*SightConfig);
 	BossAIPerceptionComponent->ConfigureSense(*HearingConfig);
 	BossAIPerceptionComponent->SetDominantSense(SightConfig->GetSenseImplementation());
@@ -49,7 +49,7 @@ void ABossAIController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// °¨°¢ ¾÷µ¥ÀÌÆ® µ¨¸®°ÔÀÌÆ® ¹ÙÀÎµù (½Ã°¢+Ã»°¢ ÅëÇÕ Ã³¸®)
+	// ê°ê° ì—…ë°ì´íŠ¸ ë¸ë¦¬ê²Œì´íŠ¸ ë°”ì¸ë”© (ì‹œê°+ì²­ê° í†µí•© ì²˜ë¦¬)
 	if (BossAIPerceptionComponent)
 	{
 		BossAIPerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &ABossAIController::OnTargetPerceptionUpdated);
@@ -60,18 +60,18 @@ void ABossAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
-	// ºñÇìÀÌºñ¾î Æ®¸® ½ÇÇà
+	// ë¹„í—¤ì´ë¹„ì–´ íŠ¸ë¦¬ ì‹¤í–‰
 	if (BehaviorTree)
 	{
 		UBlackboardComponent* BlackboardComp;
 		if (UseBlackboard(BehaviorTree->BlackboardAsset, BlackboardComp))
 		{
-			BB = BlackboardComp; // ¸â¹ö º¯¼ö BB Ä³½Ì
+			BB = BlackboardComp; // ë©¤ë²„ ë³€ìˆ˜ BB ìºì‹±
 			RunBehaviorTree(BehaviorTree);
 		}
 	}
 
-	// 0.5ÃÊ µÚ ÆĞÆ®·Ñ ÁöÁ¡ ÃÊ±âÈ­ (¿ùµå ·Îµù ´ë±â)
+	// 0.5ì´ˆ ë’¤ íŒ¨íŠ¸ë¡¤ ì§€ì  ì´ˆê¸°í™” (ì›”ë“œ ë¡œë”© ëŒ€ê¸°)
 	FTimerHandle TimerHandle;
 	GetWorldTimerManager().SetTimer(TimerHandle, this, &ABossAIController::InitializePatrolPoints, 0.5f, false);
 }
@@ -80,7 +80,7 @@ void ABossAIController::InitializePatrolPoints()
 {
 	PatrolPoints.Empty();
 
-	// ¿ùµå¿¡ ¹èÄ¡µÈ TargetPoint ¾×ÅÍµéÀ» ¸ğµÎ Ã£À½
+	// ì›”ë“œì— ë°°ì¹˜ëœ TargetPoint ì•¡í„°ë“¤ì„ ëª¨ë‘ ì°¾ìŒ
 	TArray<AActor*> FoundTargetPoints;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATargetPoint::StaticClass(), FoundTargetPoints);
 
@@ -91,7 +91,7 @@ void ABossAIController::InitializePatrolPoints()
 
 	UE_LOG(LogTemp, Warning, TEXT("AI: PatrolPoints Found: %d"), PatrolPoints.Num());
 
-	// Ã¹ ¹øÂ° ÆĞÆ®·Ñ ÁöÁ¡ ¼³Á¤
+	// ì²« ë²ˆì§¸ íŒ¨íŠ¸ë¡¤ ì§€ì  ì„¤ì •
 	if (PatrolPoints.Num() > 0 && BB)
 	{
 		BB->SetValueAsVector(PatrolLocationKey, PatrolPoints[0]);
@@ -99,19 +99,19 @@ void ABossAIController::InitializePatrolPoints()
 	}
 }
 
-// ¡Ú ÅëÇÕ °¨°¢ Ã³¸® ÇÔ¼ö (½Ã°¢ + Ã»°¢)
+//  í†µí•© ê°ê° ì²˜ë¦¬ í•¨ìˆ˜ (ì‹œê° + ì²­ê°)
 void ABossAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
-	// ÇÃ·¹ÀÌ¾îÀÎÁö È®ÀÎ
+	// í”Œë ˆì´ì–´ì¸ì§€ í™•ì¸
 	ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 	if (!PlayerCharacter || Actor != PlayerCharacter) return;
 
 	if (!BB) return;
 
-	// °¨°¢ Á¾·ù ½Äº°
+	// ê°ê° ì¢…ë¥˜ ì‹ë³„
 	TSubclassOf<UAISense> SensedClass = UAIPerceptionSystem::GetSenseClassForStimulus(this, Stimulus);
 
-	// 1. [½Ã°¢] ´«À¸·Î ºÃÀ» ¶§
+	// 1. [ì‹œê°] ëˆˆìœ¼ë¡œ ë´¤ì„ ë•Œ
 	if (SensedClass == UAISense_Sight::StaticClass())
 	{
 		bool bCanSee = Stimulus.WasSuccessfullySensed();
@@ -120,26 +120,26 @@ void ABossAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Sti
 
 		if (bCanSee)
 		{
-			// ÇÃ·¹ÀÌ¾î ¹ß°ß! -> Ãß°İ ´ë»ó ¼³Á¤
+			// í”Œë ˆì´ì–´ ë°œê²¬! -> ì¶”ê²© ëŒ€ìƒ ì„¤ì •
 			BB->SetValueAsObject(TargetPlayerKey, Actor);
 			BB->SetValueAsVector(LastSeenLocationKey, Stimulus.StimulusLocation);
 
-			// Ã»°¢ °ü·Ã Å° ÃÊ±âÈ­ (´«À¸·Î ºÃÀ¸´Ï ¼Ò¸® ÃßÀûº¸´Ù ¿ì¼±)
+			// ì²­ê° ê´€ë ¨ í‚¤ ì´ˆê¸°í™” (ëˆˆìœ¼ë¡œ ë´¤ìœ¼ë‹ˆ ì†Œë¦¬ ì¶”ì ë³´ë‹¤ ìš°ì„ )
 			BB->SetValueAsBool(CanHearPlayerKey, false);
 
 			UE_LOG(LogTemp, Warning, TEXT("AI: Player SIGHTED! Chasing..."));
 		}
 		else
 		{
-			// ³õÄ§ -> Ãß°İ ´ë»ó ÇØÁ¦ (ÇÏÁö¸¸ LastSeenLocation¿¡´Â ¸¶Áö¸· À§Ä¡°¡ ³²¾ÆÀÖÀ½)
+			// ë†“ì¹¨ -> ì¶”ê²© ëŒ€ìƒ í•´ì œ (í•˜ì§€ë§Œ LastSeenLocationì—ëŠ” ë§ˆì§€ë§‰ ìœ„ì¹˜ê°€ ë‚¨ì•„ìˆìŒ)
 			BB->SetValueAsObject(TargetPlayerKey, nullptr);
 			UE_LOG(LogTemp, Warning, TEXT("AI: Player LOST."));
 		}
 	}
-	// 2. [Ã»°¢] ¼Ò¸®¸¦ µé¾úÀ» ¶§
+	// 2. [ì²­ê°] ì†Œë¦¬ë¥¼ ë“¤ì—ˆì„ ë•Œ
 	else if (SensedClass == UAISense_Hearing::StaticClass())
 	{
-		// ÀÌ¹Ì ´«À¸·Î º¸°í ÂÑ°í ÀÖ´Ù¸é ¼Ò¸®´Â ¹«½Ã
+		// ì´ë¯¸ ëˆˆìœ¼ë¡œ ë³´ê³  ì«“ê³  ìˆë‹¤ë©´ ì†Œë¦¬ëŠ” ë¬´ì‹œ
 		if (BB->GetValueAsBool(CanSeePlayerKey)) return;
 
 		if (Stimulus.WasSuccessfullySensed())
@@ -149,7 +149,7 @@ void ABossAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Sti
 
 			UE_LOG(LogTemp, Warning, TEXT("AI: NOISE Heard at %s"), *Stimulus.StimulusLocation.ToString());
 
-			// 5ÃÊ µÚ¿¡ Ã»°¢ »óÅÂ ÇØÁ¦ (¼Ò¸®³­ °÷ °¡¼­ ¾øÀ¸¸é ´Ù½Ã ¼øÂû µ¹°Ô ÇÏ±â À§ÇØ)
+			// 5ì´ˆ ë’¤ì— ì²­ê° ìƒíƒœ í•´ì œ (ì†Œë¦¬ë‚œ ê³³ ê°€ì„œ ì—†ìœ¼ë©´ ë‹¤ì‹œ ìˆœì°° ëŒê²Œ í•˜ê¸° ìœ„í•´)
 			FTimerHandle TimerHandle;
 			GetWorld()->GetTimerManager().SetTimer(TimerHandle, [this]()
 				{

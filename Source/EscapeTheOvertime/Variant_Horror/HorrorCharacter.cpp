@@ -1,4 +1,4 @@
-#include "Variant_Horror/HorrorCharacter.h"
+ï»¿#include "Variant_Horror/HorrorCharacter.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
 #include "Kismet/GameplayStatics.h"
@@ -21,12 +21,12 @@ AHorrorCharacter::AHorrorCharacter()
 	SpotLight->InnerConeAngle = 18.7f;
 	SpotLight->OuterConeAngle = 45.24f;
 
-	// [NEW] ±âº» HP°ª ¼³Á¤
+	// ê¸°ë³¸ HPê°’ ì„¤ì •
 	MaxHP = 100.0f;
 	CurrentHP = MaxHP;
 	bIsDead = false;
 
-	// [NEW] 1. »ı¼ºÀÚ¿¡¼­ »ç¿îµå Å¥ ÆÄÀÏ Ã£¾Æ¼­ ·ÎµåÇÏ±â (Hard Loading)
+	// ìƒì„±ìì—ì„œ ì‚¬ìš´ë“œ í íŒŒì¼ ì°¾ì•„ì„œ ë¡œë“œí•˜ê¸° (Hard Loading)
 	static ConstructorHelpers::FObjectFinder<USoundBase> DamageSoundAsset(TEXT("/Game/EscapeTheOvertime/07_FX/SFX/CinematicSound/Ugh_Cue.Ugh_Cue"));
 
 	if (DamageSoundAsset.Succeeded())
@@ -42,11 +42,11 @@ void AHorrorCharacter::BeginPlay()
 	// initialize sprint meter to max
 	SprintMeter = SprintTime;
 
-	// [NEW] °ÔÀÓ ½ÃÀÛ ½Ã HP ÃÊ±âÈ­
+	// ê²Œì„ ì‹œì‘ ì‹œ HP ì´ˆê¸°í™”
 	CurrentHP = MaxHP;
 	bIsDead = false;
 
-	// [NEW] UI°¡ ÃÊ±â »óÅÂ(100%)¸¦ ±×¸± ¼ö ÀÖµµ·Ï ¹æ¼Û
+	// UIê°€ ì´ˆê¸° ìƒíƒœ(100%)ë¥¼ ê·¸ë¦´ ìˆ˜ ìˆë„ë¡ ë°©ì†¡
 	if (MaxHP > 0.0f)
 	{
 		OnHealthChanged.Broadcast(CurrentHP / MaxHP);
@@ -67,10 +67,10 @@ void AHorrorCharacter::EndPlay(EEndPlayReason::Type EndPlayReason)
 	GetWorld()->GetTimerManager().ClearTimer(SprintTimer);
 }
 
-// [NEW] º¸½º°¡ ¶§¸®¸é ÀÚµ¿ È£ÃâµÊ. ¸Â¾ÒÀ» ¶§¸¸ UI ¾÷µ¥ÀÌÆ® ¹æ¼ÛÀ» ÇÔ.
+// ë³´ìŠ¤ê°€ ë•Œë¦¬ë©´ ìë™ í˜¸ì¶œë¨. ë§ì•˜ì„ ë•Œë§Œ UI ì—…ë°ì´íŠ¸ ë°©ì†¡ì„ í•¨.
 float AHorrorCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	// ÀÌ¹Ì Á×¾ú°Å³ª µ¥¹ÌÁö°¡ ¾øÀ¸¸é ¹«½Ã
+	// ì´ë¯¸ ì£½ì—ˆê±°ë‚˜ ë°ë¯¸ì§€ê°€ ì—†ìœ¼ë©´ ë¬´ì‹œ
 	if (bIsDead || DamageAmount <= 0.0f)
 	{
 		return 0.0f;
@@ -78,23 +78,23 @@ float AHorrorCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 
 	float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
-	// HP °¨¼Ò ¹× 0 ¹Ì¸¸ ¹æÁö
+	// HP ê°ì†Œ ë° 0 ë¯¸ë§Œ ë°©ì§€
 	CurrentHP = FMath::Clamp(CurrentHP - ActualDamage, 0.0f, MaxHP);
 
-	// ¡Ú [ÇÙ½É] ¸Â¾ÒÀ» ¶§¸¸ UI¿¡°Ô "³ª Ã¼·Â º¯Çß¾î!"¶ó°í ¾Ë¸²
+	//  ë§ì•˜ì„ ë•Œë§Œ UIì—ê²Œ "ë‚˜ ì²´ë ¥ ë³€í–ˆì–´!"ë¼ê³  ì•Œë¦¼
 	if (MaxHP > 0.0f)
 	{
 		OnHealthChanged.Broadcast(CurrentHP / MaxHP);
 	}
 
-	// ¡Ú [NEW] 2. µ¥¹ÌÁö¸¦ ÀÔ¾úÀ¸¸é ¼Ò¸® Àç»ı (2D)
+	// ë°ë¯¸ì§€ë¥¼ ì…ì—ˆìœ¼ë©´ ì†Œë¦¬ ì¬ìƒ (2D)
 	if (ActualDamage > 0.0f && DamageSound)
 	{
-		// ÇÃ·¹ÀÌ¾î º»ÀÎÀÇ ¼Ò¸®ÀÌ¹Ç·Î À§Ä¡°ª ¾øÀÌ 2D·Î Àç»ı (Çìµå¼Â ÀüÃ¼¿¡¼­ µé¸²)
+		// í”Œë ˆì´ì–´ ë³¸ì¸ì˜ ì†Œë¦¬ì´ë¯€ë¡œ ìœ„ì¹˜ê°’ ì—†ì´ 2Dë¡œ ì¬ìƒ (í—¤ë“œì…‹ ì „ì²´ì—ì„œ ë“¤ë¦¼)
 		UGameplayStatics::PlaySound2D(this, DamageSound);
 	}
 
-	// »ç¸Á Ã¼Å©
+	// ì‚¬ë§ ì²´í¬
 	if (CurrentHP <= 0.0f)
 	{
 		OnDeath();
@@ -103,14 +103,14 @@ float AHorrorCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 	return ActualDamage;
 }
 
-// [NEW] »ç¸Á Ã³¸® (C++)
+// ì‚¬ë§ ì²˜ë¦¬ (C++)
 void AHorrorCharacter::OnDeath_Implementation()
 {
 	if (bIsDead) return;
 
 	bIsDead = true;
 
-	// ÀÔ·Â ¸·±â (ÇÃ·¹ÀÌ¾î ¸ØÃã)
+	// ì…ë ¥ ë§‰ê¸° (í”Œë ˆì´ì–´ ë©ˆì¶¤)
 	if (APlayerController* PC = Cast<APlayerController>(GetController()))
 	{
 		DisableInput(PC);
@@ -118,7 +118,7 @@ void AHorrorCharacter::OnDeath_Implementation()
 
 	UE_LOG(LogTemp, Warning, TEXT("Player Died. Check Blueprint for Cinematic logic."));
 
-	// ½ÇÁ¦ ½Ã³×¸¶Æ½ Àç»ıÀº ºí·çÇÁ¸°Æ®ÀÇ 'Event On Death' ³ëµå¿¡¼­ Ã³¸®ÇÕ´Ï´Ù.
+	// ì‹¤ì œ ì‹œë„¤ë§ˆí‹± ì¬ìƒì€ ë¸”ë£¨í”„ë¦°íŠ¸ì˜ 'Event On Death' ë…¸ë“œì—ì„œ ì²˜ë¦¬
 }
 
 void AHorrorCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -138,7 +138,7 @@ void AHorrorCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 void AHorrorCharacter::DoStartSprint()
 {
-	// [NEW] Á×¾úÀ¸¸é ´Ş¸®±â ºÒ°¡
+	// ì£½ì—ˆìœ¼ë©´ ë‹¬ë¦¬ê¸° ë¶ˆê°€
 	if (bIsDead) return;
 
 	// set the sprinting flag
@@ -174,7 +174,7 @@ void AHorrorCharacter::DoEndSprint()
 
 void AHorrorCharacter::SprintFixedTick()
 {
-	// [NEW] Á×¾úÀ¸¸é ½ºÅÂ¹Ì³ª ·ÎÁ÷ Áß´Ü
+	// ì£½ì—ˆìœ¼ë©´ ìŠ¤íƒœë¯¸ë‚˜ ë¡œì§ ì¤‘ë‹¨
 	if (bIsDead) return;
 
 	// are we out of recovery, still have stamina and are moving faster than our walk speed?
