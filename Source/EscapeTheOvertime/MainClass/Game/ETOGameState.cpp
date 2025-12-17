@@ -50,7 +50,7 @@ void AETOGameState::SpawnRandomItems()
 		}
 		if (index == ItemSpots.Num() - 1) //if no keycard has spawned, do it again
 		{
-			index = 0;
+			index = -1;
 			loopcount = 0;
 			UE_LOG(LogTemp, Display, TEXT("No Keycard; retrying"));
 			TArray<AActor*> DestroyedItems;
@@ -63,7 +63,7 @@ void AETOGameState::SpawnRandomItems()
 					NoMore->DestroyItem();
 				}
 			}
-			continue;
+			//continue;
 		}
 	}
 	for (loopcount; loopcount < ItemSpots.Num(); loopcount++) //spawn for the rest of the loop
