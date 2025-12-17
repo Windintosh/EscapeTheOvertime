@@ -40,6 +40,7 @@ public class EscapeTheOvertime : ModuleRules
             "EscapeTheOvertime/MainClass/Objects/Items/Distraction",
             "EscapeTheOvertime/MainClass/Objects/Items/Muffle",
             "EscapeTheOvertime/MainClass/Objects/Items/SpeedUp",
+            "EscapeTheOvertime/MainClass/Objects/Items/Heal",
             "EscapeTheOvertime/MainClass/Objects/Props",
             "EscapeTheOvertime/MainClass/Objects/Props/KeycardReader",
             "EscapeTheOvertime/MainClass/Objects/WorldObjects",

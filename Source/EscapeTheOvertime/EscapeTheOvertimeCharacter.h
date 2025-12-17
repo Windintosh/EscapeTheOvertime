@@ -13,6 +13,8 @@ class UCameraComponent;
 class UInputAction;
 struct FInputActionValue;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDistractionItemChangedDelegate, int32, DistractionItemQuantity);
+
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
 USTRUCT(BlueprintType)
@@ -112,6 +114,12 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Game")
 	bool bIsSpedUp = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	int32 DistractionItemQuantity;
+
+	UPROPERTY(BlueprintAssignable, Category = "Item")
+	FDistractionItemChangedDelegate OnDistractionItemChanged;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	FItemState DistractionItem;

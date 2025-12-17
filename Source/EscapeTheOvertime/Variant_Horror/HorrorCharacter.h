@@ -113,6 +113,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Health")
 	bool IsDead() const { return bIsDead; }
 
+	UFUNCTION(Category = "Health")
+	void Heal(float Amount);
+
 	// 앉기 입력 액션 (에디터에서 할당)
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	class UInputAction* CrouchAction;

@@ -59,7 +59,7 @@ void AETOGameState::SpawnRandomItems()
 			{
 				AItemBase* NoMore = Cast<AItemBase>(DItem);
 				if (NoMore)
-				{
+				{	
 					NoMore->DestroyItem();
 				}
 			}

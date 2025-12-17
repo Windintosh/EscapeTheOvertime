@@ -115,7 +115,9 @@ void AEscapeTheOvertimeCharacter::ActivateSpeedUp()
 
 void AEscapeTheOvertimeCharacter::ActivateDistraction()
 {
-	//later
+	DistractionItemQuantity++;
+	UE_LOG(LogTemp, Warning, TEXT("Got DistractionItem, you have %d"), DistractionItemQuantity);
+	OnDistractionItemChanged.Broadcast(DistractionItemQuantity);//broadcast
 }
 
 void AEscapeTheOvertimeCharacter::EndMuffle()

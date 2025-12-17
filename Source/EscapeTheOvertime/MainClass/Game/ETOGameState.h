@@ -19,8 +19,8 @@ public:
 
 	void SpawnRandomItems();
 
-	const int32 MinItemIndex = 0;
-	const int32 MaxItemIndex = 3;
+	const int32 MinItemIndex = 0; //Keycard
+	const int32 MaxItemIndex = 4; //MuffleItem, SpeedUpItem, DistractionItem, HealItem
 
 	bool bIsKeycardSpawned = false;
 };

@@ -252,3 +252,9 @@ void AHorrorCharacter::SprintFixedTick()
 	// broadcast the sprint meter updated delegate
 	OnSprintMeterUpdated.Broadcast(SprintMeter / SprintTime);
 }
+
+void AHorrorCharacter::Heal(float Amount)
+{
+	CurrentHP = FMath::Min(CurrentHP + Amount, MaxHP);
+	OnHealthChanged.Broadcast(CurrentHP / MaxHP);
+}

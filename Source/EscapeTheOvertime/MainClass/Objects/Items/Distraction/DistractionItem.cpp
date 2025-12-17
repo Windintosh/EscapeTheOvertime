@@ -12,7 +12,9 @@ void ADistractionItem::ActivateItem(AActor* Activator)
 	AEscapeTheOvertimeCharacter* PlayerCharacter = Cast<AEscapeTheOvertimeCharacter>(Activator);
 	if (!PlayerCharacter) return;
 
-	//distract AI or obtain it for use
+	//distract AI(x) or obtain it for use()
+	PlayerCharacter->ActivateDistraction();
+
 
 	DestroyItem();
 }
