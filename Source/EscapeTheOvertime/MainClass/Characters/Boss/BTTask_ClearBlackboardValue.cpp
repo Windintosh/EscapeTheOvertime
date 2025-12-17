@@ -12,7 +12,6 @@ EBTNodeResult::Type UBTTask_ClearBlackboardValue::ExecuteTask(UBehaviorTreeCompo
 
 	if (Blackboard)
 	{
-		// 선택된 키의 값을 초기화(Clear)
 		Blackboard->ClearValue(GetSelectedBlackboardKey());
 		return EBTNodeResult::Succeeded;
 	}

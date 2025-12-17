@@ -1,10 +1,10 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Boss.generated.h" // generated Çì´õ´Â Ç×»ó ¸¶Áö¸·¿¡ Æ÷ÇÔµÇ¾î¾ß ÇÕ´Ï´Ù.
+#include "Boss.generated.h" 
 
-// Æ÷¿öµå ¼±¾ğ (ÄÄÆÄÀÏ ¼Óµµ Çâ»ó)
+// í¬ì›Œë“œ ì„ ì–¸ (ì»´íŒŒì¼ ì†ë„ í–¥ìƒ)
 class ABossAIController;
 class UAnimMontage;
 
@@ -29,25 +29,20 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	/* ================================================== */
-	/* Combat System (New)                               */
-	/* ÀÌµ¿Àº AIController°¡ ÇÏ¹Ç·Î, °ø°İ °ü·Ã ±â´É¸¸ Ãß°¡  */
+	/* ì´ë™ì€ AIControllerê°€ í•˜ë¯€ë¡œ, ê³µê²© ê´€ë ¨ ê¸°ëŠ¥ë§Œ ì¶”ê°€  */
 	/* ================================================== */
 
-	/** ¿¡µğÅÍ¿¡¼­ ÇÒ´çÇÒ °ø°İ ¾Ö´Ï¸ŞÀÌ¼Ç ¸ùÅ¸ÁÖ */
+	/** ì—ë””í„°ì—ì„œ í• ë‹¹í•  ê³µê²© ì• ë‹ˆë©”ì´ì…˜ ëª½íƒ€ì£¼ */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
 	UAnimMontage* AttackMontage;
 
-	/** Behavior Tree(Task)¿¡¼­ È£ÃâÇÒ °ø°İ ÇÔ¼ö */
+	/** Behavior Tree(Task)ì—ì„œ í˜¸ì¶œí•  ê³µê²© í•¨ìˆ˜ */
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void Attack();
 
 private:
-	/** ¸ùÅ¸ÁÖ Àç»ıÀÌ ³¡³µÀ» ¶§ È£ÃâµÇ´Â Äİ¹é ÇÔ¼ö */
+	/** ëª½íƒ€ì£¼ ì¬ìƒì´ ëë‚¬ì„ ë•Œ í˜¸ì¶œë˜ëŠ” ì½œë°± í•¨ìˆ˜ */
 	UFUNCTION()
 	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 
-	/* [»èÁ¦µÊ]
-	   ±âÁ¸ÀÇ SetPatrolPoints, MoveToNextPatrolPoint, IsCloseToTarget µî
-	   Á÷Á¢ ÀÌµ¿À» °è»êÇÏ´ø º¯¼ö¿Í ÇÔ¼öµéÀº AIController ½Ã½ºÅÛ°ú Ãæµ¹ÇÏ¹Ç·Î Á¦°ÅÇß½À´Ï´Ù.
-	*/
 };

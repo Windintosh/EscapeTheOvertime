@@ -1,25 +1,25 @@
-#include "BTTask_Attack.h"
+ï»¿#include "BTTask_Attack.h"
 #include "MainClass/Characters/Boss/BossAIController.h"
 #include "MainClass/Characters/Boss/Boss.h"
 
 UBTTask_Attack::UBTTask_Attack()
 {
-	NodeName = TEXT("Attack"); // ºñÇìÀÌºñ¾î Æ®¸®¿¡¼­ º¸ÀÏ ÀÌ¸§
+	NodeName = TEXT("Attack"); // ë¹„í—¤ì´ë¹„ì–´ íŠ¸ë¦¬ì—ì„œ ë³´ì¼ ì´ë¦„
 }
 
 EBTNodeResult::Type UBTTask_Attack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	// 1. AI ÄÁÆ®·Ñ·¯ °¡Á®¿À±â
+	// 1. AI ì»¨íŠ¸ë¡¤ëŸ¬ ê°€ì ¸ì˜¤ê¸°
 	ABossAIController* AIController = Cast<ABossAIController>(OwnerComp.GetAIOwner());
 	if (!AIController) return EBTNodeResult::Failed;
 
-	// 2. Á¶Á¾ ÁßÀÎ º¸½º Ä³¸¯ÅÍ °¡Á®¿À±â
+	// 2. ì¡°ì¢… ì¤‘ì¸ ë³´ìŠ¤ ìºë¦­í„° ê°€ì ¸ì˜¤ê¸°
 	ABoss* Boss = Cast<ABoss>(AIController->GetPawn());
 	if (!Boss) return EBTNodeResult::Failed;
 
-	// 3. °ø°İ ÇÔ¼ö È£Ãâ
+	// 3. ê³µê²© í•¨ìˆ˜ í˜¸ì¶œ
 	Boss->Attack();
 
-	// 4. ¼º°ø ¹İÈ¯ (Succeeded)
+	// 4. ì„±ê³µ ë°˜í™˜ (Succeeded)
 	return EBTNodeResult::Succeeded;
 }

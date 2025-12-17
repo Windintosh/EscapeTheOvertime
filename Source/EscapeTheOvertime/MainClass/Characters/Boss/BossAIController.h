@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "AIController.h"
@@ -6,7 +6,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
-#include "Perception/AISenseConfig_Hearing.h" // [NEW] Ã»°¢ ¼³Á¤ Çì´õ Ãß°¡
+#include "Perception/AISenseConfig_Hearing.h" 
 #include "BossAIController.generated.h"
 
 UCLASS()
@@ -17,13 +17,13 @@ class ESCAPETHEOVERTIME_API ABossAIController : public AAIController
 public:
 	ABossAIController();
 
-	// ÆĞÆ®·Ñ ÁöÁ¡ ¸ñ·Ï
+	// íŒ¨íŠ¸ë¡¤ ì§€ì  ëª©ë¡
 	TArray<FVector> PatrolPoints;
 
 	UPROPERTY(EditAnywhere, Category = "AI")
 	UBehaviorTree* BehaviorTree;
 
-	// AIPerception Component (½Ã°¢ + Ã»°¢ ÅëÇÕ)
+	// AIPerception Component (ì‹œê° + ì²­ê° í†µí•©)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI|Perception")
 	UAIPerceptionComponent* BossAIPerceptionComponent;
 
@@ -31,7 +31,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI|Perception")
 	UAISenseConfig_Sight* SightConfig;
 
-	// [NEW] Hearing Config (PawnSensing ´ëÃ¼)
+	// Hearing Config (PawnSensing ëŒ€ì²´)
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI|Perception")
 	UAISenseConfig_Hearing* HearingConfig;
 
@@ -39,15 +39,15 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* InPawn) override;
 
-	// ¿ùµåÀÇ ¸ğµç TargetPoint¸¦ Ã£¾Æ PatrolPoints¿¡ ÀúÀå
+	// ì›”ë“œì˜ ëª¨ë“  TargetPointë¥¼ ì°¾ì•„ PatrolPointsì— ì €ì¥
 	void InitializePatrolPoints();
 
-	// °¨°¢(½Ã°¢/Ã»°¢) ¾÷µ¥ÀÌÆ® ½Ã È£ÃâµÇ´Â ÇÔ¼ö
+	// ê°ê°(ì‹œê°/ì²­ê°) ì—…ë°ì´íŠ¸ ì‹œ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜
 	UFUNCTION()
 	void OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
 
 public:
-	// Blackboard Keys (±âÁ¸ Å° È°¿ë)
+	// Blackboard Keys (ê¸°ì¡´ í‚¤ í™œìš©)
 	static const FName PatrolLocationKey;
 	static const FName PatrolIndexKey;
 	static const FName TargetPlayerKey;

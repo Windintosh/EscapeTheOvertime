@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+ï»¿// Copyright Epic Games, Inc. All Rights Reserved.
 
 
 #include "Variant_Horror/HorrorPlayerController.h"
@@ -16,11 +16,11 @@ AHorrorPlayerController::AHorrorPlayerController()
 	// set the player camera manager class
 	PlayerCameraManagerClass = AEscapeTheOvertimeCameraManager::StaticClass();
 
-	// [Time System] Tick È°¼ºÈ­ ¹× º¯¼ö ÃÊ±âÈ­
+	// [Time System] Tick í™œì„±í™” ë° ë³€ìˆ˜ ì´ˆê¸°í™”
 	PrimaryActorTick.bCanEverTick = true;
-	CurrentHour = 21;   //  ½ÃÀÛ ½Ã°£
+	CurrentHour = 20;   //  ì‹œì‘ ì‹œê°„
 	CurrentMinute = 0.0f;
-	TimeSpeed = 10.0f;  // ½Ã°£ Èå¸§ ¼Óµµ (Á¶Àı °¡´É)
+	TimeSpeed = 20.0f;  // ì‹œê°„ íë¦„ ì†ë„ (ì¡°ì ˆ ê°€ëŠ¥)
 	bIsGameOver = false;
 }
 
@@ -49,33 +49,33 @@ void AHorrorPlayerController::BeginPlay()
 	}
 }
 
-// [Time System] ¸Å ÇÁ·¹ÀÓ ½Ã°£ °è»ê ·ÎÁ÷
+// [Time System] ë§¤ í”„ë ˆì„ ì‹œê°„ ê³„ì‚° ë¡œì§
 void AHorrorPlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// °ÔÀÓ ¿À¹ö »óÅÂ¸é ½Ã°£ ¸ØÃã
+	// ê²Œì„ ì˜¤ë²„ ìƒíƒœë©´ ì‹œê°„ ë©ˆì¶¤
 	if (bIsGameOver)
 	{
 		return;
 	}
 
-	// 1. ºĞ ´©Àû (DeltaTime * ¼Óµµ)
+	// 1. ë¶„ ëˆ„ì  (DeltaTime * ì†ë„)
 	CurrentMinute += DeltaTime * TimeSpeed;
 
-	// 2. ºĞ -> ½Ã°£ º¯È¯
+	// 2. ë¶„ -> ì‹œê°„ ë³€í™˜
 	if (CurrentMinute >= 60.0f)
 	{
 		CurrentMinute -= 60.0f;
 		CurrentHour++;
 
-		// 3. ÀÚÁ¤(24½Ã) Ã¼Å©
+		// 3. ìì •(24ì‹œ) ì²´í¬
 		if (CurrentHour >= 24)
 		{
 			bIsGameOver = true;
-			CurrentHour = 0; // 0½Ã Ç¥±â (¼±ÅÃ»çÇ×)
+			CurrentHour = 0; // 0ì‹œ í‘œê¸° (ì„ íƒì‚¬í•­)
 
-			// ºí·çÇÁ¸°Æ®·Î ÀÌº¥Æ® È£Ãâ (¾ÏÀü, °ÔÀÓ¿À¹ö UI µî ¿¬Ãâ)
+			// ë¸”ë£¨í”„ë¦°íŠ¸ë¡œ ì´ë²¤íŠ¸ í˜¸ì¶œ (ì•”ì „, ê²Œì„ì˜¤ë²„ UI ë“± ì—°ì¶œ)
 			OnTimeLimitReached();
 		}
 	}

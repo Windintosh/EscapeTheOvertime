@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+ï»¿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -10,11 +10,11 @@ class USpotLightComponent;
 class UInputAction;
 class USoundBase;
 
-// ½ºÅÂ¹Ì³ª °ü·Ã µ¨¸®°ÔÀÌÆ®
+// ìŠ¤íƒœë¯¸ë‚˜ ê´€ë ¨ ë¸ë¦¬ê²Œì´íŠ¸
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FUpdateSprintMeterDelegate, float, Percentage);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSprintStateChangedDelegate, bool, bSprinting);
 
-// [NEW] HP º¯°æ ¾Ë¸²¿ë µ¨¸®°ÔÀÌÆ® (UI ÃÖÀûÈ­)
+// HP ë³€ê²½ ì•Œë¦¼ìš© ë¸ë¦¬ê²Œì´íŠ¸ (UI ìµœì í™”)
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChangedDelegate, float, HPPercent);
 
 /**
@@ -58,12 +58,11 @@ protected:
 	float SprintTime = 5.0f;
 
 	/** Walk speed while sprinting */
-	// [FIXED] ClampMax=10 Á¦°Å (¿¡µğÅÍ¿¡¼­ ¼Óµµ ¼³Á¤ °¡´ÉÇÏµµ·Ï ¼öÁ¤)
+	// [FIXED](ì—ë””í„°ì—ì„œ ì†ë„ ì„¤ì • ê°€ëŠ¥í•˜ë„ë¡ ìˆ˜ì •)
 	UPROPERTY(EditAnywhere, Category = "Sprint", meta = (ClampMin = 0, Units = "cm/s"))
 	float SprintSpeed = 600.0f;
 
 	/** Walk speed while recovering stamina */
-	// [FIXED] ClampMax=10 Á¦°Å
 	UPROPERTY(EditAnywhere, Category = "Recovery", meta = (ClampMin = 0, Units = "cm/s"))
 	float RecoveringWalkSpeed = 150.0f;
 
@@ -75,7 +74,7 @@ protected:
 	FTimerHandle SprintTimer;
 
 	/* ================================================== */
-	/* [NEW] HP & Death System                            */
+	/*       HP & Death System                            */
 	/* ================================================== */
 
 	/** Max HP */
@@ -90,7 +89,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
 	bool bIsDead = false;
 
-	/** ÇÇ°İ ½Ã Àç»ıÇÒ »ç¿îµå (Sound Cue ±ÇÀå) */
+	/** í”¼ê²© ì‹œ ì¬ìƒí•  ì‚¬ìš´ë“œ (Sound Cue) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
 	USoundBase* DamageSound;
 
@@ -102,11 +101,11 @@ public:
 	/** Delegate called when we start and stop sprinting */
 	FSprintStateChangedDelegate OnSprintStateChanged;
 
-	// [NEW] ¸Â¾ÒÀ» ¶§¸¸ UI¸¦ ¾÷µ¥ÀÌÆ®ÇÏ±â À§ÇÑ ÀÌº¥Æ®
+	// ë§ì•˜ì„ ë•Œë§Œ UIë¥¼ ì—…ë°ì´íŠ¸í•˜ê¸° ìœ„í•œ ì´ë²¤íŠ¸
 	UPROPERTY(BlueprintAssignable, Category = "Health")
 	FOnHealthChangedDelegate OnHealthChanged;
 
-	// ¿ÜºÎ¿¡¼­ HP Á¤º¸¸¦ °¡Á®¿À±â À§ÇÑ À¯Æ¿¸®Æ¼ ÇÔ¼ö
+	// ì™¸ë¶€ì—ì„œ HP ì •ë³´ë¥¼ ê°€ì ¸ì˜¤ê¸° ìœ„í•œ ìœ í‹¸ë¦¬í‹° í•¨ìˆ˜
 	UFUNCTION(BlueprintPure, Category = "Health")
 	float GetCurrentHP() const { return CurrentHP; }
 
@@ -127,10 +126,10 @@ protected:
 	/** Set up input action bindings */
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 
-	// [NEW] ¾ğ¸®¾ó ¿£Áø ±âº» ÇÇ°İ ÇÔ¼ö ¿À¹ö¶óÀÌµå
+	// ì–¸ë¦¬ì–¼ ì—”ì§„ ê¸°ë³¸ í”¼ê²© í•¨ìˆ˜ ì˜¤ë²„ë¼ì´ë“œ
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
-	// [NEW] »ç¸Á ½Ã ½ÇÇàÇÒ ÀÌº¥Æ® (ºí·çÇÁ¸°Æ®¿¡¼­ ½Ã³×¸¶Æ½ ¿¬°á¿ë)
+	// ì‚¬ë§ ì‹œ ì‹¤í–‰í•  ì´ë²¤íŠ¸ (ë¸”ë£¨í”„ë¦°íŠ¸ì—ì„œ ì‹œë„¤ë§ˆí‹± ì—°ê²°ìš©)
 	UFUNCTION(BlueprintNativeEvent, Category = "Health")
 	void OnDeath();
 	virtual void OnDeath_Implementation();

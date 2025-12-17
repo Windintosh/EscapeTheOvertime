@@ -1,7 +1,7 @@
-#include "BTTask_FindRandomLocation.h"
+ï»¿#include "BTTask_FindRandomLocation.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "AIController.h"
-#include "NavigationSystem.h" // Build.cs¿¡ NavigationSystem ¸ðµâ Ãß°¡ ÇÊ¼ö
+#include "NavigationSystem.h" 
 
 UBTTask_FindRandomLocation::UBTTask_FindRandomLocation()
 {
@@ -15,16 +15,16 @@ EBTNodeResult::Type UBTTask_FindRandomLocation::ExecuteTask(UBehaviorTreeCompone
 
 	if (AIPawn)
 	{
-		// ³×ºñ°ÔÀÌ¼Ç ½Ã½ºÅÛ °¡Á®¿À±â
+		// ë„¤ë¹„ê²Œì´ì…˜ ì‹œìŠ¤í…œ ê°€ì ¸ì˜¤ê¸°
 		UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(GetWorld());
 		if (NavSystem)
 		{
 			FNavLocation RandomLocation;
 
-			// AI ÇöÀç À§Ä¡ ±âÁØ SearchRadius ³»ÀÇ ·£´ý ³×ºñ°ÔÀÌ¼Ç Æ÷ÀÎÆ® Ã£±â
+			// AI í˜„ìž¬ ìœ„ì¹˜ ê¸°ì¤€ SearchRadius ë‚´ì˜ ëžœë¤ ë„¤ë¹„ê²Œì´ì…˜ í¬ì¸íŠ¸ ì°¾ê¸°
 			if (NavSystem->GetRandomPointInNavigableRadius(AIPawn->GetActorLocation(), SearchRadius, RandomLocation))
 			{
-				// ºí·¢º¸µå Å°(¿¹: PatrolLocation)¿¡ °ª ÀúÀå
+				// ë¸”ëž™ë³´ë“œ í‚¤(ì˜ˆ: PatrolLocation)ì— ê°’ ì €ìž¥
 				OwnerComp.GetBlackboardComponent()->SetValueAsVector(GetSelectedBlackboardKey(), RandomLocation.Location);
 				return EBTNodeResult::Succeeded;
 			}

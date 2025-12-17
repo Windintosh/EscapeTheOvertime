@@ -15,7 +15,6 @@ public:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 
 protected:
-	// 탐색 반경 (에디터에서 수정 가능)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
 	float SearchRadius = 1500.0f;
 };

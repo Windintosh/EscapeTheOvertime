@@ -1,5 +1,5 @@
-#include "BTTask_IncrementPatrolIndex.h"
-#include "MainClass/Characters/Boss/BossAIController.h" // º¸½º ÄÁÆ®·Ñ·¯ Çì´õ °æ·Î È®ÀÎ ÇÊ¿ä
+ï»¿#include "BTTask_IncrementPatrolIndex.h"
+#include "MainClass/Characters/Boss/BossAIController.h" // ë³´ìŠ¤ ì»¨íŠ¸ë¡¤ëŸ¬ í—¤ë” ê²½ë¡œ í™•ì¸ í•„ìš”
 #include "BehaviorTree/BlackboardComponent.h"
 
 UBTTask_IncrementPatrolIndex::UBTTask_IncrementPatrolIndex()
@@ -14,20 +14,20 @@ EBTNodeResult::Type UBTTask_IncrementPatrolIndex::ExecuteTask(UBehaviorTreeCompo
 
 	if (BossAI && Blackboard)
 	{
-		// ÆÐÆ®·Ñ Æ÷ÀÎÆ®°¡ ¾øÀ¸¸é ½ÇÆÐ
+		// íŒ¨íŠ¸ë¡¤ í¬ì¸íŠ¸ê°€ ì—†ìœ¼ë©´ ì‹¤íŒ¨
 		if (BossAI->PatrolPoints.Num() == 0)
 		{
 			return EBTNodeResult::Failed;
 		}
 
-		// 1. ÇöÀç ÀÎµ¦½º °¡Á®¿À±â
+		// 1. í˜„ìž¬ ì¸ë±ìŠ¤ ê°€ì ¸ì˜¤ê¸°
 		int32 CurrentIndex = Blackboard->GetValueAsInt(ABossAIController::PatrolIndexKey);
 
-		// 2. ´ÙÀ½ ÀÎµ¦½º °è»ê (³ª¸ÓÁö ¿¬»êÀ¸·Î ¼øÈ¯)
+		// 2. ë‹¤ìŒ ì¸ë±ìŠ¤ ê³„ì‚° (ë‚˜ë¨¸ì§€ ì—°ì‚°ìœ¼ë¡œ ìˆœí™˜)
 		// (0 -> 1 -> 2 -> 0 -> 1 ...)
 		int32 NextIndex = (CurrentIndex + 1) % BossAI->PatrolPoints.Num();
 
-		// 3. ºí·¢º¸µå ¾÷µ¥ÀÌÆ® (ÀÎµ¦½º & ½ÇÁ¦ º¤ÅÍ ÁÂÇ¥)
+		// 3. ë¸”ëž™ë³´ë“œ ì—…ë°ì´íŠ¸ (ì¸ë±ìŠ¤ & ì‹¤ì œ ë²¡í„° ì¢Œí‘œ)
 		Blackboard->SetValueAsInt(ABossAIController::PatrolIndexKey, NextIndex);
 		Blackboard->SetValueAsVector(ABossAIController::PatrolLocationKey, BossAI->PatrolPoints[NextIndex]);
 
