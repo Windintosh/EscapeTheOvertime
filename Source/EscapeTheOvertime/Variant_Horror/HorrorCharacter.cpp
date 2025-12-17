@@ -21,6 +21,10 @@ AHorrorCharacter::AHorrorCharacter()
 	SpotLight->InnerConeAngle = 18.7f;
 	SpotLight->OuterConeAngle = 45.24f;
 
+	GetCharacterMovement()->NavAgentProps.bCanCrouch = true;
+	// 앉았을 때 이동 속도 조절
+	GetCharacterMovement()->MaxWalkSpeedCrouched = 200.0f;
+
 	// 기본 HP값 설정
 	MaxHP = 100.0f;
 	CurrentHP = MaxHP;
@@ -132,8 +136,28 @@ void AHorrorCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 			// Sprinting
 			EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &AHorrorCharacter::DoStartSprint);
 			EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &AHorrorCharacter::DoEndSprint);
+
+			if (CrouchAction)
+			{
+				EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Started, this, &AHorrorCharacter::StartCrouch);
+				EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Completed, this, &AHorrorCharacter::StopCrouch);
+			}
 		}
 	}
+}
+
+// 앉기 시작
+void AHorrorCharacter::StartCrouch(const FInputActionValue& Value)
+{
+	// 언리얼 내장 함수 호출 (캡슐 높이를 자동으로 줄여줌)
+	Crouch();
+}
+
+// 앉기 종료 (일어서기)
+void AHorrorCharacter::StopCrouch(const FInputActionValue& Value)
+{
+	// 언리얼 내장 함수 호출 (캡슐 높이 복구)
+	UnCrouch();
 }
 
 void AHorrorCharacter::DoStartSprint()

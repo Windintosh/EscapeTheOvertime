@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InputActionValue.h"
 #include "EscapeTheOvertimeCharacter.h"
 #include "HorrorCharacter.generated.h"
 
@@ -112,6 +113,10 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Health")
 	bool IsDead() const { return bIsDead; }
 
+	// 앉기 입력 액션 (에디터에서 할당)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	class UInputAction* CrouchAction;
+
 protected:
 
 	/** Constructor */
@@ -133,6 +138,10 @@ protected:
 	UFUNCTION(BlueprintNativeEvent, Category = "Health")
 	void OnDeath();
 	virtual void OnDeath_Implementation();
+
+	// 앉기 시작/종료 함수
+	void StartCrouch(const FInputActionValue& Value);
+	void StopCrouch(const FInputActionValue& Value);
 
 protected:
 
