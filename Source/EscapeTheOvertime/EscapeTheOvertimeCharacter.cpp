@@ -44,6 +44,8 @@ AEscapeTheOvertimeCharacter::AEscapeTheOvertimeCharacter()
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 	GetCharacterMovement()->AirControl = 0.5f;
 
+
+
 	DistractionItem.Duration = 10.0f;
 	MuffleItem.Duration = 30.f;
 	SpeedUpItem.Duration = 10.f;
@@ -131,6 +133,17 @@ void AEscapeTheOvertimeCharacter::EndSpeedUp()
 	bIsSpedUp = false;
 	GetCharacterMovement()->MaxWalkSpeed = 250.0f; //need to change logic
 	UE_LOG(LogTemp, Warning, TEXT("SpeedUp Ended"));
+}
+
+void AEscapeTheOvertimeCharacter::MakeNoise(float Loudness, FVector NoiseLocation)
+{
+	if (bIsMuffled) return;
+
+	if (NoiseEmitterComponent)
+	{
+		NoiseEmitterComponent->MakeNoise(this, Loudness, NoiseLocation);
+		UE_LOG(LogTemp, Warning, TEXT("Noise Created at %s with loudness %f"), *NoiseLocation.ToString(), Loudness);
+	}
 }
 
 

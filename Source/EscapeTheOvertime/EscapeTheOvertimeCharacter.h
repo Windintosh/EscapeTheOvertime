@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
+#include "Components/PawnNoiseEmitterComponent.h"
 #include "EscapeTheOvertimeCharacter.generated.h"
 
 class UInputComponent;
@@ -106,6 +107,9 @@ public:
 	/** Returns first person camera component **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Noise")
+	class UPawnNoiseEmitterComponent* NoiseEmitterComponent;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Game")
 	bool bHasKeycard = false;
 
@@ -147,6 +151,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Item")
 	void EndSpeedUp();
+
+	void MakeNoise(float Loudness, FVector NoiseLocation);
+
+private:
+	
+
 
 };
 
