@@ -4,6 +4,7 @@
 #include "MuffleItem.h"
 #include "SpeedUpItem.h"
 #include "DistractionItem.h"
+#include "HealItem.h"
 #include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
@@ -74,6 +75,15 @@ AActor* AItemSpawner::SpawnItem(int32 Index)
 	case 3:
 	{
 		ADistractionItem* SpawnedItem = GetWorld()->SpawnActor<ADistractionItem>(DistractionItemClass, GetActorLocation(), GetActorRotation());
+		ItemIndex = SpawnedItem->GetItemIndex();
+		ItemType = SpawnedItem->GetItemType();
+		SpawnedItem->AttachToComponent(BoxComp, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+		UE_LOG(LogTemp, Display, TEXT("DistractionItem Spawned"));
+		return SpawnedItem;
+	}
+	case 4:
+	{
+		AHealItem* SpawnedItem = GetWorld()->SpawnActor<AHealItem>(DistractionItemClass, GetActorLocation(), GetActorRotation());
 		ItemIndex = SpawnedItem->GetItemIndex();
 		ItemType = SpawnedItem->GetItemType();
 		SpawnedItem->AttachToComponent(BoxComp, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
