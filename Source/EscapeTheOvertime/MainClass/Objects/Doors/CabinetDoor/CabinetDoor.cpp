@@ -9,6 +9,9 @@ ACabinetDoor::ACabinetDoor()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	ItemSpawner = CreateDefaultSubobject<AItemSpawner>(TEXT("ItemSpawner"));
+	ItemSpawner->AttachToComponent(MeshComp, FAttachmentTransformRules::KeepRelativeTransform);
+
 	BoxComp->SetBoxExtent(FVector(60.f, 60.f, 7.5f)); //make it half!
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> CabinetMesh(TEXT("/Game/EscapeTheOvertime/00_Maps/UseAsset/File_Cabinets_02-Freepoly_org/MiniCabinets_Door5.MiniCabinets_Door5"));
