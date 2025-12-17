@@ -10,7 +10,7 @@ ACabinetDoor::ACabinetDoor()
 	PrimaryActorTick.bCanEverTick = true;
 
 	ItemSpawner = CreateDefaultSubobject<AItemSpawner>(TEXT("ItemSpawner"));
-	ItemSpawner->AttachToComponent(MeshComp, FAttachmentTransformRules::KeepRelativeTransform);
+	ItemSpawner->AttachToComponent(MeshComp, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 
 	BoxComp->SetBoxExtent(FVector(60.f, 60.f, 7.5f)); //make it half!
 

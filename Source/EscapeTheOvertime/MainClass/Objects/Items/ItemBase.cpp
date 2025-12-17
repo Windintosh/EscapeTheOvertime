@@ -20,7 +20,7 @@ AItemBase::AItemBase()
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	StaticMesh->SetupAttachment(Collision);
 
-	Collision->InitSphereRadius(20.0f);
+	Collision->InitSphereRadius(40.0f);
 	Collision->OnComponentBeginOverlap.AddDynamic(this, &AItemBase::OnItemOverlap);
 	Collision->OnComponentEndOverlap.AddDynamic(this, &AItemBase::OnItemEndOverlap);
 
