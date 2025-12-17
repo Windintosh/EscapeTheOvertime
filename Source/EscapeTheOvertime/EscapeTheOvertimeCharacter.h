@@ -122,6 +122,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	FItemState SpeedUpItem;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	float IncreasedSpeed = 1200.f;
+
 	UFUNCTION(BlueprintCallable, Category = "Item")
 	void ActivateMuffle();
 
