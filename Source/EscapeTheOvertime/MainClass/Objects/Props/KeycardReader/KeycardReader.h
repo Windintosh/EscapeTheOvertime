@@ -1,17 +1,22 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "MainClass/Objects/Props/PropBase.h"
+#include "Sound/SoundCue.h" 
 #include "KeycardReader.generated.h"
 
 UCLASS()
 class ESCAPETHEOVERTIME_API AKeycardReader : public APropBase
 {
 	GENERATED_BODY()
-	
-protected:
 
+public:
 	AKeycardReader();
 
+protected:
 	virtual void ActivateProp(AActor* Activator) override;
+
+private:
+	UPROPERTY(EditAnywhere, Category = "Audio")
+	USoundCue* AccessGrantedSound;
 };
