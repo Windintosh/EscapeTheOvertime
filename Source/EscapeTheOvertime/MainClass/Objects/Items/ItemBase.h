@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
@@ -10,8 +10,8 @@ UCLASS()
 class ESCAPETHEOVERTIME_API AItemBase : public AActor, public IItemInterface
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	AItemBase();
 
@@ -32,6 +32,17 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	int32 ItemIndex;
 
+	// --- [UI 표시용 데이터 추가] ---
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item UI")
+	FText ItemDisplayName; // 아이템 이름 (예: 보안 카드키)
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item UI")
+	FText ItemDescription; // 아이템 설명 (예: 엘리베이터 권한 획득)
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item UI")
+	UTexture2D* ItemIcon;  // UI 아이콘 텍스처
+	// ---------------------------
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item")
 	USceneComponent* Scene;
 
@@ -49,11 +60,8 @@ protected:
 	//when Item is used
 	virtual void ActivateItem(AActor* Activator) override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-
-
 
 };
