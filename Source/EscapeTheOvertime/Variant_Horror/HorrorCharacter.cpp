@@ -1,4 +1,4 @@
-﻿#include "Variant_Horror/HorrorCharacter.h"
+﻿#include "Variant_Horror/HorrorCharacter.h" // 헤더 경로 유지
 #include "Engine/World.h"
 #include "TimerManager.h"
 #include "Kismet/GameplayStatics.h"
@@ -7,6 +7,7 @@
 #include "Components/SpotLightComponent.h"
 #include "EnhancedInputComponent.h"
 #include "InputAction.h"
+#include "UObject/ConstructorHelpers.h" // [추가] FObjectFinder 사용 시 필수
 
 AHorrorCharacter::AHorrorCharacter()
 {
@@ -85,7 +86,7 @@ float AHorrorCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 	// HP 감소 및 0 미만 방지
 	CurrentHP = FMath::Clamp(CurrentHP - ActualDamage, 0.0f, MaxHP);
 
-	//  맞았을 때만 UI에게 "나 체력 변했어!"라고 알림
+	//  맞았을 때만 UI에게 "나 체력 변했어!"라고 알림
 	if (MaxHP > 0.0f)
 	{
 		OnHealthChanged.Broadcast(CurrentHP / MaxHP);
@@ -121,8 +122,6 @@ void AHorrorCharacter::OnDeath_Implementation()
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("Player Died. Check Blueprint for Cinematic logic."));
-
-	// 실제 시네마틱 재생은 블루프린트의 'Event On Death' 노드에서 처리
 }
 
 void AHorrorCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -149,14 +148,12 @@ void AHorrorCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 // 앉기 시작
 void AHorrorCharacter::StartCrouch(const FInputActionValue& Value)
 {
-	// 언리얼 내장 함수 호출 (캡슐 높이를 자동으로 줄여줌)
 	Crouch();
 }
 
 // 앉기 종료 (일어서기)
 void AHorrorCharacter::StopCrouch(const FInputActionValue& Value)
 {
-	// 언리얼 내장 함수 호출 (캡슐 높이 복구)
 	UnCrouch();
 }
 
@@ -172,14 +169,12 @@ void AHorrorCharacter::DoStartSprint()
 	if (!bRecovering)
 	{
 		// set the sprint walk speed
-		if(!bIsSpedUp)
-			GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
-		else
-			GetCharacterMovement()->MaxWalkSpeed = IncreasedSpeed;
+		// [수정] 헤더에 없는 변수(bIsSpedUp) 사용 제거 -> 기본 로직으로 복구
+		GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+
 		// call the sprint state changed delegate
 		OnSprintStateChanged.Broadcast(true);
 	}
-
 }
 
 void AHorrorCharacter::DoEndSprint()
@@ -206,14 +201,12 @@ void AHorrorCharacter::SprintFixedTick()
 	// are we out of recovery, still have stamina and are moving faster than our walk speed?
 	if (bSprinting && !bRecovering && GetVelocity().Length() > WalkSpeed)
 	{
-
 		// do we still have meter to burn?
 		if (SprintMeter > 0.0f)
 		{
 			// update the sprint meter
-			if(!bIsSpedUp)
-				SprintMeter = FMath::Max(SprintMeter - SprintFixedTickTime, 0.0f);
-
+			// [수정] bIsSpedUp 관련 로직 제거
+			SprintMeter = FMath::Max(SprintMeter - SprintFixedTickTime, 0.0f);
 
 			// have we run out of stamina?
 			if (SprintMeter <= 0.0f)
@@ -225,10 +218,9 @@ void AHorrorCharacter::SprintFixedTick()
 				GetCharacterMovement()->MaxWalkSpeed = RecoveringWalkSpeed;
 			}
 		}
-
 	}
-	else {
-
+	else
+	{
 		// recover stamina
 		SprintMeter = FMath::Min(SprintMeter + SprintFixedTickTime, SprintTime);
 
@@ -238,15 +230,12 @@ void AHorrorCharacter::SprintFixedTick()
 			bRecovering = false;
 
 			// set the walk or sprint speed depending on whether the sprint button is down
-			if (!bIsSpedUp)
-				GetCharacterMovement()->MaxWalkSpeed = bSprinting ? SprintSpeed : WalkSpeed;
-			else
-				GetCharacterMovement()->MaxWalkSpeed = bSprinting ? IncreasedSpeed : SprintSpeed;	
+			// [수정] bIsSpedUp 관련 로직 제거
+			GetCharacterMovement()->MaxWalkSpeed = bSprinting ? SprintSpeed : WalkSpeed;
 
 			// update the sprint state depending on whether the button is down or not
 			OnSprintStateChanged.Broadcast(bSprinting);
 		}
-
 	}
 
 	// broadcast the sprint meter updated delegate

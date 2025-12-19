@@ -1,4 +1,4 @@
-#include "MainClass/Objects/Items/Heal/HealItem.h"
+﻿#include "MainClass/Objects/Items/Heal/HealItem.h"
 #include "HorrorCharacter.h"
 
 AHealItem::AHealItem()
@@ -14,5 +14,6 @@ void AHealItem::ActivateItem(AActor* Activator)
 
 	PlayerCharacter->Heal(50.0f);
 
-	DestroyItem();
+	//부모 클래스 호출 (이 줄이 있어야 UI가 뜨고 아이템이 사라짐)
+	Super::ActivateItem(Activator);
 }

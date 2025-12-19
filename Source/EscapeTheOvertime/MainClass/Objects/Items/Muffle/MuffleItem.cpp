@@ -1,4 +1,4 @@
-#include "MainClass/Objects/Items/Muffle/MuffleItem.h"
+﻿#include "MainClass/Objects/Items/Muffle/MuffleItem.h"
 #include "EscapeTheOvertimeCharacter.h"
 
 AMuffleItem::AMuffleItem()
@@ -16,5 +16,6 @@ void AMuffleItem::ActivateItem(AActor* Activator)
 	//PlayerCharacter->MuffleItem.RemainingTime = PlayerCharacter->MuffleItem.Duration;
 	PlayerCharacter->ActivateMuffle();
 
-	DestroyItem();
+	//부모 클래스 호출 (이 줄이 있어야 UI가 뜨고 아이템이 사라짐)
+	Super::ActivateItem(Activator);
 }

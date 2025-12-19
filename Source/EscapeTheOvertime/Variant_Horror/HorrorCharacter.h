@@ -1,6 +1,4 @@
-﻿// Copyright Epic Games, Inc. All Rights Reserved.
-
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "InputActionValue.h"
@@ -10,13 +8,17 @@
 class USpotLightComponent;
 class UInputAction;
 class USoundBase;
+class UTexture2D;
 
 // 스태미나 관련 델리게이트
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FUpdateSprintMeterDelegate, float, Percentage);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSprintStateChangedDelegate, bool, bSprinting);
 
-// HP 변경 알림용 델리게이트 (UI 최적화)
+// HP 변경 알림용 델리게이트
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChangedDelegate, float, HPPercent);
+
+// [변경] 아이템 획득 알림용 델리게이트 (파라미터 3개: 이름, 설명, 아이콘)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnItemPickedUpDelegate, FText, Name, FText, Desc, UTexture2D*, Icon);
 
 /**
  * Simple first person horror character
@@ -59,7 +61,6 @@ protected:
 	float SprintTime = 5.0f;
 
 	/** Walk speed while sprinting */
-	// [FIXED](에디터에서 속도 설정 가능하도록 수정)
 	UPROPERTY(EditAnywhere, Category = "Sprint", meta = (ClampMin = 0, Units = "cm/s"))
 	float SprintSpeed = 600.0f;
 
@@ -75,7 +76,7 @@ protected:
 	FTimerHandle SprintTimer;
 
 	/* ================================================== */
-	/*       HP & Death System                            */
+	/* HP & Death System                         */
 	/* ================================================== */
 
 	/** Max HP */
@@ -105,6 +106,11 @@ public:
 	// 맞았을 때만 UI를 업데이트하기 위한 이벤트
 	UPROPERTY(BlueprintAssignable, Category = "Health")
 	FOnHealthChangedDelegate OnHealthChanged;
+
+	// [변경] 아이템 획득 시 방송(Broadcast)할 이벤트 디스패처
+	// 블루프린트에서 이 이벤트를 Assign(바인딩)하여 UI를 띄웁니다.
+	UPROPERTY(BlueprintAssignable, Category = "UI")
+	FOnItemPickedUpDelegate OnItemPickedUp;
 
 	// 외부에서 HP 정보를 가져오기 위한 유틸리티 함수
 	UFUNCTION(BlueprintPure, Category = "Health")

@@ -1,4 +1,4 @@
-#include "MainClass/Objects/Items/SpeedUp/SpeedUpItem.h"
+﻿#include "MainClass/Objects/Items/SpeedUp/SpeedUpItem.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "EscapeTheOvertimeCharacter.h"
 #include "HorrorCharacter.h"
@@ -19,5 +19,6 @@ void ASpeedUpItem::ActivateItem(AActor* Activator)
 	//PlayerCharacter->SpeedUpItem.RemainingTime = PlayerCharacter->SpeedUpItem.Duration;
 	PlayerCharacter->ActivateSpeedUp();
 
-	DestroyItem();
+	//부모 클래스 호출 (이 줄이 있어야 UI가 뜨고 아이템이 사라짐)
+	Super::ActivateItem(Activator);
 }
