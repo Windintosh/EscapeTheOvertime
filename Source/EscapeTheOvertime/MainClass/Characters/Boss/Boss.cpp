@@ -3,6 +3,11 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Animation/AnimInstance.h"
+#include "BehaviorTree/BlackboardComponent.h"
+#include "BossAIController.h"
+#include "ThrownItem.h"
+
+const FName ABoss::StunKey = TEXT("IsStunned");
 
 // Sets default values
 ABoss::ABoss()
@@ -67,6 +72,20 @@ void ABoss::Attack()
 			UE_LOG(LogTemp, Warning, TEXT("Boss: Attacking Player!"));
 		}
 	}
+}
+
+void ABoss::Interact_Implementation(AActor* Interactor)
+{
+	AThrownItem* Item = Cast<AThrownItem>(Interactor);
+	if (!Item) return;
+	ABossAIController* AIController = Cast<ABossAIController>(GetController());
+	if (!AIController) return;
+	UBlackboardComponent* BlackboardComp = AIController->GetBlackboardComponent();
+	if (!BlackboardComp) return;
+
+	UE_LOG(LogTemp, Warning, TEXT("Boss: Boss is hit by Item!"));
+	BlackboardComp->SetValueAsBool(StunKey, true);
+
 }
 
 void ABoss::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)

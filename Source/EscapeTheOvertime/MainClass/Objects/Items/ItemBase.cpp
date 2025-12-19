@@ -7,13 +7,13 @@ AItemBase::AItemBase()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	Scene = CreateDefaultSubobject<USceneComponent>(TEXT("Scene"));
-	SetRootComponent(Scene);
+	//Scene = CreateDefaultSubobject<USceneComponent>(TEXT("Scene"));
+	//SetRootComponent(Scene);
 
 	Collision = CreateDefaultSubobject<USphereComponent>(TEXT("Collision"));
 	Collision->SetCollisionProfileName(TEXT("OverlapAllDynamic"));
-
-	Collision->SetupAttachment(Scene);
+	SetRootComponent(Collision);
+	//Collision->SetupAttachment(Scene);
 
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	StaticMesh->SetupAttachment(Collision);

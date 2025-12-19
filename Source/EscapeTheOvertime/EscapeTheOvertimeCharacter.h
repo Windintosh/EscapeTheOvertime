@@ -13,6 +13,7 @@ class USkeletalMeshComponent;
 class UCameraComponent;
 class UInputAction;
 struct FInputActionValue;
+class UAnimMontage;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDistractionItemChangedDelegate, int32, DistractionItemQuantity);
 
@@ -64,6 +65,10 @@ protected:
 	/** Mouse Look Input Action */
 	UPROPERTY(EditAnywhere, Category ="Input")
 	class UInputAction* MouseLookAction;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* ThrowAction;
+
 	
 public:
 	AEscapeTheOvertimeCharacter();
@@ -91,6 +96,9 @@ protected:
 	/** Handles jump end inputs from either controls or UI interfaces */
 	UFUNCTION(BlueprintCallable, Category="Input")
 	virtual void DoJumpEnd();
+
+	UFUNCTION(BlueprintCallable, Category = "Input")
+	virtual void DoThrow();
 
 protected:
 
@@ -151,6 +159,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Item")
 	void EndSpeedUp();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	UAnimMontage* ThrowMontage;
 
 	void MakeNoise(float Loudness, FVector NoiseLocation);
 

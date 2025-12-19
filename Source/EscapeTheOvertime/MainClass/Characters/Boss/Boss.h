@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "ThrownItem.h"
 #include "Boss.generated.h" 
 
 // 포워드 선언 (컴파일 속도 향상)
@@ -9,7 +10,7 @@ class ABossAIController;
 class UAnimMontage;
 
 UCLASS()
-class ESCAPETHEOVERTIME_API ABoss : public ACharacter
+class ESCAPETHEOVERTIME_API ABoss : public ACharacter, public IBossHit
 {
 	GENERATED_BODY()
 
@@ -39,6 +40,12 @@ public:
 	/** Behavior Tree(Task)에서 호출할 공격 함수 */
 	UFUNCTION(BlueprintCallable, Category = "Combat")
 	void Attack();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interaction")
+	void Interact(AActor* Interactor);
+	void Interact_Implementation(AActor* Interactor) override;
+
+	static const FName StunKey;
 
 private:
 	/** 몽타주 재생이 끝났을 때 호출되는 콜백 함수 */

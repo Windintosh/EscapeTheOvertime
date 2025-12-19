@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 using UnrealBuildTool;
 
@@ -19,7 +19,8 @@ public class EscapeTheOvertime : ModuleRules
 			"GameplayStateTreeModule",
 			"UMG",
 			"Slate",
-			"NavigationSystem"
+			"NavigationSystem",
+			"GeometryCollectionEngine"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { });

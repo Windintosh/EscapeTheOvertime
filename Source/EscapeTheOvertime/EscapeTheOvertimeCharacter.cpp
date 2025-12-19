@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "EscapeTheOvertimeCharacter.h"
 #include "Animation/AnimInstance.h"
@@ -68,6 +68,8 @@ void AEscapeTheOvertimeCharacter::SetupPlayerInputComponent(UInputComponent* Pla
 		// Looking/Aiming
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AEscapeTheOvertimeCharacter::LookInput);
 		EnhancedInputComponent->BindAction(MouseLookAction, ETriggerEvent::Triggered, this, &AEscapeTheOvertimeCharacter::LookInput);
+
+		EnhancedInputComponent->BindAction(ThrowAction, ETriggerEvent::Started, this, &AEscapeTheOvertimeCharacter::DoThrow);
 	}
 	else
 	{
@@ -197,4 +199,22 @@ void AEscapeTheOvertimeCharacter::DoJumpEnd()
 {
 	// pass StopJumping to the character
 	StopJumping();
+}
+
+void AEscapeTheOvertimeCharacter::DoThrow()
+{
+	if (ThrowMontage)
+	{
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+		if (AnimInstance)
+		{
+			if (DistractionItemQuantity > 0)
+			{
+				AnimInstance->Montage_Play(ThrowMontage); //play throw montage
+				//DistractionItemQuantity--;
+				UE_LOG(LogTemp, Display, TEXT("DistractionItem: %d"), DistractionItemQuantity);
+			}
+			else UE_LOG(LogTemp, Error, TEXT("You don't have any DistractionItem!"));
+		}
+	}
 }
