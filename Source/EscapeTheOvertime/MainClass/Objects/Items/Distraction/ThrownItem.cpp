@@ -349,7 +349,7 @@ void AThrownItem::OnProjectileStop(const FHitResult& ImpactResult)
 		);
 
 		// 벽에 부딪힌 충격 방향으로 힘을 가해줍니다.
-		FVector ImpulseDir = (GetActorLocation() - ImpactResult.Location).GetSafeNormal();//ProjectileMovement->Velocity.GetSafeNormal();
+		FVector ImpulseDir = ProjectileMovement->Velocity.GetSafeNormal();//(GetActorLocation() - ImpactResult.Location).GetSafeNormal(); -> Comes Back to Instigator
 		if (ImpulseDir.IsZero()) ImpulseDir = GetActorForwardVector(); //FVector::UpVector();
 		GeometryCollectionComponent->AddImpulse(ImpulseDir * 500.0f, NAME_None, false);
 
