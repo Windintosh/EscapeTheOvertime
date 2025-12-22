@@ -67,7 +67,7 @@ AThrownItem::AThrownItem()
 		// [수정] 벽(Static)과 물체(Dynamic) 모두 Block
 		Collision->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
 		Collision->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Block);
-		Collision->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore); // 던지는 사람은 무시
+		Collision->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block); // 던지는 사람은 무시
 		Collision->SetUseCCD(true);
 	}
 
@@ -184,22 +184,43 @@ void AThrownItem::BeginPlay()
 	//	UE_LOG(LogTemp, Error, TEXT("OnItemHit binding FAILED!"));
 	//}
 
+
+	// 디버깅: 실제 반경이 몇인지 로그로 확인
+	if (Collision)
+	{
+		float Radius = Collision->GetScaledSphereRadius();
+		UE_LOG(LogTemp, Warning, TEXT("Current Sphere Radius: %f"), Radius);
+
+		if (Radius <= 0.1f)
+		{
+			UE_LOG(LogTemp, Error, TEXT("CRITICAL ERROR: Radius is Zero! Force setting it."));
+			Collision->SetSphereRadius(7.f);
+			Collision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		}
+	}
+
+
 	// 1. [핵심] 충돌체(Sphere)가 있다면 설정을 강제 집행합니다.
 	if (Collision)
 	{
 		// 혹시 모를 크기 0 방지
-		Collision->SetSphereRadius(40.0f);
+		Collision->SetSphereRadius(7.f);
 
 		// 일단 "모든 것"과 충돌하게 설정 (Block)
 		Collision->SetCollisionResponseToAllChannels(ECR_Block);
 
 		// 던진 사람(Pawn)만 충돌 무시 (안 그러면 던지자마자 터짐)
-		Collision->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+		//Collision->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
 		Collision->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore); // 카메라도 무시 추천
 
 		// 움직일 때 충돌 감지(Sweep)를 위한 플래그 재확인
 		Collision->SetNotifyRigidBodyCollision(true);
 		Collision->SetGenerateOverlapEvents(true);
+		if (GetInstigator())
+		{
+			Collision->IgnoreActorWhenMoving(GetInstigator(), true); // 이동 중 충돌 무시
+			Collision->MoveIgnoreActors.Add(GetInstigator());
+		}
 	}
 
 	// 2. Projectile Movement 연결 재확인
@@ -215,9 +236,16 @@ void AThrownItem::BeginPlay()
 		ProjectileMovement->OnProjectileStop.AddDynamic(this, &AThrownItem::OnProjectileStop);
 	}
 
+	if (StaticMesh)
+	{
+		StaticMesh->SetVisibility(true);
+		StaticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision); // 충돌은 오직 Sphere가 담당
+	}
+
 	// 3. GC 물리 끄기 (날아가는 동안 방해 안 되게)
 	if (GeometryCollectionComponent)
 	{
+		GeometryCollectionComponent->SetVisibility(false);
 		GeometryCollectionComponent->SetSimulatePhysics(false);
 		GeometryCollectionComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
@@ -250,15 +278,55 @@ void AThrownItem::OnProjectileStop(const FHitResult& ImpactResult)
 
 	ActivateItem(HitActor); //do sth to boss
 
-	if (Collision) Collision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	// 1. 둥둥 떠있게 될 Static Mesh를 숨깁니다.
+	if (StaticMesh)
+	{
+		StaticMesh->SetVisibility(false);
+	}
+
+	// 2. 루트(Sphere)의 충돌을 끕니다. (더 이상 충돌 방지)
+	if (Collision)
+	{
+		Collision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
 
 	if (GeometryCollectionComponent)
 	{
+		GeometryCollectionComponent->SetCollisionProfileName(TEXT("PhysicsActor"));
+		GeometryCollectionComponent->SetVisibility(true);
 		GeometryCollectionComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 		GeometryCollectionComponent->SetSimulatePhysics(true);
 		// 
 		// GeometryCollectionComponent->AddRadialImpulse(ImpactResult.ImpactPoint, 500.0f, 2000.0f, ERadialImpulseFalloff::RIF_Linear, true);
+		// 벽에 부딪힌 충격 방향으로 힘을 가해줍니다.
+		FVector ImpulseDir = ProjectileMovement->Velocity.GetSafeNormal();
+		GeometryCollectionComponent->AddImpulse(ImpulseDir * 5000.0f, NAME_None, true);
+
+	}
+
+	if (ProjectileMovement)
+	{
+		ProjectileMovement->StopMovementImmediately();
 	}
 
 	SetLifeSpan(5.0f); //
+}
+
+void AThrownItem::OnConstruction(const FTransform& Transform)
+{
+	Super::OnConstruction(Transform);
+
+	if (Collision)
+	{
+		// 1. 크기가 0이 되지 않도록 강제 설정
+		if (Collision->GetUnscaledSphereRadius() <= 0.0f)
+		{
+			Collision->SetSphereRadius(7.f); // 원하는 크기로 설정
+		}
+
+		// 2. 물리 상태 강제 재생성 (구체가 안 보일 때 특효약)
+		// 이 함수는 "물리 엔진아, 나 여기 있어! 다시 그려줘"라고 명령하는 것입니다.
+		Collision->RecreatePhysicsState();
+	}
+
 }

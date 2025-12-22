@@ -56,4 +56,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UProjectileMovementComponent* ProjectileMovement;
 
+public:
+	virtual void OnConstruction(const FTransform& Transform) override;
 };
