@@ -10,6 +10,18 @@ class UInputAction;
 class USoundBase;
 class UTexture2D;
 
+// 사망 장소 구분을 위한 열거형 (Enum) 정의
+UENUM(BlueprintType)
+enum class EDeathLocationType : uint8
+{
+	None        UMETA(DisplayName = "None"),
+	Office      UMETA(DisplayName = "Office"),     // 사무실
+	Window      UMETA(DisplayName = "Window"),     // 창가
+	Pantry      UMETA(DisplayName = "Pantry"),     // 탕비실
+	Hallway     UMETA(DisplayName = "Hallway"),    // 복도
+	Restroom    UMETA(DisplayName = "Restroom")    // 화장실
+};
+
 // 스태미나 관련 델리게이트
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FUpdateSprintMeterDelegate, float, Percentage);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSprintStateChangedDelegate, bool, bSprinting);
@@ -17,7 +29,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSprintStateChangedDelegate, bool, b
 // HP 변경 알림용 델리게이트
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChangedDelegate, float, HPPercent);
 
-// [변경] 아이템 획득 알림용 델리게이트 (파라미터 3개: 이름, 설명, 아이콘)
+// 아이템 획득 알림용 델리게이트
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnItemPickedUpDelegate, FText, Name, FText, Desc, UTexture2D*, Icon);
 
 /**
@@ -44,6 +56,10 @@ protected:
 
 	/** If true, we're recovering stamina */
 	bool bRecovering = false;
+
+	bool bIsSpedUp = false;
+
+	float IncreasedSpeed = 600.0f; // 필요시 값 조정
 
 	/** Default walk speed when not sprinting or recovering */
 	UPROPERTY(EditAnywhere, Category = "Walk")
@@ -76,7 +92,7 @@ protected:
 	FTimerHandle SprintTimer;
 
 	/* ================================================== */
-	/* HP & Death System                         */
+	/* HP & Death System                          */
 	/* ================================================== */
 
 	/** Max HP */
@@ -95,6 +111,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
 	USoundBase* DamageSound;
 
+	//  현재 플레이어가 위치한 장소 (기본값 None) 트리거 박스에 들어갈 때마다 이 변수가 갱신
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Cinematic")
+	EDeathLocationType CurrentDeathLocation = EDeathLocationType::None;
+
 public:
 
 	/** Delegate called when the sprint meter should be updated */
@@ -107,8 +127,7 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Health")
 	FOnHealthChangedDelegate OnHealthChanged;
 
-	// [변경] 아이템 획득 시 방송(Broadcast)할 이벤트 디스패처
-	// 블루프린트에서 이 이벤트를 Assign(바인딩)하여 UI를 띄웁니다.
+	// 아이템 획득 시 방송(Broadcast)할 이벤트 디스패처
 	UPROPERTY(BlueprintAssignable, Category = "UI")
 	FOnItemPickedUpDelegate OnItemPickedUp;
 
@@ -121,6 +140,10 @@ public:
 
 	UFUNCTION(Category = "Health")
 	void Heal(float Amount);
+
+	// 외부(트리거 박스 등)에서 현재 플레이어의 장소 정보를 갱신할 때 호출하는 함수
+	UFUNCTION(BlueprintCallable, Category = "Cinematic")
+	void SetDeathLocation(EDeathLocationType NewLocation);
 
 	// 앉기 입력 액션 (에디터에서 할당)
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
@@ -143,10 +166,14 @@ protected:
 	// 언리얼 엔진 기본 피격 함수 오버라이드
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
-	// 사망 시 실행할 이벤트 (블루프린트에서 시네마틱 연결용)
+	// 사망 시 실행할 이벤트
 	UFUNCTION(BlueprintNativeEvent, Category = "Health")
 	void OnDeath();
 	virtual void OnDeath_Implementation();
+
+	//  하이브리드 방식: C++에서 호출하면 블루프린트에서 시네마틱을 재생하는 이벤트
+	UFUNCTION(BlueprintImplementableEvent, Category = "Cinematic")
+	void PlayGameOverCinematic(EDeathLocationType DeathLocation);
 
 	// 앉기 시작/종료 함수
 	void StartCrouch(const FInputActionValue& Value);

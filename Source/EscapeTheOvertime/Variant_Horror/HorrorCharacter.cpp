@@ -7,7 +7,7 @@
 #include "Components/SpotLightComponent.h"
 #include "EnhancedInputComponent.h"
 #include "InputAction.h"
-#include "UObject/ConstructorHelpers.h" // [추가] FObjectFinder 사용 시 필수
+#include "UObject/ConstructorHelpers.h" // FObjectFinder 사용 시 필수
 
 AHorrorCharacter::AHorrorCharacter()
 {
@@ -50,6 +50,9 @@ void AHorrorCharacter::BeginPlay()
 	// 게임 시작 시 HP 초기화
 	CurrentHP = MaxHP;
 	bIsDead = false;
+	
+	// 시작 시 장소 초기화
+	CurrentDeathLocation = EDeathLocationType::None;
 
 	// UI가 초기 상태(100%)를 그릴 수 있도록 방송
 	if (MaxHP > 0.0f)
@@ -86,7 +89,7 @@ float AHorrorCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 	// HP 감소 및 0 미만 방지
 	CurrentHP = FMath::Clamp(CurrentHP - ActualDamage, 0.0f, MaxHP);
 
-	//  맞았을 때만 UI에게 "나 체력 변했어!"라고 알림
+	//  맞았을 때만 UI에게 "나 체력 변했어!"라고 알림
 	if (MaxHP > 0.0f)
 	{
 		OnHealthChanged.Broadcast(CurrentHP / MaxHP);
@@ -121,7 +124,10 @@ void AHorrorCharacter::OnDeath_Implementation()
 		DisableInput(PC);
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Player Died. Check Blueprint for Cinematic logic."));
+	UE_LOG(LogTemp, Warning, TEXT("Player Died. Calling Cinematic Logic..."));
+	
+	// 하이브리드 연결: 현재 저장된 위치 태그(CurrentDeathLocation)를 블루프린트로 넘김
+	PlayGameOverCinematic(CurrentDeathLocation);
 }
 
 void AHorrorCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -143,6 +149,14 @@ void AHorrorCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 			}
 		}
 	}
+}
+
+// 위치 태그 갱신 함수 (트리거 박스에서 호출)
+void AHorrorCharacter::SetDeathLocation(EDeathLocationType NewLocation)
+{
+	CurrentDeathLocation = NewLocation;
+	// 디버깅용 로그 (필요시 주석 해제)
+	// UE_LOG(LogTemp, Log, TEXT("Death Location Updated: %d"), (int32)NewLocation);
 }
 
 // 앉기 시작
