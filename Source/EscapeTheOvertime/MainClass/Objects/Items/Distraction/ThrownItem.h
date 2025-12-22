@@ -59,6 +59,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Effects")
 	TSubclassOf<AActor> BreakerClass;
 
+	// 타이머를 관리할 핸들
+	FTimerHandle CollisionTimerHandle;
+
+	// 타이머가 끝나면 호출될 함수
+	UFUNCTION()
+	void DisablePawnCollision();
+
 public:
 	virtual void OnConstruction(const FTransform& Transform) override;
 };

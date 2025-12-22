@@ -353,6 +353,14 @@ void AThrownItem::OnProjectileStop(const FHitResult& ImpactResult)
 		if (ImpulseDir.IsZero()) ImpulseDir = GetActorForwardVector(); //FVector::UpVector();
 		GeometryCollectionComponent->AddImpulse(ImpulseDir * 500.0f, NAME_None, false);
 
+		// 0.1초 ~ 0.5초 사이로 조절해 보세요. 너무 짧으면 안 튀고, 너무 길면 발에 걸립니다.
+		GetWorld()->GetTimerManager().SetTimer(
+			CollisionTimerHandle,
+			this,
+			&AThrownItem::DisablePawnCollision,
+			0.2f, // 0.2초 뒤 실행
+			false // 반복 없음
+		);
 	}
 
 	if (ProjectileMovement)
@@ -361,6 +369,20 @@ void AThrownItem::OnProjectileStop(const FHitResult& ImpactResult)
 	}
 
 	SetLifeSpan(5.0f); //
+}
+
+void AThrownItem::DisablePawnCollision()
+{
+	if (GeometryCollectionComponent)
+	{
+		// 이제 조각들이 흩어졌으니, 캐릭터가 밟고 지나갈 수 있게 무시합니다.
+		GeometryCollectionComponent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+
+		// (선택 사항) 카메라(Camera) 채널도 무시하면 시야 가림 방지에 좋습니다.
+		GeometryCollectionComponent->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+
+		UE_LOG(LogTemp, Warning, TEXT("Pawn Collision Disabled for Debris!"));
+	}
 }
 
 void AThrownItem::OnConstruction(const FTransform& Transform)
