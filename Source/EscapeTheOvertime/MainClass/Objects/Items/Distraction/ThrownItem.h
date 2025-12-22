@@ -56,6 +56,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UProjectileMovementComponent* ProjectileMovement;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Effects")
+	TSubclassOf<AActor> BreakerClass;
+
 public:
 	virtual void OnConstruction(const FTransform& Transform) override;
 };

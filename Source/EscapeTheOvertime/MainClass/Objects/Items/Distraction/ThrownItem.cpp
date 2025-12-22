@@ -76,10 +76,11 @@ AThrownItem::AThrownItem()
 
 	if (RestCollectionAsset)
 	{
-		GeometryCollectionComponent->SetRestCollection(RestCollectionAsset);
-		GeometryCollectionComponent->SetSimulatePhysics(false);
-		GeometryCollectionComponent->SetNotifyRigidBodyCollision(false); // 날아갈 땐 꺼둠
-		GeometryCollectionComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		//GeometryCollectionComponent->SetRestCollection(RestCollectionAsset);
+		//GeometryCollectionComponent->SetSimulatePhysics(false);
+		//GeometryCollectionComponent->SetNotifyRigidBodyCollision(false); // 날아갈 땐 꺼둠
+		//GeometryCollectionComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		GeometryCollectionComponent->SetNotifyBreaks(true);
 	}
 
 	// 발사체 설정
@@ -248,6 +249,7 @@ void AThrownItem::BeginPlay()
 		GeometryCollectionComponent->SetVisibility(false);
 		GeometryCollectionComponent->SetSimulatePhysics(false);
 		GeometryCollectionComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		GeometryCollectionComponent->SetNotifyBreaks(true);
 	}
 
 
@@ -290,17 +292,66 @@ void AThrownItem::OnProjectileStop(const FHitResult& ImpactResult)
 		Collision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 
+	// [필살기] 외부 파괴자(Field System) 소환
+	if (BreakerClass)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Attempting to Spawn Breaker...")); // 로그 1
+		FVector SpawnLoc = GetActorLocation();
+		FRotator SpawnRot = FRotator::ZeroRotator;
+
+		// 소환되는 순간 주변 GC를 박살냄
+		AActor* Breaker = GetWorld()->SpawnActor<AActor>(BreakerClass, SpawnLoc, SpawnRot);
+		if (Breaker)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Breaker Spawned SUCCESSFULLY: %s"), *Breaker->GetName()); // 로그 2
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Breaker Spawn FAILED!")); // 로그 3
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("BreakerClass is NULL! Please assign in BP!")); // 로그 4 (할당 안 됨)
+	}
+
 	if (GeometryCollectionComponent)
 	{
 		GeometryCollectionComponent->SetCollisionProfileName(TEXT("PhysicsActor"));
 		GeometryCollectionComponent->SetVisibility(true);
 		GeometryCollectionComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		GeometryCollectionComponent->SetNotifyBreaks(true);
 		GeometryCollectionComponent->SetSimulatePhysics(true);
+
+		GeometryCollectionComponent->RecreatePhysicsState();
 		// 
 		// GeometryCollectionComponent->AddRadialImpulse(ImpactResult.ImpactPoint, 500.0f, 2000.0f, ERadialImpulseFalloff::RIF_Linear, true);
+
+		// [수정] 단순 Impulse가 아니라 'Radial Impulse'를 사용하여 데미지(Strain)를 줍니다.
+		// ImpactPoint(충돌 지점)에서 폭발을 일으킵니다.
+		// Strength: 파괴력 (10000.0f 이상 강력하게!)
+		// Radius: 머그컵 크기보다 살짝 크게 (50.0f)
+		// bFalloff: true (가까울수록 셈)
+		// bVelChange: true (질량 무시하고 속도 변경 - 이게 중요!)
+
+		GeometryCollectionComponent->AddRadialImpulse(
+			ImpactResult.ImpactPoint,
+			50.0f,    // 반경
+			500.0f, // 강도 (안 깨지면 10만, 100만까지 올리세요)
+			ERadialImpulseFalloff::RIF_Linear,
+			true      // bVelChange
+		);
+
+		GeometryCollectionComponent->ApplyExternalStrain(
+			5000000.0f,               // Strain 양 (충분히 크게)
+			GetActorLocation(), //ImpactResult.Location,  // 충돌 위치
+			50.0f                   // 반경 (머그컵 크기)
+		);
+
 		// 벽에 부딪힌 충격 방향으로 힘을 가해줍니다.
-		FVector ImpulseDir = ProjectileMovement->Velocity.GetSafeNormal();
-		GeometryCollectionComponent->AddImpulse(ImpulseDir * 5000.0f, NAME_None, true);
+		FVector ImpulseDir = (GetActorLocation() - ImpactResult.Location).GetSafeNormal();//ProjectileMovement->Velocity.GetSafeNormal();
+		if (ImpulseDir.IsZero()) ImpulseDir = GetActorForwardVector(); //FVector::UpVector();
+		GeometryCollectionComponent->AddImpulse(ImpulseDir * 500.0f, NAME_None, false);
 
 	}
 
