@@ -57,9 +57,9 @@ protected:
 	/** If true, we're recovering stamina */
 	bool bRecovering = false;
 
-	bool bIsSpedUp = false;
+	//bool bIsSpedUp = false;
 
-	float IncreasedSpeed = 600.0f; // 필요시 값 조정
+	//float IncreasedSpeed = 1200.0f; // 필요시 값 조정
 
 	/** Default walk speed when not sprinting or recovering */
 	UPROPERTY(EditAnywhere, Category = "Walk")
@@ -141,6 +141,9 @@ public:
 	UFUNCTION(Category = "Health")
 	void Heal(float Amount);
 
+	UFUNCTION(Category = "Health")
+	void DamagePlayer(float Amount);
+
 	// 외부(트리거 박스 등)에서 현재 플레이어의 장소 정보를 갱신할 때 호출하는 함수
 	UFUNCTION(BlueprintCallable, Category = "Cinematic")
 	void SetDeathLocation(EDeathLocationType NewLocation);
@@ -148,6 +151,11 @@ public:
 	// 앉기 입력 액션 (에디터에서 할당)
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	class UInputAction* CrouchAction;
+
+	//virtual void ActivateSpeedUp() override;
+
+	//UFUNCTION(BlueprintCallable, Category = "Gameplay")
+	//void SetSpeedUpState(bool bNewState);
 
 protected:
 
@@ -191,4 +199,6 @@ protected:
 
 	/** Called while sprinting at a fixed time interval */
 	void SprintFixedTick();
+
+
 };

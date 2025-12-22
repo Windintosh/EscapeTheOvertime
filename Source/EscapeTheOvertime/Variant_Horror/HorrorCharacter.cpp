@@ -183,10 +183,12 @@ void AHorrorCharacter::DoStartSprint()
 	if (!bRecovering)
 	{
 		// set the sprint walk speed
-		if (!bIsSpedUp)
-			GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
-		else
-			GetCharacterMovement()->MaxWalkSpeed = IncreasedSpeed;
+		//if (!bIsSpedUp)
+		//	GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+		//else
+		//	GetCharacterMovement()->MaxWalkSpeed = IncreasedSpeed;
+
+		GetCharacterMovement()->MaxWalkSpeed = bIsSpedUp ? IncreasedSpeed : SprintSpeed;
 
 		// call the sprint state changed delegate
 		OnSprintStateChanged.Broadcast(true);
@@ -202,7 +204,7 @@ void AHorrorCharacter::DoEndSprint()
 	if (!bRecovering)
 	{
 		// set the default walk speed
-		GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+		GetCharacterMovement()->MaxWalkSpeed = bIsSpedUp? SprintSpeed : WalkSpeed;
 
 		// call the sprint state changed delegate
 		OnSprintStateChanged.Broadcast(false);
@@ -234,6 +236,7 @@ void AHorrorCharacter::SprintFixedTick()
 
 				// set the recovering walk speed
 				GetCharacterMovement()->MaxWalkSpeed = RecoveringWalkSpeed;
+
 			}
 		}
 	}
@@ -262,9 +265,61 @@ void AHorrorCharacter::SprintFixedTick()
 	OnSprintMeterUpdated.Broadcast(SprintMeter / SprintTime);
 }
 
+//void AHorrorCharacter::ActivateSpeedUp()
+//{
+//	// 부모의 로직(타이머 설정, 로그 등)은 그대로 실행하고 싶다면:
+//	Super::ActivateSpeedUp();
+//
+//	// 하지만 속도 설정만큼은 내 방식(변수 사용)대로 확실하게 다시 잡는다!
+//	// 내가 아까 만들어준 함수를 여기서 호출하거나, 로직을 직접 씀
+//	SetSpeedUpState(true);
+//}
+
+//void AHorrorCharacter::SetSpeedUpState(bool bNewState)
+//{
+//	// 상태가 이전과 같다면 아무것도 하지 않음 (불필요한 연산 방지)
+//	if (bIsSpedUp == bNewState)
+//	{
+//		return;
+//	}
+//
+//	// 1. 상태 변수 업데이트
+//	bIsSpedUp = bNewState;
+//
+//	UE_LOG(LogTemp, Warning, TEXT("SpeedUp State Changed: %s"), bIsSpedUp ? TEXT("ON") : TEXT("OFF"));
+//
+//	// 2. 현재 상황에 맞춰 즉시 이동 속도(MaxWalkSpeed) 갱신
+//
+//	if (bRecovering)
+//	{
+//		// A. 탈진(Recovering) 상태일 때
+//		// 보통 탈진 상태에서는 버프가 있어도 느리게 걷습니다. (기획에 따라 다를 수 있음)
+//		GetCharacterMovement()->MaxWalkSpeed = RecoveringWalkSpeed;
+//	}
+//	else if (bSprinting)
+//	{
+//		// B. 달리기(Shift 누름) 중일 때
+//		// 버프 상태면 IncreasedSpeed, 아니면 일반 SprintSpeed
+//		GetCharacterMovement()->MaxWalkSpeed = bIsSpedUp ? IncreasedSpeed : SprintSpeed;
+//	}
+//	else
+//	{
+//		// C. 걷기(Shift 안 누름) 중일 때
+//		// 네 코드 로직(DoEndSprint)에 따르면: 버프 상태일 때 걷는 속도는 일반 달리기 속도(SprintSpeed)와 같음
+//		GetCharacterMovement()->MaxWalkSpeed = bIsSpedUp ? SprintSpeed : WalkSpeed;
+//	}
+//}
+
 void AHorrorCharacter::Heal(float Amount)
 {
 	CurrentHP = FMath::Min(CurrentHP + Amount, MaxHP);
 	OnHealthChanged.Broadcast(CurrentHP / MaxHP);
 	UE_LOG(LogTemp, Warning, TEXT("Player Healed by %.1f, Health: %.1f"), Amount, CurrentHP);
+}
+
+void AHorrorCharacter::DamagePlayer(float Amount)
+{
+	CurrentHP = FMath::Clamp(CurrentHP - Amount, 0.0f, MaxHP);
+	OnHealthChanged.Broadcast(CurrentHP / MaxHP);
+	UE_LOG(LogTemp, Warning, TEXT("Player Damaged by %.1f, Health: %.1f"), Amount, CurrentHP);
 }

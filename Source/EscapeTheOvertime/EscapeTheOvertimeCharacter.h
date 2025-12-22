@@ -149,7 +149,7 @@ public:
 	void ActivateMuffle();
 
 	UFUNCTION(BlueprintCallable, Category = "Item")
-	void ActivateSpeedUp();
+	virtual void ActivateSpeedUp();
 
 	UFUNCTION(BlueprintCallable, Category = "Item")
 	void ActivateDistraction();

@@ -100,6 +100,8 @@ void AEscapeTheOvertimeCharacter::Tick(float DeltaTime)
 			EndSpeedUp();
 		}
 	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Player Speed : %f"), GetCharacterMovement()->MaxWalkSpeed);
 }
 
 void AEscapeTheOvertimeCharacter::ActivateMuffle()
@@ -133,7 +135,7 @@ void AEscapeTheOvertimeCharacter::EndMuffle()
 void AEscapeTheOvertimeCharacter::EndSpeedUp()
 {
 	bIsSpedUp = false;
-	GetCharacterMovement()->MaxWalkSpeed = 250.0f; //need to change logic
+	GetCharacterMovement()->MaxWalkSpeed = 250.f; //need to change logic
 	UE_LOG(LogTemp, Warning, TEXT("SpeedUp Ended"));
 }
 
