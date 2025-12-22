@@ -169,8 +169,10 @@ void AHorrorCharacter::DoStartSprint()
 	if (!bRecovering)
 	{
 		// set the sprint walk speed
-		// [수정] 헤더에 없는 변수(bIsSpedUp) 사용 제거 -> 기본 로직으로 복구
-		GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+		if (!bIsSpedUp)
+			GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+		else
+			GetCharacterMovement()->MaxWalkSpeed = IncreasedSpeed;
 
 		// call the sprint state changed delegate
 		OnSprintStateChanged.Broadcast(true);
@@ -205,8 +207,10 @@ void AHorrorCharacter::SprintFixedTick()
 		if (SprintMeter > 0.0f)
 		{
 			// update the sprint meter
-			// [수정] bIsSpedUp 관련 로직 제거
-			SprintMeter = FMath::Max(SprintMeter - SprintFixedTickTime, 0.0f);
+			if (!bIsSpedUp)
+				SprintMeter = FMath::Max(SprintMeter - SprintFixedTickTime, 0.0f);
+			else
+				SprintMeter = FMath::Min(SprintMeter + SprintFixedTickTime, SprintTime);
 
 			// have we run out of stamina?
 			if (SprintMeter <= 0.0f)
@@ -230,8 +234,10 @@ void AHorrorCharacter::SprintFixedTick()
 			bRecovering = false;
 
 			// set the walk or sprint speed depending on whether the sprint button is down
-			// [수정] bIsSpedUp 관련 로직 제거
-			GetCharacterMovement()->MaxWalkSpeed = bSprinting ? SprintSpeed : WalkSpeed;
+			if (!bIsSpedUp)
+				GetCharacterMovement()->MaxWalkSpeed = bSprinting ? SprintSpeed : WalkSpeed;
+			else
+				GetCharacterMovement()->MaxWalkSpeed = bSprinting ? IncreasedSpeed : SprintSpeed;
 
 			// update the sprint state depending on whether the button is down or not
 			OnSprintStateChanged.Broadcast(bSprinting);
