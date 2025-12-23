@@ -141,8 +141,8 @@ public:
 	UFUNCTION(Category = "Health")
 	void Heal(float Amount);
 
-	UFUNCTION(Category = "Health")
-	void DamagePlayer(float Amount);
+	//UFUNCTION(Category = "Health")
+	//void DamagePlayer(float Amount);
 
 	// 외부(트리거 박스 등)에서 현재 플레이어의 장소 정보를 갱신할 때 호출하는 함수
 	UFUNCTION(BlueprintCallable, Category = "Cinematic")
