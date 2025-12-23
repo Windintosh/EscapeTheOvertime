@@ -317,9 +317,18 @@ void AHorrorCharacter::Heal(float Amount)
 	UE_LOG(LogTemp, Warning, TEXT("Player Healed by %.1f, Health: %.1f"), Amount, CurrentHP);
 }
 
+void AHorrorCharacter::AddMaxHP(float Amount)
+{
+	MaxHP += Amount;
+	CurrentHP = FMath::Min(CurrentHP + Amount, MaxHP);
+	OnHealthChanged.Broadcast(CurrentHP / MaxHP);
+	UE_LOG(LogTemp, Warning, TEXT("MaxHP Increased by %.1f, Health: %.1f / %.1f"), Amount, CurrentHP, MaxHP);
+}
+
 //void AHorrorCharacter::DamagePlayer(float Amount)
 //{
 //	CurrentHP = FMath::Clamp(CurrentHP - Amount, 0.0f, MaxHP);
 //	OnHealthChanged.Broadcast(CurrentHP / MaxHP);
 //	UE_LOG(LogTemp, Warning, TEXT("Player Damaged by %.1f, Health: %.1f"), Amount, CurrentHP);
 //}
+

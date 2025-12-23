@@ -12,7 +12,7 @@ void AHealItem::ActivateItem(AActor* Activator)
 	AHorrorCharacter* PlayerCharacter = Cast<AHorrorCharacter>(Activator);
 	if (!PlayerCharacter) return;
 
-	PlayerCharacter->Heal(50.0f);
+	PlayerCharacter->Heal(HealAmount);
 
 	//부모 클래스 호출 (이 줄이 있어야 UI가 뜨고 아이템이 사라짐)
 	Super::ActivateItem(Activator);

@@ -2,20 +2,21 @@
 
 #include "CoreMinimal.h"
 #include "MainClass/Objects/Items/ItemBase.h"
-#include "HealItem.generated.h"
+#include "MaxHPUpItem.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class ESCAPETHEOVERTIME_API AHealItem : public AItemBase
+class ESCAPETHEOVERTIME_API AMaxHPUpItem : public AItemBase
 {
 	GENERATED_BODY()
 	
-protected:
-	AHealItem();
+public:
+	AMaxHPUpItem();
 
+protected:
 	virtual void ActivateItem(AActor* Activator) override;
 
-	float HealAmount = 50.f;
+	float HealAmount = 20.f;
 };

@@ -1,10 +1,11 @@
-#include "MainClass/Objects/WorldObjects/ItemSpawner.h"
+﻿#include "MainClass/Objects/WorldObjects/ItemSpawner.h"
 #include "Components/BoxComponent.h"
 #include "Keycard.h"
 #include "MuffleItem.h"
 #include "SpeedUpItem.h"
 #include "DistractionItem.h"
 #include "HealItem.h"
+#include "MaxHPUpItem.h"
 #include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
@@ -87,7 +88,16 @@ AActor* AItemSpawner::SpawnItem(int32 Index)
 		ItemIndex = SpawnedItem->GetItemIndex();
 		ItemType = SpawnedItem->GetItemType();
 		SpawnedItem->AttachToComponent(BoxComp, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-		UE_LOG(LogTemp, Display, TEXT("DistractionItem Spawned"));
+		UE_LOG(LogTemp, Display, TEXT("HealItem Spawned"));
+		return SpawnedItem;
+	}
+	case 5: 
+	{
+		AMaxHPUpItem* SpawnedItem = GetWorld()->SpawnActor<AMaxHPUpItem>(AMaxHPUpItemClass, GetActorLocation(), GetActorRotation());
+		ItemIndex = SpawnedItem->GetItemIndex();
+		ItemType = SpawnedItem->GetItemType();
+		SpawnedItem->AttachToComponent(BoxComp, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+		UE_LOG(LogTemp, Display, TEXT("MaxHPUpItem Spawned"));
 		return SpawnedItem;
 	}
 	default:

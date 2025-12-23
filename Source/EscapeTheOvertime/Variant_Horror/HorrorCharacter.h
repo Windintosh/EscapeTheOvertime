@@ -141,6 +141,9 @@ public:
 	UFUNCTION(Category = "Health")
 	void Heal(float Amount);
 
+	UFUNCTION(Category = "Health")
+	void AddMaxHP(float Amount);
+
 	//UFUNCTION(Category = "Health")
 	//void DamagePlayer(float Amount);
 
