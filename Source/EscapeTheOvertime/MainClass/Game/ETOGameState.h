@@ -20,7 +20,7 @@ public:
 	void SpawnRandomItems();
 
 	const int32 MinItemIndex = 0; //Keycard
-	const int32 MaxItemIndex = 4; //MuffleItem, SpeedUpItem, DistractionItem, HealItem
+	const int32 MaxItemIndex = 5; //MuffleItem, SpeedUpItem, DistractionItem, HealItem, MaxHPUpItem
 
 	bool bIsKeycardSpawned = false;
 
