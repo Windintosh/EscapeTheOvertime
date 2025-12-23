@@ -19,7 +19,8 @@ enum class EDeathLocationType : uint8
 	Window      UMETA(DisplayName = "Window"),     // 창가
 	Pantry      UMETA(DisplayName = "Pantry"),     // 탕비실
 	Hallway     UMETA(DisplayName = "Hallway"),    // 복도
-	Restroom    UMETA(DisplayName = "Restroom")    // 화장실
+	Restroom    UMETA(DisplayName = "Restroom"),    // 화장실
+	TimeOver    UMETA(DisplayName = "TimeOver")
 };
 
 // 스태미나 관련 델리게이트
@@ -150,6 +151,10 @@ public:
 	UFUNCTION(Category = "Health")
 	void SetHP(float Value);
 
+	// 사망 시 실행할 이벤트
+	UFUNCTION(BlueprintNativeEvent, Category = "Health")
+	void OnDeath();
+
 	//UFUNCTION(Category = "Health")
 	//void DamagePlayer(float Amount);
 
@@ -183,9 +188,6 @@ protected:
 	// 언리얼 엔진 기본 피격 함수 오버라이드
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
-	// 사망 시 실행할 이벤트
-	UFUNCTION(BlueprintNativeEvent, Category = "Health")
-	void OnDeath();
 	virtual void OnDeath_Implementation();
 
 	//  하이브리드 방식: C++에서 호출하면 블루프린트에서 시네마틱을 재생하는 이벤트

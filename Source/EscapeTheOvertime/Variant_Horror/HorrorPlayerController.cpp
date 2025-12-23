@@ -54,28 +54,37 @@ void AHorrorPlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// 게임 오버 상태면 시간 멈춤
 	if (bIsGameOver)
 	{
 		return;
 	}
 
-	// 1. 분 누적 (DeltaTime * 속도)
+	// 1. 분 누적
 	CurrentMinute += DeltaTime * TimeSpeed;
 
-	// 2. 분 -> 시간 변환
+	// 2. 시간 변환
 	if (CurrentMinute >= 60.0f)
 	{
 		CurrentMinute -= 60.0f;
 		CurrentHour++;
 
-		// 3. 자정(24시) 체크
+		// 3. 자정(24시) 체크 - [수정된 부분]
 		if (CurrentHour >= 24)
 		{
 			bIsGameOver = true;
-			CurrentHour = 0; // 0시 표기 (선택사항)
+			CurrentHour = 0;
 
-			// 블루프린트로 이벤트 호출 (암전, 게임오버 UI 등 연출)
+			// 현재 빙의 중인 캐릭터(HorrorCharacter)를 가져옴
+			if (AHorrorCharacter* MyCharacter = Cast<AHorrorCharacter>(GetPawn()))
+			{
+				// 1. 사망 원인을 'TimeOver'로 설정
+				MyCharacter->SetDeathLocation(EDeathLocationType::TimeOver);
+
+				// 2. 캐릭터 사망 처리 실행 (이러면 자동으로 시네마틱 요청 신호가 감)
+				MyCharacter->OnDeath();
+			}
+
+			// (기존 코드) 필요하다면 남겨두세요 (UI 연출 등)
 			OnTimeLimitReached();
 		}
 	}
