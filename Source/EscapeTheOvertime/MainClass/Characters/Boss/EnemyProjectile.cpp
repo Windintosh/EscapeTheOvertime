@@ -19,13 +19,15 @@ AEnemyProjectile::AEnemyProjectile()
 	StaticMesh->SetupAttachment(Collision);
 
 	Collision->InitSphereRadius(40.0f);
-	Collision->OnComponentBeginOverlap.AddDynamic(this, &AEnemyProjectile::OnPlayerOverlap);
+	
 }
 
 // Called when the game starts or when spawned
 void AEnemyProjectile::BeginPlay()
 {
 	Super::BeginPlay();
+
+	Collision->OnComponentBeginOverlap.AddDynamic(this, &AEnemyProjectile::OnPlayerOverlap);
 	
 }
 

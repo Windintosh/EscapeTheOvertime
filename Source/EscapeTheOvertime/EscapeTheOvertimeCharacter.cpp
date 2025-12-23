@@ -101,7 +101,7 @@ void AEscapeTheOvertimeCharacter::Tick(float DeltaTime)
 		}
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Player Speed : %f"), GetCharacterMovement()->MaxWalkSpeed);
+	//UE_LOG(LogTemp, Warning, TEXT("Player Speed : %f"), GetCharacterMovement()->MaxWalkSpeed);
 }
 
 void AEscapeTheOvertimeCharacter::ActivateMuffle()
