@@ -44,7 +44,7 @@ public:
 	TSubclassOf<class AHealItem> HealItemClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	TSubclassOf<class AMaxHPUpItem> AMaxHPUpItemClass;
+	TSubclassOf<class AMaxHPUpItem> MaxHPUpItemClass;
 
 	AActor* SpawnItem(int32 Index);
 

@@ -11,11 +11,10 @@ UCLASS()
 class ESCAPETHEOVERTIME_API AMaxHPUpItem : public AItemBase
 {
 	GENERATED_BODY()
-	
-public:
-	AMaxHPUpItem();
 
 protected:
+	AMaxHPUpItem();
+
 	virtual void ActivateItem(AActor* Activator) override;
 
 	float HealAmount = 20.f;

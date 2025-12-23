@@ -93,7 +93,7 @@ AActor* AItemSpawner::SpawnItem(int32 Index)
 	}
 	case 5: 
 	{
-		AMaxHPUpItem* SpawnedItem = GetWorld()->SpawnActor<AMaxHPUpItem>(AMaxHPUpItemClass, GetActorLocation(), GetActorRotation());
+		AMaxHPUpItem* SpawnedItem = GetWorld()->SpawnActor<AMaxHPUpItem>(MaxHPUpItemClass, GetActorLocation(), GetActorRotation());
 		ItemIndex = SpawnedItem->GetItemIndex();
 		ItemType = SpawnedItem->GetItemType();
 		SpawnedItem->AttachToComponent(BoxComp, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
