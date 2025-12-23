@@ -157,7 +157,7 @@ void AThrownItem::BeginPlay()
 {
 	Super::BeginPlay();
 
-	DrawDebugSphere(GetWorld(), GetActorLocation(), Collision->GetScaledSphereRadius(), 12, FColor::Red, true, 5.0f);
+	//DrawDebugSphere(GetWorld(), GetActorLocation(), Collision->GetScaledSphereRadius(), 12, FColor::Red, true, 5.0f);
 
 	//Collision->OnComponentBeginOverlap.RemoveDynamic(this, &AItemBase::OnItemOverlap);
 	Collision->OnComponentHit.AddDynamic(this, &AThrownItem::OnItemHit);
