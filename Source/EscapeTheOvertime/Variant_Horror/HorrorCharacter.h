@@ -136,6 +136,9 @@ public:
 	float GetCurrentHP() const { return CurrentHP; }
 
 	UFUNCTION(BlueprintPure, Category = "Health")
+	float GetMaxHP() const { return MaxHP; }
+
+	UFUNCTION(BlueprintPure, Category = "Health")
 	bool IsDead() const { return bIsDead; }
 
 	UFUNCTION(Category = "Health")
@@ -143,6 +146,9 @@ public:
 
 	UFUNCTION(Category = "Health")
 	void AddMaxHP(float Amount);
+
+	UFUNCTION(Category = "Health")
+	void SetHP(float Value);
 
 	//UFUNCTION(Category = "Health")
 	//void DamagePlayer(float Amount);

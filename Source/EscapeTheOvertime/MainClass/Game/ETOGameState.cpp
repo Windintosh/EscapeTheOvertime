@@ -1,11 +1,14 @@
-#include "MainClass/Game/ETOGameState.h"
+﻿#include "MainClass/Game/ETOGameState.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "ETOGameInstance.h"
+#include "HorrorCharacter.h"
 
 void AETOGameState::BeginPlay()
 {
 	Super::BeginPlay();
 
+	LoadPlayerHP();
 	SpawnRandomItems();
 
 	UGameplayStatics::SetGamePaused(GetWorld(), false);
@@ -77,4 +80,28 @@ void AETOGameState::SpawnRandomItems()
 		}
 	}
 	UGameplayStatics::SetGamePaused(GetWorld(), false);
+}
+
+void AETOGameState::LoadPlayerHP()
+{
+	UETOGameInstance* ETOGI = Cast<UETOGameInstance>(GetWorld()->GetGameInstance());
+	AHorrorCharacter* PlayerCharacter = Cast<AHorrorCharacter>(GetWorld()->GetFirstPlayerController()->GetCharacter());
+
+	if (ETOGI && PlayerCharacter)
+	{
+		PlayerCharacter->SetHP(ETOGI->LoadPlayerHP());
+		UE_LOG(LogTemp, Warning, TEXT("Player MaxHP is set to %.1f -> %.1f"), ETOGI->LoadPlayerHP(), PlayerCharacter->GetCurrentHP());
+	}
+}
+
+void AETOGameState::SavePlayerHP()
+{
+	UETOGameInstance* ETOGI = Cast<UETOGameInstance>(GetWorld()->GetGameInstance());
+	AHorrorCharacter* PlayerCharacter = Cast<AHorrorCharacter>(GetWorld()->GetFirstPlayerController()->GetCharacter());
+
+	if (ETOGI && PlayerCharacter)
+	{
+		ETOGI->SavePlayerHP(PlayerCharacter->GetMaxHP());
+		UE_LOG(LogTemp, Warning, TEXT("Player MaxHP is saved %.1f -> %.1f"),PlayerCharacter->GetMaxHP(), ETOGI->LoadPlayerHP());
+	}
 }

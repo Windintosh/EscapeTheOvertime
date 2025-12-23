@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 //#include "GameFramework/GameState.h"
@@ -23,4 +23,8 @@ public:
 	const int32 MaxItemIndex = 4; //MuffleItem, SpeedUpItem, DistractionItem, HealItem
 
 	bool bIsKeycardSpawned = false;
+
+	void LoadPlayerHP();
+
+	void SavePlayerHP();
 };

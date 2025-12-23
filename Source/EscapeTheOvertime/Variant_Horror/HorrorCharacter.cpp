@@ -325,6 +325,13 @@ void AHorrorCharacter::AddMaxHP(float Amount)
 	UE_LOG(LogTemp, Warning, TEXT("MaxHP Increased by %.1f, Health: %.1f / %.1f"), Amount, CurrentHP, MaxHP);
 }
 
+void AHorrorCharacter::SetHP(float Value)
+{
+	MaxHP = Value;
+	CurrentHP = MaxHP;
+	UE_LOG(LogTemp, Warning, TEXT("HP is now %f Max"), MaxHP);
+}
+
 //void AHorrorCharacter::DamagePlayer(float Amount)
 //{
 //	CurrentHP = FMath::Clamp(CurrentHP - Amount, 0.0f, MaxHP);

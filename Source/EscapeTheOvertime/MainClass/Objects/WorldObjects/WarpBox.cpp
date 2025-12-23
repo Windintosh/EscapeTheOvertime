@@ -3,6 +3,7 @@
 #include "EscapeTheOvertimeCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
+#include "ETOGameState.h"
 
 AWarpBox::AWarpBox()
 {
@@ -31,6 +32,9 @@ void AWarpBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Other
 	{
 		return;
 	}
+
+	AETOGameState* GameState = Cast<AETOGameState>(GetWorld()->GetGameState());
+	GameState->SavePlayerHP();
 
 	AEscapeTheOvertimeCharacter* Player = Cast<AEscapeTheOvertimeCharacter>(OtherActor);
 	if (Player)
