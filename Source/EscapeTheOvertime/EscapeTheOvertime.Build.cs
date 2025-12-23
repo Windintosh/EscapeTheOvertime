@@ -46,6 +46,8 @@ public class EscapeTheOvertime : ModuleRules
             "EscapeTheOvertime/MainClass/Objects/Props/KeycardReader",
             "EscapeTheOvertime/MainClass/Objects/WorldObjects",
             "EscapeTheOvertime/MainClass/Characters",
+            "EscapeTheOvertime/MainClass/Characters/Boss",
+            "EscapeTheOvertime/MainClass/Characters/Dancer",
             "EscapeTheOvertime/MainClass/Game",
             "EscapeTheOvertime/MainClass/Game/AnimNotifies",
             "EscapeTheOvertime/Variant_Horror",
