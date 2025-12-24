@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "Animation/AnimNotifies/AnimNotify.h"
@@ -14,7 +14,7 @@ class ESCAPETHEOVERTIME_API UAnimNotify_PlayerNoise : public UAnimNotify
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-	float Loudness = 1.0f;
+	float Loudness = 3.0f;
 
 	virtual FString GetNotifyName_Implementation() const override;
 	
