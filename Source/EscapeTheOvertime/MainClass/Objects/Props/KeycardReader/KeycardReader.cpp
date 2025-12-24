@@ -7,7 +7,7 @@
 AKeycardReader::AKeycardReader()
 {
 	// 사운드 큐 에셋 로드 (성공음)
-	static ConstructorHelpers::FObjectFinder<USoundCue> SoundAsset(TEXT("/Game/EscapeTheOvertime/06_Audio/SFX/Environment/DoorOpen/Cue_open_Elevator.Cue_open_Elevator"));
+	static ConstructorHelpers::FObjectFinder<USoundCue> SoundAsset(TEXT("/Engine/EditorSounds/Notifications/CompileFailed_Cue.CompileFailed_Cue"));
 
 	if (SoundAsset.Succeeded())
 	{

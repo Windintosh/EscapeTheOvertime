@@ -4,6 +4,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
 #include "ETOGameState.h"
+#include "ElevatorDoor.h"
 
 AWarpBox::AWarpBox()
 {
@@ -33,12 +34,23 @@ void AWarpBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Other
 		return;
 	}
 
-	AETOGameState* GameState = Cast<AETOGameState>(GetWorld()->GetGameState());
-	GameState->SavePlayerHP();
-
 	AEscapeTheOvertimeCharacter* Player = Cast<AEscapeTheOvertimeCharacter>(OtherActor);
 	if (Player)
 	{
+		AETOGameState* GameState = Cast<AETOGameState>(GetWorld()->GetGameState());
+		GameState->SavePlayerHP();
+
+		TArray<AActor*> EVDoors;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AElevatorDoor::StaticClass(), EVDoors);
+
+		for (AActor* Door : EVDoors)
+		{
+			AElevatorDoor* EVDoor = Cast<AElevatorDoor>(Door);
+
+			EVDoor->CloseDoorOnTimer();
+		}
+
+
 		UE_LOG(LogTemp, Warning, TEXT("Player entered WarpBox. Teleporting in %.1f seconds..."), WarpDelayTime);
 
 		// 4초 뒤 WarpLevel 함수 실행
