@@ -288,7 +288,14 @@ void AThrownItem::OnProjectileStop(const FHitResult& ImpactResult)
 	if (Collision)
 	{
 		Collision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		Collision->SetCollisionResponseToAllChannels(ECR_Ignore);
 	}
+
+	if (ProjectileMovement)
+	{
+		ProjectileMovement->StopMovementImmediately();
+	}
+
 
 	// [필살기] 외부 파괴자(Field System) 소환
 	if (BreakerClass)
@@ -313,15 +320,15 @@ void AThrownItem::OnProjectileStop(const FHitResult& ImpactResult)
 		UE_LOG(LogTemp, Error, TEXT("BreakerClass is NULL! Please assign in BP!")); // 로그 4 (할당 안 됨)
 	}
 
-	if (GeometryCollectionComponent)
-	{
-		GeometryCollectionComponent->SetCollisionProfileName(TEXT("PhysicsActor"));
-		GeometryCollectionComponent->SetVisibility(true);
-		GeometryCollectionComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-		GeometryCollectionComponent->SetNotifyBreaks(true);
-		GeometryCollectionComponent->SetSimulatePhysics(true);
+	//if (GeometryCollectionComponent)
+	//{
+	//	GeometryCollectionComponent->SetCollisionProfileName(TEXT("PhysicsActor"));
+	//	GeometryCollectionComponent->SetVisibility(true);
+	//	GeometryCollectionComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	//	GeometryCollectionComponent->SetNotifyBreaks(true);
+	//	GeometryCollectionComponent->SetSimulatePhysics(true);
 
-		GeometryCollectionComponent->RecreatePhysicsState();
+	//	GeometryCollectionComponent->RecreatePhysicsState();
 		// 
 		// GeometryCollectionComponent->AddRadialImpulse(ImpactResult.ImpactPoint, 500.0f, 2000.0f, ERadialImpulseFalloff::RIF_Linear, true);
 
@@ -332,41 +339,71 @@ void AThrownItem::OnProjectileStop(const FHitResult& ImpactResult)
 		// bFalloff: true (가까울수록 셈)
 		// bVelChange: true (질량 무시하고 속도 변경 - 이게 중요!)
 
-		GeometryCollectionComponent->AddRadialImpulse(
-			ImpactResult.ImpactPoint,
-			50.0f,    // 반경
-			500.0f, // 강도 (안 깨지면 10만, 100만까지 올리세요)
-			ERadialImpulseFalloff::RIF_Linear,
-			true      // bVelChange
-		);
+	//	GeometryCollectionComponent->AddRadialImpulse(
+	//		ImpactResult.ImpactPoint,
+	//		50.0f,    // 반경
+	//		500.0f, // 강도 (안 깨지면 10만, 100만까지 올리세요)
+	//		ERadialImpulseFalloff::RIF_Linear,
+	//		true      // bVelChange
+	//	);
 
+	//	GeometryCollectionComponent->ApplyExternalStrain(
+	//		5000000.0f,               // Strain 양 (충분히 크게)
+	//		GetActorLocation(), //ImpactResult.Location,  // 충돌 위치
+	//		50.0f                   // 반경 (머그컵 크기)
+	//	);
+
+	//	// 벽에 부딪힌 충격 방향으로 힘을 가해줍니다.
+	//	FVector ImpulseDir = ProjectileMovement->Velocity.GetSafeNormal();//(GetActorLocation() - ImpactResult.Location).GetSafeNormal(); -> Comes Back to Instigator
+	//	if (ImpulseDir.IsZero()) ImpulseDir = GetActorForwardVector(); //FVector::UpVector();
+	//	GeometryCollectionComponent->AddImpulse(ImpulseDir * 500.0f, NAME_None, false);
+
+	//	// 0.1초 ~ 0.5초 사이로 조절해 보세요. 너무 짧으면 안 튀고, 너무 길면 발에 걸립니다.
+	//	GetWorld()->GetTimerManager().SetTimer(
+	//		CollisionTimerHandle,
+	//		this,
+	//		&AThrownItem::DisablePawnCollision,
+	//		0.2f, // 0.2초 뒤 실행
+	//		false // 반복 없음
+	//	);
+	//}
+
+	if (GeometryCollectionComponent)
+	{
+		GeometryCollectionComponent->SetVisibility(true);
+		GeometryCollectionComponent->SetCollisionProfileName(TEXT("PhysicsActor")); // 또는 BlockAllDynamic
+		GeometryCollectionComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		GeometryCollectionComponent->SetNotifyBreaks(true);
+		GeometryCollectionComponent->SetSimulatePhysics(true);
+
+		// 물리 상태 강제 리셋 (잠든 상태 깨우기)
+		GeometryCollectionComponent->RecreatePhysicsState();
+
+		// [안전장치 1] 속도가 0이어도 방향을 구함 (정면 벡터 사용)
+		FVector ImpulseDir = ProjectileMovement->Velocity.GetSafeNormal();
+		if (ImpulseDir.IsZero()) ImpulseDir = GetActorForwardVector();
+
+		// [안전장치 2] 파괴 원점(Origin) 계산
+		FVector BreakOrigin = ImpactResult.ImpactPoint;
+		if (BreakOrigin.IsZero()) BreakOrigin = GetActorLocation();
+
+		// A. 내부 파괴 (Strain) - 확실하게 깨뜨림
 		GeometryCollectionComponent->ApplyExternalStrain(
-			5000000.0f,               // Strain 양 (충분히 크게)
-			GetActorLocation(), //ImpactResult.Location,  // 충돌 위치
-			50.0f                   // 반경 (머그컵 크기)
+			1000000.0f, // 백만 (확실한 파괴)
+			BreakOrigin,
+			50.0f
 		);
 
-		// 벽에 부딪힌 충격 방향으로 힘을 가해줍니다.
-		FVector ImpulseDir = ProjectileMovement->Velocity.GetSafeNormal();//(GetActorLocation() - ImpactResult.Location).GetSafeNormal(); -> Comes Back to Instigator
-		if (ImpulseDir.IsZero()) ImpulseDir = GetActorForwardVector(); //FVector::UpVector();
-		GeometryCollectionComponent->AddImpulse(ImpulseDir * 500.0f, NAME_None, false);
-
-		// 0.1초 ~ 0.5초 사이로 조절해 보세요. 너무 짧으면 안 튀고, 너무 길면 발에 걸립니다.
-		GetWorld()->GetTimerManager().SetTimer(
-			CollisionTimerHandle,
-			this,
-			&AThrownItem::DisablePawnCollision,
-			0.2f, // 0.2초 뒤 실행
-			false // 반복 없음
-		);
+		// B. 외부 충격 (Impulse) - 파편 흩뿌리기
+		// bVelChange=false로 설정하고 질량 고려한 힘을 가함 (너무 빠르지 않게)
+		GeometryCollectionComponent->AddImpulse(ImpulseDir * 500.f, NAME_None, false);
 	}
+
+	// 6. 0.2초 뒤 플레이어 충돌 무시 (이전에 만든 함수)
+	GetWorld()->GetTimerManager().SetTimer(CollisionTimerHandle, this, &AThrownItem::DisablePawnCollision, 0.2f, false);
 
 	MakeNoise(3.0f, GetWorld()->GetFirstPlayerController()->GetCharacter(), GetActorLocation());
 
-	if (ProjectileMovement)
-	{
-		ProjectileMovement->StopMovementImmediately();
-	}
 
 	SetLifeSpan(5.0f); //
 }
