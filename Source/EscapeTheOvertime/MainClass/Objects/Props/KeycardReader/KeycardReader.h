@@ -17,6 +17,5 @@ protected:
 	virtual void ActivateProp(AActor* Activator) override;
 
 private:
-	UPROPERTY(EditAnywhere, Category = "Audio")
-	USoundCue* AccessGrantedSound;
+
 };
