@@ -141,6 +141,7 @@ void AThrownItem::OnItemHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 		// (Optional) add impulse to impact point for dramatic
 		// GeometryCollectionComponent->AddRadialImpulse(Hit.ImpactPoint, 500.0f, 2000.0f, ERadialImpulseFalloff::RIF_Linear, true);
 	}
+
 	SetLifeSpan(5.0f); //destroy after
 }
 
@@ -252,9 +253,6 @@ void AThrownItem::BeginPlay()
 		GeometryCollectionComponent->SetNotifyBreaks(true);
 	}
 
-
-
-
 	// 3. ignore instigator(who threw)
 	if (GetInstigator())
 	{
@@ -363,6 +361,8 @@ void AThrownItem::OnProjectileStop(const FHitResult& ImpactResult)
 		);
 	}
 
+	MakeNoise(3.0f, GetWorld()->GetFirstPlayerController()->GetCharacter(), GetActorLocation());
+
 	if (ProjectileMovement)
 	{
 		ProjectileMovement->StopMovementImmediately();
@@ -375,13 +375,47 @@ void AThrownItem::DisablePawnCollision()
 {
 	if (GeometryCollectionComponent)
 	{
-		// 이제 조각들이 흩어졌으니, 캐릭터가 밟고 지나갈 수 있게 무시합니다.
+		//// 이제 조각들이 흩어졌으니, 캐릭터가 밟고 지나갈 수 있게 무시합니다.
+		//GeometryCollectionComponent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+
+		//// 2. [핵심] 캐릭터의 몸(Mesh)은 주로 PhysicsBody 채널입니다. 이것도 무시해야 발에 안 걸립니다.
+		//GeometryCollectionComponent->SetCollisionResponseToChannel(ECC_PhysicsBody, ECR_Ignore);
+
+		//// (선택 사항) 카메라(Camera) 채널도 무시하면 시야 가림 방지에 좋습니다.
+		//GeometryCollectionComponent->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+
+		//GeometryCollectionComponent->SetCollisionResponseToChannel(ECC_Vehicle, ECR_Ignore);
+
+		//// 4. [중요] 충돌 이벤트 발생도 끕니다 (성능 최적화 및 떨림 방지)
+		//GeometryCollectionComponent->SetNotifyRigidBodyCollision(false);
+
+		// 1. [핵심] 물체의 '신분(Object Type)'을 방금 만든 Debris 채널로 변경합니다.
+		// 'ECC_GameTraceChannel1'은 보통 첫 번째로 만든 커스텀 채널(Debris)을 의미합니다.
+		// (Project Settings -> Collision -> Object Channels 목록 순서 확인 필요하지만 보통 1번입니다.)
+		GeometryCollectionComponent->SetCollisionObjectType(ECC_GameTraceChannel2);
+
+		// 2. 충돌 반응 재설정 (솔루션 B 방식 유지)
+		// 일단 다 무시하고...
+		GeometryCollectionComponent->SetCollisionResponseToAllChannels(ECR_Ignore);
+
+		// 바닥(WorldStatic)과 벽(WorldDynamic)은 밟고 서 있어야 하니 Block으로 켭니다.
+		GeometryCollectionComponent->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+		GeometryCollectionComponent->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Block);
+
+		// 플레이어(Pawn)는 Debris 채널을 'Ignore'하도록 설정했으므로, 
+		// 여기서 굳이 ECR_Ignore를 안 해도 무시되지만, 확실하게 하기 위해 둡니다.
 		GeometryCollectionComponent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
 
-		// (선택 사항) 카메라(Camera) 채널도 무시하면 시야 가림 방지에 좋습니다.
+		// 카메라 무시 (시야 가림 방지)
 		GeometryCollectionComponent->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 
 		UE_LOG(LogTemp, Warning, TEXT("Pawn Collision Disabled for Debris!"));
+	}
+
+	// 혹시 모르니 루트 컴포넌트(구체)도 다시 한 번 확실하게 끕니다.
+	if (Collision)
+	{
+		Collision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 }
 
