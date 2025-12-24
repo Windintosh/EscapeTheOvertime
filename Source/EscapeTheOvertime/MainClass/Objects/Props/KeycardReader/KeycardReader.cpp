@@ -6,13 +6,13 @@
 
 AKeycardReader::AKeycardReader()
 {
-	// 사운드 큐 에셋 로드 (성공음) -> Moved to ElevatorDoor
-	//static ConstructorHelpers::FObjectFinder<USoundCue> SoundAsset(TEXT("/Game/EscapeTheOvertime/06_Audio/SFX/Environment/DoorOpen/Cue_open_Elevator.Cue_open_Elevator"));
+	// 사운드 큐 에셋 로드 (성공음)
+	static ConstructorHelpers::FObjectFinder<USoundCue> SoundAsset(TEXT("/Engine/EditorSounds/Notifications/CompileFailed_Cue.CompileFailed_Cue"));
 
-	//if (SoundAsset.Succeeded())
-	//{
-	//	AccessGrantedSound = SoundAsset.Object;
-	//}
+	if (SoundAsset.Succeeded())
+	{
+		AccessGrantedSound = SoundAsset.Object;
+	}
 }
 
 void AKeycardReader::ActivateProp(AActor* Activator)
@@ -30,11 +30,11 @@ void AKeycardReader::ActivateProp(AActor* Activator)
 		// boolean 타입이므로 false로 되돌려 "감소/소멸" 효과를 냄
 		PlayerCharacter->bHasKeycard = false;
 
-		//// 2. 인식 성공 사운드 재생 -> Moved to ElevatorDoor
-		//if (AccessGrantedSound)
-		//{
-		//	UGameplayStatics::PlaySoundAtLocation(this, AccessGrantedSound, GetActorLocation());
-		//}
+		// 2. 인식 성공 사운드 재생
+		if (AccessGrantedSound)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, AccessGrantedSound, GetActorLocation());
+		}
 
 		// 3. 엘리베이터 문 열기 로직 실행
 		TArray<AActor*> EVDoors;

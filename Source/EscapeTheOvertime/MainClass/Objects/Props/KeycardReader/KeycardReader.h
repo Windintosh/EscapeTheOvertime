@@ -18,4 +18,6 @@ protected:
 
 private:
 
+	UPROPERTY(EditAnywhere, Category = "Audio")
+	USoundCue* AccessGrantedSound;
 };
