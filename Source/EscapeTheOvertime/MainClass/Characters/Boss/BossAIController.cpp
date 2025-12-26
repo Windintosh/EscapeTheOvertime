@@ -4,6 +4,7 @@
 #include "GameFramework/Character.h"
 #include "Perception/AISense_Sight.h"
 #include "Perception/AISense_Hearing.h" // 청각 센스 헤더
+#include "BehaviorTree/BlackboardComponent.h"
 
 // 블랙보드 키 정의
 const FName ABossAIController::PatrolLocationKey = TEXT("PatrolLocation");
@@ -13,6 +14,7 @@ const FName ABossAIController::LastSeenLocationKey = TEXT("LastSeenLocation");
 const FName ABossAIController::CanSeePlayerKey = TEXT("CanSeePlayer");
 const FName ABossAIController::LastHeardLocationKey = TEXT("LastHeardLocation");
 const FName ABossAIController::CanHearPlayerKey = TEXT("CanHearPlayer");
+const FName ABossAIController::HomeLocationKey = TEXT("HomeLocation");
 
 ABossAIController::ABossAIController()
 {
@@ -68,6 +70,13 @@ void ABossAIController::OnPossess(APawn* InPawn)
 		{
 			BB = BlackboardComp; // 멤버 변수 BB 캐싱
 			RunBehaviorTree(BehaviorTree);
+
+			// [핵심 추가] 트리가 실행된 직후, 빙의한 폰의 현재 위치를 HomeLocation으로 저장
+			if (InPawn)
+			{
+				BB->SetValueAsVector(HomeLocationKey, InPawn->GetActorLocation());
+				UE_LOG(LogTemp, Warning, TEXT("AI: Home Location Saved: %s"), *InPawn->GetActorLocation().ToString());
+			}
 		}
 	}
 
