@@ -42,7 +42,7 @@ void AEnemyProjectile::BeginPlay()
 
 void AEnemyProjectile::OnPlayerOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Error, TEXT("Projectile: Overlapped Object"));
+	UE_LOG(LogTemp, Error, TEXT("Projectile: Overlapped Object %s"), *OtherActor->GetName());
 	if (!OtherActor || OtherActor == this || OtherActor == GetOwner())
 	{
 		UE_LOG(LogTemp, Error, TEXT("Projectile: Overlapped Object is not a Player!"));
