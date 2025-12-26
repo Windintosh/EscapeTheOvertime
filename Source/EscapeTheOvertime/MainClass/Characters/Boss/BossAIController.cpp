@@ -34,7 +34,7 @@ ABossAIController::ABossAIController()
 
 	// 3. 청각 설정 (Hearing) 
 	HearingConfig = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("HearingConfig"));
-	HearingConfig->HearingRange = 3000.0f; // 소리 감지 범위
+	HearingConfig->HearingRange = 2500.0f; // 소리 감지 범위
 	HearingConfig->DetectionByAffiliation.bDetectEnemies = true;
 	HearingConfig->DetectionByAffiliation.bDetectFriendlies = true;
 	HearingConfig->DetectionByAffiliation.bDetectNeutrals = true;
