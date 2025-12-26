@@ -4,6 +4,7 @@
 #include "GameFramework/Character.h"
 #include "Perception/AISense_Sight.h"
 #include "Perception/AISense_Hearing.h" // 청각 센스 헤더
+#include "Boss/Boss.h"
 
 // 블랙보드 키 정의
 const FName ABossAIController::PatrolLocationKey = TEXT("PatrolLocation");
@@ -13,6 +14,7 @@ const FName ABossAIController::LastSeenLocationKey = TEXT("LastSeenLocation");
 const FName ABossAIController::CanSeePlayerKey = TEXT("CanSeePlayer");
 const FName ABossAIController::LastHeardLocationKey = TEXT("LastHeardLocation");
 const FName ABossAIController::CanHearPlayerKey = TEXT("CanHearPlayer");
+const FName ABossAIController::StunKey = TEXT("IsStunned");
 
 ABossAIController::ABossAIController()
 {
@@ -102,11 +104,28 @@ void ABossAIController::InitializePatrolPoints()
 // 통합 감각 처리 함수 (시각 + 청각)
 void ABossAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
+    if (!BB) return;
+
+    bool bIsStunned = BB->GetValueAsBool(StunKey);
+
+    if (BB->GetValueAsBool(StunKey)) return; //if AICharacter is stunned, do not update perception
+
+    if (bIsStunned)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("AI is Stunned! Ignoring Perception Update."));
+    }
+
+    if (bIsStunned)
+    {
+        // [핵심] 기절 상태인데 감각 정보가 들어왔다면? -> 강제로 잊게 만듦
+        // 이걸 안 하면 다음 프레임에 또 들어올 수 있음
+        BossAIPerceptionComponent->ForgetActor(Actor);
+        return;
+    }
+
     // 플레이어인지 확인
     ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
     if (!PlayerCharacter || Actor != PlayerCharacter) return;
-
-    if (!BB) return;
 
     // 감각 종류 식별
     TSubclassOf<UAISense> SensedClass = UAIPerceptionSystem::GetSenseClassForStimulus(this, Stimulus);

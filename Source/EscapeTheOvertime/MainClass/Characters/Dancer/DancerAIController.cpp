@@ -58,6 +58,7 @@ void ADancerAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus S
 	{
 		UE_LOG(LogTemp, Display, TEXT("Dancer-OTPU: Found Boss!"));
 	}
+	else return;
 
 	TSubclassOf<UAISense> SensedClass = UAIPerceptionSystem::GetSenseClassForStimulus(this, Stimulus);
 
@@ -69,7 +70,7 @@ void ADancerAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus S
 
 		if (bCanSee)
 		{
-			// 플레이어 발견! -> 추격 대상 설정
+			// Found boss and chase him;
 			BB->SetValueAsObject(TargetPlayerKey, Actor);
 			BB->SetValueAsVector(LastSeenLocationKey, Stimulus.StimulusLocation);
 

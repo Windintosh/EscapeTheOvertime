@@ -55,6 +55,7 @@ public:
 	static const FName LastSeenLocationKey;
 	static const FName LastHeardLocationKey;
 	static const FName CanHearPlayerKey;
+	static const FName StunKey;
 
 private:
 	UBlackboardComponent* BB = nullptr;
