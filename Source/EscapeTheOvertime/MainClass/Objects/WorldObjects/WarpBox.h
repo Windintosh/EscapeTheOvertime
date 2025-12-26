@@ -5,6 +5,9 @@
 #include "WarpBox.generated.h"
 
 class UBoxComponent;
+// 블루프린트에서 바인딩할 수 있는 델리게이트 선언
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnEndingTriggeredDelegate);
+
 
 UCLASS()
 class ESCAPETHEOVERTIME_API AWarpBox : public AActor
@@ -13,6 +16,10 @@ class ESCAPETHEOVERTIME_API AWarpBox : public AActor
 
 public:
 	AWarpBox();
+	// 금요일 맵에서 이 워프박스가 작동하면 이 이벤트가 호출됩니다.
+	UPROPERTY(BlueprintAssignable, Category = "Event")
+	FOnEndingTriggeredDelegate OnEndingTriggered;
+
 
 protected:
 	virtual void BeginPlay() override;

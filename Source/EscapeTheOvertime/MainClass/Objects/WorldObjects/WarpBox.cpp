@@ -82,6 +82,20 @@ void AWarpBox::WarpLevel()
 		// 금요일 맵이 있다면 추가 (예시)
 		LevelToLoad = FName("FridayMap");
 	}
+	// [추가] 금요일 맵(FridayMap)일 경우 엔딩 로직 실행
+	else if (CurrentLevelName == "FridayMap")
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Friday Map Cleared! Triggering Ending Sequence..."));
+
+		// 델리게이트 방송 -> 레벨 블루프린트가 듣고 시네마틱 재생
+		if (OnEndingTriggered.IsBound())
+		{
+			OnEndingTriggered.Broadcast();
+		}
+
+		// 레벨 이동을 하지 않고 여기서 함수 종료
+		return;
+	}
 
 	// 3. 레벨 이동 실행
 	if (!LevelToLoad.IsNone())
