@@ -23,4 +23,5 @@ public:
 	// 닦을 때 바라볼 방향
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 	FRotator HomeRotation;
+
 };

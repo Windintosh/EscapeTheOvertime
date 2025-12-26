@@ -56,15 +56,24 @@ void ABoss::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 // Behavior Tree에서 호출할 공격 함수
 void ABoss::Attack()
 {
+	// [수정 1] 이미 공격 중이라면 명령 무시 (애니메이션 무한 리셋 방지)
+	if (bIsAttacking) return;
+
 	if (AttackMontage)
 	{
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		if (AnimInstance)
 		{
+			// [수정 2] 공격 시작 시 미끄러짐 방지 (즉시 정지)
+			GetCharacterMovement()->StopMovementImmediately();
+
+			// 공격 상태 설정
+			bIsAttacking = true;
+
 			// 몽타주 재생
 			AnimInstance->Montage_Play(AttackMontage);
 
-			// 몽타주 종료 시점 바인딩 (필요 시 AI에게 알리기 위함)
+			// 몽타주 종료 시점 바인딩
 			FOnMontageEnded EndDelegate;
 			EndDelegate.BindUObject(this, &ABoss::OnAttackMontageEnded);
 			AnimInstance->Montage_SetEndDelegate(EndDelegate, AttackMontage);
@@ -85,11 +94,12 @@ void ABoss::Interact_Implementation(AActor* Interactor)
 
 	UE_LOG(LogTemp, Warning, TEXT("Boss: Boss is hit by Item!"));
 	BlackboardComp->SetValueAsBool(StunKey, true);
-
 }
 
 void ABoss::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
-	// 공격이 끝났을 때의 후처리 
+	// [수정 3] 공격 종료 시 상태 해제 (다시 이동/공격 가능)
+	bIsAttacking = false;
+
 	UE_LOG(LogTemp, Warning, TEXT("Boss: Attack Finished."));
 }

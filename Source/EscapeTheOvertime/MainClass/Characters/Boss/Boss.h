@@ -5,7 +5,7 @@
 #include "ThrownItem.h"
 #include "Boss.generated.h" 
 
-// 포워드 선언 (컴파일 속도 향상)
+// 포워드 선언
 class ABossAIController;
 class UAnimMontage;
 
@@ -21,6 +21,9 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	// [추가] 공격 중복 실행 방지용 플래그
+	bool bIsAttacking = false;
 
 public:
 	// Called every frame
@@ -39,7 +42,7 @@ public:
 
 	/** Behavior Tree(Task)에서 호출할 공격 함수 */
 	UFUNCTION(BlueprintCallable, Category = "Combat")
-	void Attack();
+	virtual void Attack(); // 자식에서 확장 가능하도록 virtual 유지
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interaction")
 	void Interact(AActor* Interactor);
@@ -47,9 +50,9 @@ public:
 
 	static const FName StunKey;
 
-private:
+protected: // (private에서 protected로 변경 권장: 자식 클래스에서도 접근 가능하게)
 	/** 몽타주 재생이 끝났을 때 호출되는 콜백 함수 */
 	UFUNCTION()
-	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
+	virtual void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 
 };
