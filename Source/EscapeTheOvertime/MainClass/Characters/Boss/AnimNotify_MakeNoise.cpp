@@ -31,7 +31,7 @@ void UAnimNotify_MakeNoise::Notify(USkeletalMeshComponent* MeshComp, UAnimSequen
         {
             // MakeNoise(소리크기, 소음유발자, 소음위치, 최대거리)
             OwnerPawn->MakeNoise(Loudness, OwnerPawn, OwnerPawn->GetActorLocation(), MaxRange);
-
+            UE_LOG(LogTemp, Warning, TEXT("MakeNoise: Noise Created!"));
         }
     }
 }

@@ -44,7 +44,7 @@ AEscapeTheOvertimeCharacter::AEscapeTheOvertimeCharacter()
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 	GetCharacterMovement()->AirControl = 0.5f;
 
-
+	NoiseEmitterComponent = CreateDefaultSubobject<UPawnNoiseEmitterComponent>(TEXT("NoiseEmitter	"));
 
 	DistractionItem.Duration = 10.0f;
 	MuffleItem.Duration = 30.f;
@@ -150,6 +150,11 @@ void AEscapeTheOvertimeCharacter::MakeNoise(float Loudness, FVector NoiseLocatio
 	}
 }
 
+void AEscapeTheOvertimeCharacter::OnThrowEnded(UAnimMontage* Montage, bool bInterrupted)
+{
+	bIsThrowing = false;
+}
+
 
 void AEscapeTheOvertimeCharacter::MoveInput(const FInputActionValue& Value)
 {
@@ -210,13 +215,28 @@ void AEscapeTheOvertimeCharacter::DoThrow()
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		if (AnimInstance)
 		{
-			if (DistractionItemQuantity > 0)
+			if (DistractionItemQuantity > 0 && !bIsThrowing)
 			{
 				AnimInstance->Montage_Play(ThrowMontage); //play throw montage
-				//DistractionItemQuantity--;
+				//DistractionItemQuantity--; //this is done in AnimNotify
+				bIsThrowing = true;
+				FOnMontageEnded EndDelegate;
+				EndDelegate.BindUObject(this, &AEscapeTheOvertimeCharacter::OnThrowEnded);
+				AnimInstance->Montage_SetEndDelegate(EndDelegate, ThrowMontage);
 				UE_LOG(LogTemp, Display, TEXT("DistractionItem: %d"), DistractionItemQuantity);
 			}
-			else UE_LOG(LogTemp, Error, TEXT("You don't have any DistractionItem!"));
+			else if (DistractionItemQuantity <= 0)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("You don't have any DistractionItem!"));
+			}
+			else if(bIsThrowing)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("You can't throw mid-thowing!"));
+			}
+			else 
+			{
+				UE_LOG(LogTemp, Error, TEXT("Throwing cannot be done!!"));
+			}
 		}
 	}
 }

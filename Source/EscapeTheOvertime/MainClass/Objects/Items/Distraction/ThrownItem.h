@@ -45,8 +45,8 @@ protected:
 
 	virtual void BeginPlay() override;
 
-	UFUNCTION()
-	void OnProjectileStop(const FHitResult& ImpactResult);
+	//UFUNCTION()
+	//void OnProjectileStop(const FHitResult& ImpactResult);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UGeometryCollectionComponent* GeometryCollectionComponent;
@@ -66,6 +66,8 @@ protected:
 	// 타이머가 끝나면 호출될 함수
 	UFUNCTION()
 	void DisablePawnCollision();
+
+	bool bIsBroken = false;
 
 public:
 	virtual void OnConstruction(const FTransform& Transform) override;

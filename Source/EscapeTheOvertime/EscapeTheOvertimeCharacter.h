@@ -167,6 +167,10 @@ public:
 
 private:
 	
+	bool bIsThrowing;
+
+	UFUNCTION()
+	void OnThrowEnded(UAnimMontage* Montage, bool bInterrupted);
 
 
 };
