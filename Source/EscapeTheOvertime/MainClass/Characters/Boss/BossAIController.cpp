@@ -99,62 +99,81 @@ void ABossAIController::InitializePatrolPoints()
 	}
 }
 
-//  통합 감각 처리 함수 (시각 + 청각)
+// 통합 감각 처리 함수 (시각 + 청각)
 void ABossAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
-	// 플레이어인지 확인
-	ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	if (!PlayerCharacter || Actor != PlayerCharacter) return;
+    // 플레이어인지 확인
+    ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+    if (!PlayerCharacter || Actor != PlayerCharacter) return;
 
-	if (!BB) return;
+    if (!BB) return;
 
-	// 감각 종류 식별
-	TSubclassOf<UAISense> SensedClass = UAIPerceptionSystem::GetSenseClassForStimulus(this, Stimulus);
+    // 감각 종류 식별
+    TSubclassOf<UAISense> SensedClass = UAIPerceptionSystem::GetSenseClassForStimulus(this, Stimulus);
 
-	// 1. [시각] 눈으로 봤을 때
-	if (SensedClass == UAISense_Sight::StaticClass())
-	{
-		bool bCanSee = Stimulus.WasSuccessfullySensed();
+    // 1. [시각] 눈으로 봤을 때
+    if (SensedClass == UAISense_Sight::StaticClass())
+    {
+        bool bCanSee = Stimulus.WasSuccessfullySensed();
 
-		BB->SetValueAsBool(CanSeePlayerKey, bCanSee);
+        // 시야 여부(CanSeePlayer) 업데이트
+        // (이건 매번 업데이트해도 보통 데코레이터가 Abort를 유발하지 않으므로 괜찮음, 
+        // 하지만 최적화를 원하면 여기도 체크 가능)
+        BB->SetValueAsBool(CanSeePlayerKey, bCanSee);
 
-		if (bCanSee)
-		{
-			// 플레이어 발견! -> 추격 대상 설정
-			BB->SetValueAsObject(TargetPlayerKey, Actor);
-			BB->SetValueAsVector(LastSeenLocationKey, Stimulus.StimulusLocation);
+        if (bCanSee)
+        {
+            // [중요 수정] 버벅임 방지 로직
+            // 현재 블랙보드에 저장된 타겟이 지금 본 녀석과 같은지 확인
+            UObject* CurrentTarget = BB->GetValueAsObject(TargetPlayerKey);
 
-			// 청각 관련 키 초기화 (눈으로 봤으니 소리 추적보다 우선)
-			BB->SetValueAsBool(CanHearPlayerKey, false);
+            // "저장된 타겟이 없거나" OR "다른 대상을 봤을 때만" 값을 갱신
+            if (CurrentTarget != Actor)
+            {
+                BB->SetValueAsObject(TargetPlayerKey, Actor);
+                UE_LOG(LogTemp, Warning, TEXT("AI: Player SIGHTED! Chasing..."));
+            }
 
-			UE_LOG(LogTemp, Warning, TEXT("AI: Player SIGHTED! Chasing..."));
-		}
-		else
-		{
-			// 놓침 -> 추격 대상 해제 (하지만 LastSeenLocation에는 마지막 위치가 남아있음)
-			BB->SetValueAsObject(TargetPlayerKey, nullptr);
-			UE_LOG(LogTemp, Warning, TEXT("AI: Player LOST."));
-		}
-	}
-	// 2. [청각] 소리를 들었을 때
-	else if (SensedClass == UAISense_Hearing::StaticClass())
-	{
-		// 이미 눈으로 보고 쫓고 있다면 소리는 무시
-		if (BB->GetValueAsBool(CanSeePlayerKey)) return;
+            // 위치 정보는 계속 업데이트해줘야 정확히 쫓아감
+            BB->SetValueAsVector(LastSeenLocationKey, Stimulus.StimulusLocation);
 
-		if (Stimulus.WasSuccessfullySensed())
-		{
-			BB->SetValueAsBool(CanHearPlayerKey, true);
-			BB->SetValueAsVector(LastHeardLocationKey, Stimulus.StimulusLocation);
+            // 청각 관련 키 초기화 (눈으로 봤으니 소리 추적보다 우선)
+            BB->SetValueAsBool(CanHearPlayerKey, false);
+        }
+        else
+        {
+            // 놓쳤을 때
+            // 기존 타겟이 있었다면 지움
+            if (BB->GetValueAsObject(TargetPlayerKey) != nullptr)
+            {
+                BB->SetValueAsObject(TargetPlayerKey, nullptr);
+                UE_LOG(LogTemp, Warning, TEXT("AI: Player LOST."));
+            }
+        }
+    }
+    // 2. [청각] 소리를 들었을 때
+    else if (SensedClass == UAISense_Hearing::StaticClass())
+    {
+        // 이미 눈으로 보고 쫓고 있다면 소리는 무시 (시각 우선)
+        if (BB->GetValueAsBool(CanSeePlayerKey)) return;
 
-			UE_LOG(LogTemp, Warning, TEXT("AI: NOISE Heard at %s"), *Stimulus.StimulusLocation.ToString());
+        if (Stimulus.WasSuccessfullySensed())
+        {
+            BB->SetValueAsBool(CanHearPlayerKey, true);
+            BB->SetValueAsVector(LastHeardLocationKey, Stimulus.StimulusLocation);
 
-			// 5초 뒤에 청각 상태 해제 (소리난 곳 가서 없으면 다시 순찰 돌게 하기 위해)
-			FTimerHandle TimerHandle;
-			GetWorld()->GetTimerManager().SetTimer(TimerHandle, [this]()
-				{
-					if (BB) BB->SetValueAsBool(CanHearPlayerKey, false);
-				}, 5.0f, false);
-		}
-	}
+            UE_LOG(LogTemp, Warning, TEXT("AI: NOISE Heard at %s"), *Stimulus.StimulusLocation.ToString());
+
+            // 5초 뒤에 청각 상태 해제
+            FTimerHandle TimerHandle;
+            GetWorld()->GetTimerManager().SetTimer(TimerHandle, [this]()
+                {
+                    // 람다 함수 내 안전장치
+                    if (this && BB)
+                    {
+                        BB->SetValueAsBool(CanHearPlayerKey, false);
+                    }
+                }, 5.0f, false);
+        }
+    }
 }
