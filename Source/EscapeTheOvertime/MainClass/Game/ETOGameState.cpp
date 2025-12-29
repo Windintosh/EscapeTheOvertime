@@ -17,6 +17,7 @@ void AETOGameState::BeginPlay()
 void AETOGameState::SpawnRandomItems()
 {
 	UGameplayStatics::SetGamePaused(GetWorld(), true);
+	UE_LOG(LogTemp, Warning, TEXT("Game Paused for Item Spawn"));
 	TArray<AActor*> ItemSpots;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AItemSpawner::StaticClass(), ItemSpots);
 	UE_LOG(LogTemp, Display, TEXT("%d Itemspots Spawned"), ItemSpots.Num());
@@ -47,7 +48,7 @@ void AETOGameState::SpawnRandomItems()
 			if (SpawnPoint->ItemIndex == 0) //if keycard, break the loop
 			{
 				bIsKeycardSpawned = true;
-				UE_LOG(LogTemp, Display, TEXT("Keycard Spawned; doing next loop"));
+				UE_LOG(LogTemp, Display, TEXT("Keycard Spawned; Finishing first loop"));
 				break;
 			}
 		}
@@ -66,7 +67,6 @@ void AETOGameState::SpawnRandomItems()
 					NoMore->DestroyItem();
 				}
 			}
-			//continue;
 		}
 	}
 	for (loopcount; loopcount < ItemSpots.Num(); loopcount++) //spawn for the rest of the loop
@@ -79,6 +79,7 @@ void AETOGameState::SpawnRandomItems()
 			UE_LOG(LogTemp, Display, TEXT("%s Spawned(Index: %d) at point %d"), *SpawnPoint->ItemType.ToString(), SpawnPoint->ItemIndex, loopcount);
 		}
 	}
+	UE_LOG(LogTemp, Warning, TEXT("Item Spawn Completed, Unpausing Game"));
 	UGameplayStatics::SetGamePaused(GetWorld(), false);
 }
 
