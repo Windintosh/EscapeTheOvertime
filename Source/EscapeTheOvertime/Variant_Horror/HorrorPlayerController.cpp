@@ -139,3 +139,9 @@ void AHorrorPlayerController::SetupInputComponent()
 		}
 	}
 }
+
+void AHorrorPlayerController::ResetCurrentTime()
+{
+	CurrentHour = 0;
+	CurrentMinute = 0;
+}
