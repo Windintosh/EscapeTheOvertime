@@ -114,7 +114,7 @@ protected:
 
 	//  현재 플레이어가 위치한 장소 (기본값 None) 트리거 박스에 들어갈 때마다 이 변수가 갱신
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Cinematic")
-	EDeathLocationType CurrentDeathLocation = EDeathLocationType::None;
+	EDeathLocationType CurrentDeathLocation;
 
 public:
 
