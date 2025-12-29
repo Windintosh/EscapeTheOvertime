@@ -57,7 +57,7 @@ void AHorrorCharacter::BeginPlay()
 	bIsDead = false;
 	
 	// 시작 시 장소 초기화
-	CurrentDeathLocation = EDeathLocationType::None;
+	CurrentDeathLocation = EDeathLocationType::Window;
 
 	// UI가 초기 상태(100%)를 그릴 수 있도록 방송
 	if (MaxHP > 0.0f)

@@ -14,7 +14,7 @@ class UTexture2D;
 UENUM(BlueprintType)
 enum class EDeathLocationType : uint8
 {
-	None        UMETA(DisplayName = "None"),
+	//None        UMETA(DisplayName = "None"),	   //no use, removed
 	Office      UMETA(DisplayName = "Office"),     // 사무실
 	Window      UMETA(DisplayName = "Window"),     // 창가
 	Pantry      UMETA(DisplayName = "Pantry"),     // 탕비실
