@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "InputActionValue.h"
 #include "EscapeTheOvertimeCharacter.h"
+#include "Components/AudioComponent.h"
 #include "HorrorCharacter.generated.h"
 
 class USpotLightComponent;
@@ -173,6 +174,14 @@ public:
 
 	bool GetSprintState();
 
+	// 심장박동 사운드 컴포넌트
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Audio")
+	UAudioComponent* HeartbeatAudioComponent;
+
+	// AI 감지 상태 업데이트 함수 (True: 발각됨, False: 따돌림)
+	UFUNCTION(BlueprintCallable, Category = "AI")
+	void UpdateHeartbeatState(bool bIsDetected);
+
 protected:
 
 	/** Constructor */
@@ -212,6 +221,9 @@ protected:
 
 	/** Called while sprinting at a fixed time interval */
 	void SprintFixedTick();
+
+	// 나를 쫓고 있는 적의 수 (0명이 되면 소리 멈춤)
+	int32 ChasingEnemyCount = 0;
 
 
 };

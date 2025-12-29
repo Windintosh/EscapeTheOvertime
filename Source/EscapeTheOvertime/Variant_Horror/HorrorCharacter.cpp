@@ -8,6 +8,8 @@
 #include "EnhancedInputComponent.h"
 #include "InputAction.h"
 #include "UObject/ConstructorHelpers.h" // FObjectFinder 사용 시 필수
+#include "Components/AudioComponent.h"
+#include "Sound/SoundCue.h"
 
 bool AHorrorCharacter::GetSprintState()
 {
@@ -35,6 +37,8 @@ AHorrorCharacter::AHorrorCharacter()
 	MaxHP = 100.0f;
 	CurrentHP = MaxHP;
 	bIsDead = false;
+	SprintMeter = SprintTime;
+	ChasingEnemyCount = 0;
 
 	// 생성자에서 사운드 큐 파일 찾아서 로드하기 (Hard Loading)
 	static ConstructorHelpers::FObjectFinder<USoundBase> DamageSoundAsset(TEXT("/Game/EscapeTheOvertime/07_FX/SFX/CinematicSound/Ugh_Cue.Ugh_Cue"));
@@ -42,6 +46,18 @@ AHorrorCharacter::AHorrorCharacter()
 	if (DamageSoundAsset.Succeeded())
 	{
 		DamageSound = DamageSoundAsset.Object;
+	}
+
+	// 심장박동 오디오 컴포넌트 설정
+	HeartbeatAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("HeartbeatAudioComponent"));
+	HeartbeatAudioComponent->SetupAttachment(RootComponent);
+	HeartbeatAudioComponent->bAutoActivate = false; // 시작 시 자동 재생 끔
+
+	// 심장박동 사운드 큐 로드
+	static ConstructorHelpers::FObjectFinder<USoundCue> HeartbeatCueAsset(TEXT("/Game/EscapeTheOvertime/06_Audio/BGM/Player/HeartBeat_Cue.HeartBeat_Cue"));
+	if (HeartbeatCueAsset.Succeeded())
+	{
+		HeartbeatAudioComponent->SetSound(HeartbeatCueAsset.Object);
 	}
 }
 
@@ -78,6 +94,42 @@ void AHorrorCharacter::EndPlay(EEndPlayReason::Type EndPlayReason)
 
 	// clear the sprint timer
 	GetWorld()->GetTimerManager().ClearTimer(SprintTimer);
+}
+
+void AHorrorCharacter::UpdateHeartbeatState(bool bIsDetected)
+{
+	// 1. 추격자 수 카운팅
+	if (bIsDetected)
+	{
+		ChasingEnemyCount++;
+	}
+	else
+	{
+		// 0 미만 방지
+		ChasingEnemyCount = FMath::Max(0, ChasingEnemyCount - 1);
+	}
+
+	// 2. 재생 로직 (Fade In/Out)
+	if (ChasingEnemyCount > 0)
+	{
+		// 쫓는 적이 1명이라도 있고, 소리가 안 나고 있다면 재생 시작
+		if (!HeartbeatAudioComponent->IsPlaying())
+		{
+			// 0.5초 동안 볼륨 0 -> 1로 부드럽게 재생
+			HeartbeatAudioComponent->FadeIn(0.5f, 1.0f);
+			// UE_LOG(LogTemp, Warning, TEXT("Heartbeat Start! (Chasers: %d)"), ChasingEnemyCount);
+		}
+	}
+	else
+	{
+		// 쫓는 적이 아무도 없으면 중지
+		if (HeartbeatAudioComponent->IsPlaying())
+		{
+			// 1.5초 동안 볼륨 1 -> 0으로 부드럽게 중지
+			HeartbeatAudioComponent->FadeOut(1.5f, 0.0f);
+			// UE_LOG(LogTemp, Warning, TEXT("Heartbeat Stop. (Safe)"));
+		}
+	}
 }
 
 // 보스가 때리면 자동 호출됨. 맞았을 때만 UI 업데이트 방송을 함.
