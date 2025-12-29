@@ -171,6 +171,8 @@ public:
 	//UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	//void SetSpeedUpState(bool bNewState);
 
+	bool GetSprintState();
+
 protected:
 
 	/** Constructor */
