@@ -9,6 +9,11 @@
 #include "InputAction.h"
 #include "UObject/ConstructorHelpers.h" // FObjectFinder 사용 시 필수
 
+bool AHorrorCharacter::GetSprintState()
+{
+	return bSprinting;
+}
+
 AHorrorCharacter::AHorrorCharacter()
 {
 	// create the spotlight
