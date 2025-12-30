@@ -22,9 +22,6 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	// [추가] 공격 중복 실행 방지용 플래그
-	UPROPERTY(BlueprintReadWrite)
-	bool bIsAttacking = false;
 
 public:
 	// Called every frame
@@ -50,6 +47,10 @@ public:
 	void Interact_Implementation(AActor* Interactor) override;
 
 	static const FName StunKey;
+
+	// [추가] 공격 중복 실행 방지용 플래그
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsAttacking = false;
 
 protected: // (private에서 protected로 변경 권장: 자식 클래스에서도 접근 가능하게)
 	/** 몽타주 재생이 끝났을 때 호출되는 콜백 함수 */
