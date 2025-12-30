@@ -24,10 +24,13 @@ struct FItemState
 {
 	GENERATED_BODY()
 
+	// 블루프린트에서 읽고 쓸 수 있게 허용
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Data")
 	float Duration = 0.f;
 
+	// 블루프린트에서 읽을 수 있게 허용
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Data")
 	float RemainingTime = 0.f;
-
 };
 
 
