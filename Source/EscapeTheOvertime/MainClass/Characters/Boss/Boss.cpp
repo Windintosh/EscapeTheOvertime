@@ -57,7 +57,12 @@ void ABoss::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void ABoss::Attack()
 {
 	// [수정 1] 이미 공격 중이라면 명령 무시 (애니메이션 무한 리셋 방지)
-	if (bIsAttacking) return;
+	if (bIsAttacking)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Boss: Boss is Already Attacking")); 
+		return;
+	}
+		
 
 	if (AttackMontage)
 	{
@@ -72,6 +77,8 @@ void ABoss::Attack()
 
 			// 몽타주 재생
 			AnimInstance->Montage_Play(AttackMontage);
+
+			bIsAttacking = false;
 
 			// 몽타주 종료 시점 바인딩
 			FOnMontageEnded EndDelegate;

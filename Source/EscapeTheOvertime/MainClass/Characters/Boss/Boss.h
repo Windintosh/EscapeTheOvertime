@@ -23,6 +23,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	// [추가] 공격 중복 실행 방지용 플래그
+	UPROPERTY(BlueprintReadWrite)
 	bool bIsAttacking = false;
 
 public:
