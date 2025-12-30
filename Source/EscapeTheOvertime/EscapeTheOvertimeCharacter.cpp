@@ -44,7 +44,7 @@ AEscapeTheOvertimeCharacter::AEscapeTheOvertimeCharacter()
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 	GetCharacterMovement()->AirControl = 0.5f;
 
-	NoiseEmitterComponent = CreateDefaultSubobject<UPawnNoiseEmitterComponent>(TEXT("NoiseEmitter	"));
+	NoiseEmitterComponent = CreateDefaultSubobject<UPawnNoiseEmitterComponent>(TEXT("NoiseEmitter"));
 
 	DistractionItem.Duration = 10.0f;
 	MuffleItem.Duration = 30.f;

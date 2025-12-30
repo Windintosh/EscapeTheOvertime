@@ -181,7 +181,7 @@ void AHorrorCharacter::OnDeath_Implementation()
 		DisableInput(PC);
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Player Died. Calling Cinematic Logic..."));
+	UE_LOG(LogTemp, Warning, TEXT("Player Died. Actor Name %s Calling Cinematic Logic, Location %d"), *GetName(), CurrentDeathLocation);
 	
 	// 하이브리드 연결: 현재 저장된 위치 태그(CurrentDeathLocation)를 블루프린트로 넘김
 	PlayGameOverCinematic(CurrentDeathLocation);

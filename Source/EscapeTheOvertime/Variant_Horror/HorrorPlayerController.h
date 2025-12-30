@@ -82,7 +82,7 @@ public:
 	bool bIsGameOver;
 
 	UFUNCTION(BlueprintCallable)
-	void ResetCurrentTime();
+	void InitCurrentTime();
 
 protected:
 	// --- [Time System Events] ---

@@ -140,8 +140,8 @@ void AHorrorPlayerController::SetupInputComponent()
 	}
 }
 
-void AHorrorPlayerController::ResetCurrentTime()
+void AHorrorPlayerController::InitCurrentTime()
 {
-	CurrentHour = 0;
+	CurrentHour = 20;
 	CurrentMinute = 0;
 }
