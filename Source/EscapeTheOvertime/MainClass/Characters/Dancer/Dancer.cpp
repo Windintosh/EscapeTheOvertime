@@ -1,6 +1,7 @@
 ﻿#include "MainClass/Characters/Dancer/Dancer.h"
 #include "NavModifierComponent.h"       // NavModifier 컴포넌트 헤더
 #include "NavAreas/NavArea_Obstacle.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 ADancer::ADancer()
@@ -22,6 +23,15 @@ ADancer::ADancer()
     NavModifierExtentSize = FVector(50.f, 50.f, 100.f);
 
     NavModifierComp->FailsafeExtent = NavModifierExtentSize;
+
+    UCharacterMovementComponent* MovementComponent = GetCharacterMovement();
+    if (MovementComponent)
+    {
+        MovementComponent->bUseRVOAvoidance = true;
+        MovementComponent->AvoidanceConsiderationRadius = 200.f;
+        MovementComponent->AvoidanceWeight = 0.5f;
+        UE_LOG(LogTemp, Display, TEXT("RVO is enabled"));
+    }
 }
 
 // Called when the game starts or when spawned
