@@ -81,15 +81,15 @@ void AEscapeTheOvertimeCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (bIsMuffled)
-	{
-		MuffleItem.RemainingTime -= DeltaTime;
-		UE_LOG(LogTemp, Warning, TEXT("Muffle : %f"), MuffleItem.RemainingTime);
-		if (MuffleItem.RemainingTime <= 0)
-		{
-			EndMuffle();
-		}
-	}
+	//if (bIsMuffled)
+	//{
+	//	MuffleItem.RemainingTime -= DeltaTime;
+	//	UE_LOG(LogTemp, Warning, TEXT("Muffle : %f"), MuffleItem.RemainingTime);
+	//	if (MuffleItem.RemainingTime <= 0)
+	//	{
+	//		EndMuffle();
+	//	}
+	//}
 
 	if (bIsSpedUp)
 	{
@@ -107,8 +107,8 @@ void AEscapeTheOvertimeCharacter::Tick(float DeltaTime)
 void AEscapeTheOvertimeCharacter::ActivateMuffle()
 {
 	bIsMuffled = true;
-	MuffleItem.RemainingTime = MuffleItem.Duration;
-	UE_LOG(LogTemp, Warning, TEXT("Muffle Activated for %f sec"), MuffleItem.Duration);
+	//MuffleItem.RemainingTime = MuffleItem.Duration;
+	UE_LOG(LogTemp, Warning, TEXT("Player is Muffled"));
 }
 
 void AEscapeTheOvertimeCharacter::ActivateSpeedUp()
