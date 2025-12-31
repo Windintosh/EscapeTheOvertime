@@ -1,4 +1,4 @@
-#include "CabinetDoor.h"
+﻿#include "CabinetDoor.h"
 #include "UObject/ConstructorHelpers.h"
 #include "EscapeTheOvertimeCharacter.h"
 
@@ -14,26 +14,26 @@ ACabinetDoor::ACabinetDoor()
 
 	BoxComp->SetBoxExtent(FVector(60.f, 60.f, 7.5f)); //make it half!
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> CabinetMesh(TEXT("/Game/EscapeTheOvertime/00_Maps/UseAsset/File_Cabinets_02-Freepoly_org/MiniCabinets_Door5.MiniCabinets_Door5"));
-	if (CabinetMesh.Succeeded())
-	{
-		MeshComp->SetStaticMesh(CabinetMesh.Object);
-	} 
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to get StaticMesh for %s"), *GetName());
-	}
-	
-	static ConstructorHelpers::FObjectFinder<UMaterial> CabinetMaterial(TEXT("/Game/EscapeTheOvertime/00_Maps/UseAsset/File_Cabinets_02-Freepoly_org/21___Default.21___Default"));
-	if (CabinetMaterial.Succeeded())
-	{
-		MeshComp->GetStaticMesh()->SetMaterial(0, CabinetMaterial.Object);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to get Material for %s"), *GetName());
-	}
-
+	//static ConstructorHelpers::FObjectFinder<UStaticMesh> CabinetMesh(TEXT("/Game/EscapeTheOvertime/00_Maps/UseAsset/File_Cabinets_02-Freepoly_org/MiniCabinets_Door5.MiniCabinets_Door5"));
+	//if (CabinetMesh.Succeeded())
+	//{
+	//	MeshComp->SetStaticMesh(CabinetMesh.Object);
+	//} 
+	//else
+	//{
+	//	UE_LOG(LogTemp, Error, TEXT("Failed to get StaticMesh for %s"), *GetName());
+	//}
+	//
+	//static ConstructorHelpers::FObjectFinder<UMaterial> CabinetMaterial(TEXT("/Game/EscapeTheOvertime/00_Maps/UseAsset/File_Cabinets_02-Freepoly_org/21___Default.21___Default"));
+	//if (CabinetMaterial.Succeeded())
+	//{
+	//	MeshComp->GetStaticMesh()->SetMaterial(0, CabinetMaterial.Object);
+	//}
+	//else
+	//{
+	//	UE_LOG(LogTemp, Error, TEXT("Failed to get Material for %s"), *GetName());
+	//}
+	MeshComp->SetupAttachment(RootComponent);
 	MovableValue = 40.f;	
 }
 

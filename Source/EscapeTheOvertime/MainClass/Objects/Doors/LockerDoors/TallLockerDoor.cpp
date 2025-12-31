@@ -1,4 +1,4 @@
-#include "MainClass/Objects/Doors/LockerDoors/TallLockerDoor.h"
+﻿#include "MainClass/Objects/Doors/LockerDoors/TallLockerDoor.h"
 
 ATallLockerDoor::ATallLockerDoor()
 {
@@ -15,24 +15,25 @@ ATallLockerDoor::ATallLockerDoor()
 		UE_LOG(LogTemp, Error, TEXT("Failed to get StaticMesh for %s"), *GetName());
 	}
 
-	static ConstructorHelpers::FObjectFinder<UMaterial> TallLockerMaterial(TEXT("/Game/EscapeTheOvertime/00_Maps/UseAsset/Cabinet/Material_001.Material_001"));
-	if (TallLockerMaterial.Succeeded())
-	{
-		MeshComp->GetStaticMesh()->SetMaterial(0, TallLockerMaterial.Object);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to get Material0 for %s"), *GetName());
-	}
-	static ConstructorHelpers::FObjectFinder<UMaterial> TallLockerMaterial2(TEXT("/Game/EscapeTheOvertime/00_Maps/UseAsset/Cabinet/Material_002.Material_002"));
-	if (TallLockerMaterial2.Succeeded())
-	{
-		MeshComp->GetStaticMesh()->SetMaterial(1, TallLockerMaterial2.Object);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to get Material1 for %s"), *GetName());
-	}
+	//static ConstructorHelpers::FObjectFinder<UMaterial> TallLockerMaterial(TEXT("/Game/EscapeTheOvertime/00_Maps/UseAsset/Cabinet/Material_001.Material_001"));
+	//if (TallLockerMaterial.Succeeded())
+	//{
+	//	MeshComp->GetStaticMesh()->SetMaterial(0, TallLockerMaterial.Object);
+	//}
+	//else
+	//{
+	//	UE_LOG(LogTemp, Error, TEXT("Failed to get Material0 for %s"), *GetName());
+	//}
+	//static ConstructorHelpers::FObjectFinder<UMaterial> TallLockerMaterial2(TEXT("/Game/EscapeTheOvertime/00_Maps/UseAsset/Cabinet/Material_002.Material_002"));
+	//if (TallLockerMaterial2.Succeeded())
+	//{
+	//	MeshComp->GetStaticMesh()->SetMaterial(1, TallLockerMaterial2.Object);
+	//}
+	//else
+	//{
+	//	UE_LOG(LogTemp, Error, TEXT("Failed to get Material1 for %s"), *GetName());
+	//}
+	MeshComp->SetupAttachment(RootComponent);
 }
 
 void ATallLockerDoor::BeginPlay()
