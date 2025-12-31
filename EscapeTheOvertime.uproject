@@ -40,18 +40,6 @@
 			"Enabled": true
 		},
 		{
-			"Name": "AndroidMedia",
-			"Enabled": false
-		},
-		{
-			"Name": "AndroidMoviePlayer",
-			"Enabled": false
-		},
-		{
-			"Name": "AndroidDeviceProfileSelector",
-			"Enabled": false
-		},
-		{
 			"Name": "OnlineSubsystemGooglePlay",
 			"Enabled": false,
 			"SupportedTargetPlatforms": [
@@ -59,23 +47,7 @@
 			]
 		},
 		{
-			"Name": "AndroidPermission",
-			"Enabled": false
-		},
-		{
-			"Name": "AndroidFileServer",
-			"Enabled": false
-		},
-		{
 			"Name": "AppleImageUtils",
-			"Enabled": false
-		},
-		{
-			"Name": "AppleMoviePlayer",
-			"Enabled": false
-		},
-		{
-			"Name": "AvfMedia",
 			"Enabled": false
 		},
 		{
@@ -104,9 +76,40 @@
 				"Linux",
 				"Android"
 			]
+		},
+		{
+			"Name": "LocationServicesAndroidImpl",
+			"Enabled": true
+		},
+		{
+			"Name": "AndroidCamera",
+			"Enabled": true
+		},
+		{
+			"Name": "AndroidBackgroundService",
+			"Enabled": true,
+			"SupportedTargetPlatforms": [
+				"Android"
+			]
+		},
+		{
+			"Name": "AppleProResMedia",
+			"Enabled": true,
+			"SupportedTargetPlatforms": [
+				"Win64"
+			]
+		},
+		{
+			"Name": "AppleProResDecoderElectra",
+			"Enabled": true,
+			"SupportedTargetPlatforms": [
+				"Win64"
+			]
 		}
 	],
 	"TargetPlatforms": [
-		"Windows"
+		"Windows",
+		"Android",
+		"IOS"
 	]
 }

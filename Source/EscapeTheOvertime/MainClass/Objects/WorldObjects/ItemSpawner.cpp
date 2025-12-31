@@ -49,56 +49,68 @@ AActor* AItemSpawner::SpawnItem(int32 Index)
 	case 0:
 	{
 		AKeycard* SpawnedItem = GetWorld()->SpawnActor<AKeycard>(KeycardClass, GetActorLocation(), GetActorRotation());
-		ItemIndex = SpawnedItem->GetItemIndex();
-		ItemType = SpawnedItem->GetItemType();
-		SpawnedItem->AttachToComponent(BoxComp, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-		UE_LOG(LogTemp, Display, TEXT("Keycard Spawned"));
-		return SpawnedItem;
+		if (SpawnedItem) {
+			ItemIndex = SpawnedItem->GetItemIndex();
+			ItemType = SpawnedItem->GetItemType();
+			SpawnedItem->AttachToComponent(BoxComp, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+			UE_LOG(LogTemp, Display, TEXT("Keycard Spawned"));
+			return SpawnedItem;
+		}
 	}
 	case 1:
 	{
 		AMuffleItem* SpawnedItem = GetWorld()->SpawnActor<AMuffleItem>(MuffleItemClass, GetActorLocation(), GetActorRotation());
-		ItemIndex = SpawnedItem->GetItemIndex();
-		ItemType = SpawnedItem->GetItemType();
-		SpawnedItem->AttachToComponent(BoxComp, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-		UE_LOG(LogTemp, Display, TEXT("MuffleItem Spawned"));
-		return SpawnedItem;
+		if (SpawnedItem) {
+			ItemIndex = SpawnedItem->GetItemIndex();
+			ItemType = SpawnedItem->GetItemType();
+			SpawnedItem->AttachToComponent(BoxComp, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+			UE_LOG(LogTemp, Display, TEXT("MuffleItem Spawned"));
+			return SpawnedItem;
+		}
 	}
 	case 2:
 	{
 		ASpeedUpItem* SpawnedItem = GetWorld()->SpawnActor<ASpeedUpItem>(SpeedUpItemClass, GetActorLocation(), GetActorRotation());
-		ItemIndex = SpawnedItem->GetItemIndex();
-		ItemType = SpawnedItem->GetItemType();
-		SpawnedItem->AttachToComponent(BoxComp, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-		UE_LOG(LogTemp, Display, TEXT("SpeedUp Spawned"));
-		return SpawnedItem;
+		if (SpawnedItem) {
+			ItemIndex = SpawnedItem->GetItemIndex();
+			ItemType = SpawnedItem->GetItemType();
+			SpawnedItem->AttachToComponent(BoxComp, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+			UE_LOG(LogTemp, Display, TEXT("SpeedUp Spawned"));
+			return SpawnedItem;
+		}
 	}
 	case 3:
 	{
 		ADistractionItem* SpawnedItem = GetWorld()->SpawnActor<ADistractionItem>(DistractionItemClass, GetActorLocation(), GetActorRotation());
-		ItemIndex = SpawnedItem->GetItemIndex();
-		ItemType = SpawnedItem->GetItemType();
-		SpawnedItem->AttachToComponent(BoxComp, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-		UE_LOG(LogTemp, Display, TEXT("DistractionItem Spawned"));
-		return SpawnedItem;
+		if (SpawnedItem) {
+			ItemIndex = SpawnedItem->GetItemIndex();
+			ItemType = SpawnedItem->GetItemType();
+			SpawnedItem->AttachToComponent(BoxComp, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+			UE_LOG(LogTemp, Display, TEXT("DistractionItem Spawned"));
+			return SpawnedItem;
+		}
 	}
 	case 4:
 	{
 		AHealItem* SpawnedItem = GetWorld()->SpawnActor<AHealItem>(HealItemClass, GetActorLocation(), GetActorRotation());
-		ItemIndex = SpawnedItem->GetItemIndex();
-		ItemType = SpawnedItem->GetItemType();
-		SpawnedItem->AttachToComponent(BoxComp, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-		UE_LOG(LogTemp, Display, TEXT("HealItem Spawned"));
-		return SpawnedItem;
+		if (SpawnedItem) {
+			ItemIndex = SpawnedItem->GetItemIndex();
+			ItemType = SpawnedItem->GetItemType();
+			SpawnedItem->AttachToComponent(BoxComp, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+			UE_LOG(LogTemp, Display, TEXT("HealItem Spawned"));
+			return SpawnedItem;
+		}
 	}
 	case 5: 
 	{
 		AMaxHPUpItem* SpawnedItem = GetWorld()->SpawnActor<AMaxHPUpItem>(MaxHPUpItemClass, GetActorLocation(), GetActorRotation());
-		ItemIndex = SpawnedItem->GetItemIndex();
-		ItemType = SpawnedItem->GetItemType();
-		SpawnedItem->AttachToComponent(BoxComp, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-		UE_LOG(LogTemp, Display, TEXT("MaxHPUpItem Spawned"));
-		return SpawnedItem;
+		if (SpawnedItem) {
+			ItemIndex = SpawnedItem->GetItemIndex();
+			ItemType = SpawnedItem->GetItemType();
+			SpawnedItem->AttachToComponent(BoxComp, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+			UE_LOG(LogTemp, Display, TEXT("MaxHPUpItem Spawned"));
+			return SpawnedItem;
+		}
 	}
 	default:
 		return nullptr;
