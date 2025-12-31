@@ -168,6 +168,7 @@ void AThrownItem::OnItemHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 		Collision->SetCollisionResponseToAllChannels(ECR_Ignore);
 	}
 
+	AActor* Breaker;
 	if (GeometryCollectionComponent)
 	{
 		GeometryCollectionComponent->SetVisibility(true);
@@ -199,6 +200,7 @@ void AThrownItem::OnItemHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 		GeometryCollectionComponent->AddImpulse(ImpulseDir * 500.f, NAME_None, false);
 
 		// [필살기] 외부 파괴자(Field System) 소환
+
 		if (BreakerClass)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Attempting to Spawn Breaker...")); // 로그 1
@@ -206,7 +208,7 @@ void AThrownItem::OnItemHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 			FRotator SpawnRot = FRotator::ZeroRotator;
 
 			// 소환되는 순간 주변 GC를 박살냄
-			AActor* Breaker = GetWorld()->SpawnActor<AActor>(BreakerClass, SpawnLoc, SpawnRot);
+			Breaker = GetWorld()->SpawnActor<AActor>(BreakerClass, SpawnLoc, SpawnRot);
 			if (Breaker)
 			{
 				UE_LOG(LogTemp, Warning, TEXT("Breaker Spawned SUCCESSFULLY: %s"), *Breaker->GetName()); // 로그 2
@@ -224,6 +226,12 @@ void AThrownItem::OnItemHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 
 	// 6. 0.2초 뒤 플레이어 충돌 무시 (이전에 만든 함수)
 	GetWorld()->GetTimerManager().SetTimer(CollisionTimerHandle, this, &AThrownItem::DisablePawnCollision, 0.2f, false);
+
+	if(Breaker)
+	{
+		Breaker->Destroy();
+		UE_LOG(LogTemp, Display, TEXT("Breaker %s Destroyed"), *Breaker->GetName());
+	}
 
 	MakeNoise(3.0f, GetWorld()->GetFirstPlayerController()->GetCharacter(), GetActorLocation());
 
