@@ -60,6 +60,7 @@ void ABoss::Attack()
 	if (bIsAttacking)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Boss: Boss is Already Attacking")); 
+		bIsAttacking = false; //for quick fix
 		return;
 	}
 		
