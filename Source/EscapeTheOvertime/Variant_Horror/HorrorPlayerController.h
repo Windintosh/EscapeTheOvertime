@@ -84,6 +84,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void InitCurrentTime();
 
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsPaused = false;
+
 protected:
 	// --- [Time System Events] ---
 

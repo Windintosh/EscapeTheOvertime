@@ -59,33 +59,37 @@ void AHorrorPlayerController::Tick(float DeltaTime)
 		return;
 	}
 
-	// 1. 분 누적
-	CurrentMinute += DeltaTime * TimeSpeed;
+	if (!bIsPaused) //time passes when the game is not paused
+	{	
 
-	// 2. 시간 변환
-	if (CurrentMinute >= 60.0f)
-	{
-		CurrentMinute -= 60.0f;
-		CurrentHour++;
+		// 1. 분 누적
+		CurrentMinute += DeltaTime * TimeSpeed;
 
-		// 3. 자정(24시) 체크 - [수정된 부분]
-		if (CurrentHour >= 24)
+		// 2. 시간 변환
+		if (CurrentMinute >= 60.0f)
 		{
-			bIsGameOver = true;
-			CurrentHour = 0;
+			CurrentMinute -= 60.0f;
+			CurrentHour++;
 
-			// 현재 빙의 중인 캐릭터(HorrorCharacter)를 가져옴
-			if (AHorrorCharacter* MyCharacter = Cast<AHorrorCharacter>(GetPawn()))
+			// 3. 자정(24시) 체크 - [수정된 부분]
+			if (CurrentHour >= 24)
 			{
-				// 1. 사망 원인을 'TimeOver'로 설정
-				MyCharacter->SetDeathLocation(EDeathLocationType::TimeOver);
+				bIsGameOver = true;
+				CurrentHour = 0;
 
-				// 2. 캐릭터 사망 처리 실행 (이러면 자동으로 시네마틱 요청 신호가 감)
-				MyCharacter->OnDeath();
+				// 현재 빙의 중인 캐릭터(HorrorCharacter)를 가져옴
+				if (AHorrorCharacter* MyCharacter = Cast<AHorrorCharacter>(GetPawn()))
+				{
+					// 1. 사망 원인을 'TimeOver'로 설정
+					MyCharacter->SetDeathLocation(EDeathLocationType::TimeOver);
+
+					// 2. 캐릭터 사망 처리 실행 (이러면 자동으로 시네마틱 요청 신호가 감)
+					MyCharacter->OnDeath();
+				}
+
+				// (기존 코드) 필요하다면 남겨두세요 (UI 연출 등)
+				OnTimeLimitReached();
 			}
-
-			// (기존 코드) 필요하다면 남겨두세요 (UI 연출 등)
-			OnTimeLimitReached();
 		}
 	}
 }
