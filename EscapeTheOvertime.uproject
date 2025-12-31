@@ -50,5 +50,8 @@
 			"Name": "MetaHumanLiveLink",
 			"Enabled": true
 		}
+	],
+	"TargetPlatforms": [
+		"Windows"
 	]
 }
