@@ -160,7 +160,7 @@ float AHorrorCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 	}
 
 	// 사망 체크
-	if (CurrentHP <= 0.0f)
+	if (CurrentHP <= 0.0f && !bIsGameCleared) //player dies if game is not cleared
 	{
 		OnDeath();
 	}
@@ -171,7 +171,7 @@ float AHorrorCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 // 사망 처리 (C++)
 void AHorrorCharacter::OnDeath_Implementation()
 {
-	if (bIsDead) return;
+	if (bIsDead || bIsGameCleared) return; //returns when the player is already dead or the game is cleared;
 
 	bIsDead = true;
 

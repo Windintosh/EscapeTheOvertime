@@ -182,6 +182,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AI")
 	void UpdateHeartbeatState(bool bIsDetected);
 
+	bool bIsGameCleared = false;
+
 protected:
 
 	/** Constructor */
