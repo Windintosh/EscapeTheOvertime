@@ -87,6 +87,12 @@ void AWarpBox::WarpLevel()
 	// [추가] 금요일 맵(FridayMap)일 경우 엔딩 로직 실행
 	else if (CurrentLevelName == "FridayMap")
 	{
+		AHorrorCharacter* PlayerCharacter = Cast<AHorrorCharacter>(GetWorld()->GetFirstPlayerController()->GetCharacter());
+		AETOGameState* GameState = Cast<AETOGameState>(GetWorld()->GetGameState());
+
+		PlayerCharacter->SetHP(100.f);
+		GameState->SavePlayerHP();
+
 		UE_LOG(LogTemp, Warning, TEXT("Friday Map Cleared! Triggering Ending Sequence..."));
 
 		// 델리게이트 방송 -> 레벨 블루프린트가 듣고 시네마틱 재생

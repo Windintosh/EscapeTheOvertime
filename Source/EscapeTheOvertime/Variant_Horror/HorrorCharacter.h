@@ -149,7 +149,7 @@ public:
 	UFUNCTION(Category = "Health")
 	void AddMaxHP(float Amount);
 
-	UFUNCTION(Category = "Health")
+	UFUNCTION(BlueprintCallable, Category = "Health")
 	void SetHP(float Value);
 
 	// 사망 시 실행할 이벤트
