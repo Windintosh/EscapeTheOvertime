@@ -181,10 +181,12 @@ void AEscapeTheOvertimeCharacter::DoAim(float Yaw, float Pitch)
 	if (GetController())
 	{
 		// pass the rotation inputs
-		AddControllerYawInput(Yaw);
-		AddControllerPitchInput(Pitch);
+		// 입력값(Yaw, Pitch)에 MouseSensitivity를 곱해서 회전 속도 조절
+		AddControllerYawInput(Yaw * MouseSensitivity);
+		AddControllerPitchInput(Pitch * MouseSensitivity);
 	}
 }
+
 
 void AEscapeTheOvertimeCharacter::DoMove(float Right, float Forward)
 {
@@ -206,6 +208,12 @@ void AEscapeTheOvertimeCharacter::DoJumpEnd()
 {
 	// pass StopJumping to the character
 	StopJumping();
+}
+
+void AEscapeTheOvertimeCharacter::SetMouseSensitivity(float NewSensitivity)
+{
+	MouseSensitivity = NewSensitivity;
+	UE_LOG(LogTemp, Warning, TEXT("Mouse Sensitivity Updated: %f"), MouseSensitivity);
 }
 
 void AEscapeTheOvertimeCharacter::DoThrow()

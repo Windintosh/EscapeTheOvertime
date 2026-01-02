@@ -168,6 +168,14 @@ public:
 
 	void MakeNoise(float Loudness, FVector NoiseLocation);
 
+	// 마우스 감도 변수 (기본값 1.0)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
+	float MouseSensitivity = 0.5f;
+
+	// UI에서 호출할 감도 설정 함수
+	UFUNCTION(BlueprintCallable, Category = "Input")
+	void SetMouseSensitivity(float NewSensitivity);
+
 private:
 	
 	bool bIsThrowing;
