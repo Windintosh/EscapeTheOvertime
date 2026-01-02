@@ -43,13 +43,26 @@ void AETOGameState::SpawnRandomItems()
 		loopcount++;
 		if (SpawnPoint)
 		{
-			SpawnPoint->SpawnItem(RandIndex);
-			UE_LOG(LogTemp, Display, TEXT("%s Spawned(Index: %d) at point %d"), *SpawnPoint->ItemType.ToString(), SpawnPoint->ItemIndex, index);
-			if (SpawnPoint->ItemIndex == 0) //if keycard, break the loop
+			AActor* SpawnedActor = SpawnPoint->SpawnItem(RandIndex);
+			if (SpawnedActor)
 			{
-				bIsKeycardSpawned = true;
-				UE_LOG(LogTemp, Display, TEXT("Keycard Spawned; Finishing first loop"));
-				break;
+				UE_LOG(LogTemp, Display, TEXT("%s Spawned(Index: %d) at point %d"), *SpawnPoint->ItemType.ToString(), SpawnPoint->ItemIndex, index);
+				if (SpawnPoint->ItemIndex == 0) //if keycard, break the loop
+				{
+					bIsKeycardSpawned = true;
+					UE_LOG(LogTemp, Display, TEXT("Keycard Spawned; Finishing first loop"));
+					break;
+				}
+				//else if (SpawnPoint->ItemType.IsNone())
+				//{
+				//	UE_LOG(LogTemp, Display, TEXT("ItemSpawner Spawned nothing! retrying..."));
+				//	SpawnPoint->SpawnItem(RandIndex); //need to change
+				//}
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Ghost Spawner Found at Location: %s"), *SpawnPoint->GetActorLocation().ToString());
+				UE_LOG(LogTemp, Warning, TEXT("Spawn Failed at point %d. Ignoring this spawner."), index);
 			}
 		}
 		if (index == ItemSpots.Num() - 1) //if no keycard has spawned, do it again
@@ -75,8 +88,11 @@ void AETOGameState::SpawnRandomItems()
 		AItemSpawner* SpawnPoint = Cast<AItemSpawner>(ItemSpots[loopcount]);
 		if (SpawnPoint)
 		{
-			SpawnPoint->SpawnItem(RandIndex);
-			UE_LOG(LogTemp, Display, TEXT("%s Spawned(Index: %d) at point %d"), *SpawnPoint->ItemType.ToString(), SpawnPoint->ItemIndex, loopcount);
+			AActor* SpawnedActor = SpawnPoint->SpawnItem(RandIndex);
+			if (SpawnedActor) 
+			{
+				UE_LOG(LogTemp, Display, TEXT("%s Spawned(Index: %d) at point %d"), *SpawnPoint->ItemType.ToString(), SpawnPoint->ItemIndex, loopcount);
+			}
 		}
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Item Spawn Completed, Unpausing Game"));

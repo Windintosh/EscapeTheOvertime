@@ -56,6 +56,7 @@ AActor* AItemSpawner::SpawnItem(int32 Index)
 			UE_LOG(LogTemp, Display, TEXT("Keycard Spawned"));
 			return SpawnedItem;
 		}
+		else return nullptr;
 	}
 	case 1:
 	{
@@ -67,6 +68,7 @@ AActor* AItemSpawner::SpawnItem(int32 Index)
 			UE_LOG(LogTemp, Display, TEXT("MuffleItem Spawned"));
 			return SpawnedItem;
 		}
+		else return nullptr;
 	}
 	case 2:
 	{
@@ -78,6 +80,7 @@ AActor* AItemSpawner::SpawnItem(int32 Index)
 			UE_LOG(LogTemp, Display, TEXT("SpeedUp Spawned"));
 			return SpawnedItem;
 		}
+		else return nullptr;
 	}
 	case 3:
 	{
@@ -89,6 +92,7 @@ AActor* AItemSpawner::SpawnItem(int32 Index)
 			UE_LOG(LogTemp, Display, TEXT("DistractionItem Spawned"));
 			return SpawnedItem;
 		}
+		else return nullptr;
 	}
 	case 4:
 	{
@@ -100,6 +104,7 @@ AActor* AItemSpawner::SpawnItem(int32 Index)
 			UE_LOG(LogTemp, Display, TEXT("HealItem Spawned"));
 			return SpawnedItem;
 		}
+		else return nullptr;
 	}
 	case 5: 
 	{
@@ -111,6 +116,7 @@ AActor* AItemSpawner::SpawnItem(int32 Index)
 			UE_LOG(LogTemp, Display, TEXT("MaxHPUpItem Spawned"));
 			return SpawnedItem;
 		}
+		else return nullptr;
 	}
 	default:
 		return nullptr;
