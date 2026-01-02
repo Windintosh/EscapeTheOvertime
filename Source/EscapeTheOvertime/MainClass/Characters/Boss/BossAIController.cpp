@@ -183,14 +183,20 @@ void ABossAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Sti
 
             UE_LOG(LogTemp, Warning, TEXT("AI: NOISE Heard at %s"), *Stimulus.StimulusLocation.ToString());
 
-            // 5초 뒤에 청각 상태 해제
+            // 약한 참조(Weak Pointer)를 사용하여 안전하게 타이머 실행
+            TWeakObjectPtr<ABossAIController> WeakThis(this);
+
             FTimerHandle TimerHandle;
-            GetWorld()->GetTimerManager().SetTimer(TimerHandle, [this]()
+            GetWorld()->GetTimerManager().SetTimer(TimerHandle, [WeakThis]()
                 {
-                    // 람다 함수 내 안전장치
-                    if (this && BB)
+                    // 1. 컨트롤러가 살아있는지 확인 (죽었으면 실행 안 함)
+                    if (ABossAIController* StrongThis = WeakThis.Get())
                     {
-                        BB->SetValueAsBool(CanHearPlayerKey, false);
+                        // 2. 블랙보드가 살아있는지 확인
+                        if (StrongThis->BB)
+                        {
+                            StrongThis->BB->SetValueAsBool(CanHearPlayerKey, false);
+                        }
                     }
                 }, 5.0f, false);
         }
