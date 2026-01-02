@@ -17,5 +17,5 @@ protected:
 
 	virtual void ActivateItem(AActor* Activator) override;
 
-	float HealAmount = 20.f;
+	float HealAmount = 10.f;
 };
