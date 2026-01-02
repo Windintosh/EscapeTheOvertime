@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
@@ -29,6 +29,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	AItemSpawner* ItemSpawner;
+	//AItemSpawner* ItemSpawner;
 
 };
