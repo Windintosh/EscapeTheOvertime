@@ -22,7 +22,7 @@
 ### 🔗 개발 문서 (Documents)
 > 기획서, WBS, 기술 명세서 및 상세 개발 로그를 확인하실 수 있습니다.
 
-[👉 **칼퇴의 정석 개발 노션(Notion) 바로가기**]()
+[👉 **칼퇴의 정석 개발 노션(Notion) 바로가기**](https://wax-passbook-93d.notion.site/2bfe919330e380379d77e74a150b67f4)
 
 <br>
 
